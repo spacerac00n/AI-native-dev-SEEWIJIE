@@ -1,6 +1,6 @@
 # Initial architectural decisions
 
-Status: accepted direction for the MVP, not implemented capabilities. Update this record when evidence changes a decision.
+Status: accepted direction for the MVP. Milestone 2 implements workspace tooling and health checks; later product capabilities remain planned. Update this record when evidence changes a decision.
 
 ## D01 — A small TypeScript workspace
 
@@ -49,3 +49,15 @@ Record test counts and distinguish invalid definitions, execution errors, produc
 Use simple forms, buttons, case lists, and evidence links. Establish a working auth baseline, then schema/approval, planner, executor/replay, dashboard/reporting, and finally the seeded defect/fix demonstration.
 
 This delays visual polish and optional integrations so effort goes to the smallest reproducible vertical slice. Milestone 1 remains documentation only; runtime versions, exact schemas, endpoints, and commands become concrete at their implementation milestones.
+
+## D09 — Compiled contracts and local development proxies
+
+Build the shared contracts package to ESM JavaScript and TypeScript declarations before starting or checking consumers. Root scripts enforce this order; the dev command watches contracts for edits. This small build step avoids coupling the compiled Node API to TypeScript source exports or custom path aliases.
+
+Both Vite servers proxy `/api` to the loopback Hono process. This lets the shells exercise the actual API without adding CORS setup. Production UI serving/proxying is outside Milestone 2; its verified interactive workflow uses the development servers.
+
+## D10 — Minimal real smoke checks with separate invocation reports
+
+Use three Playwright checks: direct health JSON, demo rendering plus API connectivity, and dashboard rendering plus API connectivity. Start fresh servers, reject port conflicts, use one Chromium worker, and disable retries. Unique report directories preserve each invocation; `--list` discovery reports remain separate from actual executions.
+
+This verifies the workspace boundary without introducing the future AI-plan executor or persistence system. Reports and dependency/build caches stay ignored; the committed workflow record contains the actual commands, counts, exit codes, and local artifact references.

@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestone 1 is documentation only; Milestones 2–10 remain pending.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestone 1 is complete. Milestone 2's implementation and verification are complete, with the requested commit/push as its publication step; Milestones 3–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results.
 
 ## 1. Context engineering
 
@@ -17,6 +17,8 @@ Acceptance criteria:
 ## 2. Workspace and development tooling
 
 Establish the smallest runnable TypeScript workspace, without implementing authentication or the planner yet.
+
+Verification: all four workspaces type-check and build; `npm ci` succeeds; the dev command serves the documented URLs; all three Playwright smoke tests pass with real browser/API execution. Authentication, OpenAI integration, and seeded defects are not included.
 
 Acceptance criteria:
 

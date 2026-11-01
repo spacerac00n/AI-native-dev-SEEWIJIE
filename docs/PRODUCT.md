@@ -1,6 +1,6 @@
 # Product definition
 
-Status: planned MVP; Milestone 1 contains documentation only.
+Status: planned MVP. Milestone 2 provides app shells and API-health smoke checks; the authentication and QA workflow requirements below remain unimplemented.
 
 ## Target developer and problem
 

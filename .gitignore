@@ -1,0 +1,25 @@
+# Dependencies, build outputs, and local caches.
+node_modules/
+dist/
+.cache/
+*.tsbuildinfo
+
+# Local configuration and credentials; keep the safe example tracked.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated records and evidence stay local unless explicitly reviewed.
+data/
+artifacts/
+test-results/
+playwright-report/
+*.log
+
+# OS/editor files and confidential assessment documents.
+.DS_Store
+.idea/
+.vscode/
+*.pdf

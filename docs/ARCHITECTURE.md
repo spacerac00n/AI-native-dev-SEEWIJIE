@@ -1,8 +1,20 @@
-# Planned architecture
+# Architecture
 
-Status: design only. The paths and interfaces below are proposed; no application code exists at Milestone 1.
+Status: Milestone 2 implements the workspace foundation. Authentication, planning, approval, replay, and QA reporting below remain the target design.
+
+## Implemented foundation
+
+- Two React + Vite app shells run at `http://127.0.0.1:5173` and `http://127.0.0.1:5174`. Each can check API health through a same-origin `/api` development proxy.
+- One Hono process listens at `http://127.0.0.1:3000`, with only `GET /api/health` implemented. It returns `{"status":"ok","service":"veriqa-api"}`.
+- `packages/contracts/` exports a Zod health schema and its inferred TypeScript type. It compiles to ESM JavaScript and declarations before consumers run; no source-path aliases or runtime TypeScript imports are needed by the compiled API.
+- Root npm scripts install/build/run the four workspaces. The dev command also watches shared contracts. Both web apps deliberately use plain browser styling.
+- Three tests in `tests/smoke/` check the real API and both rendered apps, including their health buttons. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes each invocation's reports to a unique ignored `artifacts/smoke/` directory. This is developer smoke tooling, not the future AI-plan executor or QA reporter.
+
+Exact setup commands and local URLs are in [README.md](../README.md). No OpenAI key, environment file, auth state, or application persistence is needed yet.
 
 ## Components and responsibilities
+
+The following table describes the target responsibilities; the current implementation is limited to the foundation above.
 
 | Component | Planned location | Responsibility |
 | --- | --- | --- |
@@ -12,6 +24,7 @@ Status: design only. The paths and interfaces below are proposed; no application
 | Shared contracts | `packages/contracts/` | TypeScript types and Zod schemas for requirements, plans, approvals, and run records. |
 | Trusted executor | `tests/executor/` | Playwright Test configuration and maintained adapters that interpret approved actions and execute assertions. |
 | Baseline checks | `tests/demo/` | Deterministic tests proving the demo works before defects are seeded. |
+| Workspace smoke checks | `tests/smoke/` | Implemented connectivity and rendered-shell checks, before authentication exists. |
 | Persistence | `data/`, `artifacts/` | Local JSON records and actual execution evidence. |
 | Replay fixture | `fixtures/approved-plans/` | Sanitized approved plan and provenance for the final offline demonstration. |
 

@@ -22,3 +22,52 @@ Documentation verification:
 Application tests discovered: 0; executed: 0. No application, test runner, or type-check configuration exists in this milestone, so there is no claim of runtime correctness. There are no runtime result artifacts; the deliverables are the documentation and Git commit. Commit/push verification will be reported after publication rather than predicted inside this record.
 
 No further human correction has been recorded at this stage. Future entries must distinguish a developer correction from an AI-proposed change and include actual commands, exit codes, counts, and artifact references for implementation work.
+
+## Milestone 2 — Workspace and smoke tests (November 1, 2026)
+
+Developer direction: implement only npm workspace tooling, two simple React + Vite shells, a Hono API, shared contracts, and minimal Playwright smoke checks. Include environment/Node/ignore configuration; verify and document the commands; commit and push. Authentication, OpenAI integration, and seeded bugs were explicitly excluded and remain unimplemented.
+
+AI assistance: read the required agent, architecture, and milestone documents, then implemented the four TypeScript workspaces. Each UI has only a heading, description, health button, and status. The shared health schema is validated by both apps; their requests reach the real API through Vite proxies. Read the official [Vite setup](https://vite.dev/guide/), [Hono Node adapter](https://hono.dev/docs/getting-started/nodejs), and [Playwright web-server configuration](https://playwright.dev/docs/test-webserver) documentation and queried npm for compatible versions before installing.
+
+Trade-offs: build shared contracts before consumers instead of adding source aliases; use Vite proxies instead of CORS setup; run only Chromium with one worker and no retries; retain a unique report directory per invocation. See decisions D09–D10. Node 22.23.2 and npm 10.9.8 match the development environment; direct dependency versions and the lockfile are pinned. Helpful comments explain runtime validation, proxying, shutdown, and evidence preservation.
+
+No additional human correction was needed during implementation. Smoke tests are deterministic developer-authored checks, not AI-generated QA plans. The checked source was the Milestone 2 working tree based on commit `9e1ffa0d1d3829f778c1b34619ffc2983b14aecb`, with the new implementation still uncommitted during execution; the implementation commit follows verification. No defective product version was seeded.
+
+### Actual commands and results
+
+| Command | Exit code | Observed result |
+| --- | --- | --- |
+| `node --version` / `npm --version` | 0 / 0 | Node `v22.23.2`; npm `10.9.8`. |
+| `npm install --cache .cache/npm` | 0 | Created the workspace lockfile; installed dependencies; npm reported 0 vulnerabilities. |
+| `npm install --package-lock-only --offline --cache .cache/npm` | 0 | Updated the lockfile after pinning the resolved Node 22 type definitions to `22.20.5`. |
+| `npm ci --cache .cache/npm` | 0 | Reinstalled from the lockfile: 60 packages added, 65 audited, 0 vulnerabilities reported. |
+| `npx playwright install chromium` | 0 | Installed Chromium/headless shell revision `1248` (Chrome for Testing `156.0.8078.4`) and FFmpeg. |
+| `npm run typecheck` | 0 | All four workspaces, Vite configs, Playwright config, and smoke tests checked successfully. |
+| `npm run build` | 0 | Built shared ESM/declarations, compiled Node API, and both Vite apps. |
+| `npm run dev` | 0 after intentional Ctrl+C | Started all three services plus the contracts watcher; checked responses before stopping it for tests. |
+| `npm test -- --list` | 0 | Discovered 3 tests in 1 file; executed 0. Its separate discovery report has no test execution results. |
+| `npm test` | 0 | Executed all 3 discovered tests using 1 Chromium worker: 3 passed, 0 failed, 0 skipped; 4.0 seconds total. |
+
+The dev-command HTTP check used an inline Node `fetch` script and exited 0. Both shell pages returned HTTP 200 with their expected HTML titles. The direct health endpoint and both Vite `/api/health` proxies returned HTTP 200 with `{"status":"ok","service":"veriqa-api"}`. After the test run, a separate inline Node check exited 0 and confirmed ports 3000, 5173, and 5174 were released (`ECONNREFUSED`), rather than leaving stale services running.
+
+### Actual Playwright execution
+
+| Test | Result | Duration |
+| --- | --- | --- |
+| Hono health endpoint returns the expected JSON | passed | 20 ms |
+| VeriQA Demo renders and checks the real API | passed | 485 ms |
+| VeriQA Dashboard renders and checks the real API | passed | 481 ms |
+
+Both browser tests render React, assert the title and heading, click the health button, and assert the resulting status. No API mocking was used. JSON results record 0 unexpected tests, 0 skipped, 0 reported flaky tests, no runner errors, and retry index 0 for each test. One passing execution does not establish long-term stability.
+
+Local retained artifacts (ignored by Git):
+
+- Discovery only: `artifacts/smoke/2026-11-01T12-28-49.885Z-4374d935-d83d-448b-90a4-2252025ccb9c/results.json`. Playwright's discovery report marks 3 cases skipped and has empty execution-result arrays; these are not passed executions.
+- Real execution: `artifacts/smoke/2026-11-01T12-28-50.543Z-f71a4c74-030f-4bc5-b675-9112bc7ececa/results.json` and its sibling `html/index.html` report. All three execution-result arrays contain an actual `passed` result.
+- No screenshots/traces were retained because all tests passed; the configuration retains them for failed browser tests when available. No failure evidence was removed or overwritten.
+
+Local development required network-enabled dependency/browser installation and permission to bind loopback ports in the agent sandbox. Commands and tests succeeded. Node emitted a harmless `NO_COLOR`/`FORCE_COLOR` environment warning during Playwright execution. There were no product assertion failures, invalid test definitions, or environment/runner failures in the smoke execution.
+
+Final static review: `git diff --check` exited 0. An inline Python audit exited 0, checking all seven Markdown files and eleven local links, retaining ten milestones, and confirming all five package manifests match the lockfile with exact direct dependency versions. Reviewed the file inventory to exclude dependency caches, build outputs, local reports, secrets, and confidential material from the commit.
+
+Human actions for reproduction: use the specified Node/npm versions, install dependencies and Chromium using the README commands, then run `npm run dev` to view the shells or `npm test` with those ports free. No `.env`, API key, authentication setup, or external service is required. Verification servers were stopped after the checks. Commit/push confirmation is reported after publication.
