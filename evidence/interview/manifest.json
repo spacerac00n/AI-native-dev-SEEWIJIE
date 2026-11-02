@@ -147,8 +147,8 @@
     },
     {
       "path": "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip",
-      "sha256": "7cbb951efd3543c5cb7d1b9097b46f1c7094fed27279c9bf990b99f606f93d2f",
-      "bytes": 316783,
+      "sha256": "f39b0c5d7b19f682a690ce7415df8328c97256ac006d17dd7ba51cf8df350cb6",
+      "bytes": 182302,
       "originalSha256": "6a211cda6cc2dd75205a110eb7d4d6565e8ee30477eafa6333f4523bab154d43"
     },
     {
@@ -534,32 +534,14 @@
     {
       "path": "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip",
       "originalSha256": "6a211cda6cc2dd75205a110eb7d4d6565e8ee30477eafa6333f4523bab154d43",
-      "publishedSha256": "7cbb951efd3543c5cb7d1b9097b46f1c7094fed27279c9bf990b99f606f93d2f",
+      "publishedSha256": "f39b0c5d7b19f682a690ce7415df8328c97256ac006d17dd7ba51cf8df350cb6",
       "reason": "Remove synthetic in-memory session cookie values from trace members. Local original untouched; timestamps, actions, assertions and screenshots unchanged. Mock OTP text values also removed; unmodified historical screencast images may show the expired synthetic mock OTP.",
       "members": [
-        "0-trace.network",
-        "0-trace.stacks",
-        "0-trace.trace",
-        "1-trace.network",
-        "1-trace.stacks",
+        "test.trace",
         "1-trace.trace",
-        "attachments/de58031488d7b216353765b7841691d519a602a0",
-        "attachments/e66a1eb7a059739b3281029dbaf3ae6868670401",
-        "resources/19901c60c9c7a9bad1c06d5afb0bc78ca4e4f555.json",
+        "1-trace.network",
         "resources/3c1af81f2e7dcc1723c499933df2fc90af6fec4c.json",
-        "resources/42c421f3ec9bc033ec5bc913bd1156b4ffd8fc8c.json",
-        "resources/7b9f5e3ac7b19853715cdb67022485288813a3e4.json",
-        "resources/7d90e0702153bf15768dc1c7fb866e2415e64782.json",
-        "resources/8d4cec1d6fc4dcd40376a90dab24ea80.jsonl",
-        "resources/9ef58d7e8b3ce977475ad31876af307c.jsonl",
-        "resources/ae266ed98beeac74973d731b8810d677583db0f0.json",
-        "resources/c10581fcc4785e1aa72cb7627ba6f78c0c9e069e.json",
-        "resources/db26ba50d3b2f009712648cd3b26268d869b3fdd.json",
-        "resources/e7e8acd9614309b836bf29744b10316e7e9ae74c.json",
-        "resources/f963deba75aead62cc0827c5aec26aa7d0e8f3dd.html",
-        "src/c0e2013a925c1534cabd55c8e3ba6602c9bf8eeb.ts",
-        "src/f257b1dd928757e8b3ea83515e33a0610b072d1e.ts",
-        "test.trace"
+        "resources/ae266ed98beeac74973d731b8810d677583db0f0.json"
       ]
     }
   ]
