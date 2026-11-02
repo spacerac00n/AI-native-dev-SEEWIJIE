@@ -71,7 +71,7 @@ AI output is data. The executor maps allowed action types to repository-maintain
 
 Validate at import and on every stored read. Approval is a separate developer action bound to both revision UUID and content hash; approval fields inside a definition are rejected. Every import creates a new unapproved revision, even when reverting older content. `PlanStore.requireApproved(id, revision)` verifies current revision, schema, digest, and approval binding and fails closed otherwise. `npm run plan -- check` exercises this gate only, without executing actions. The executor calls it and executes the returned immutable snapshot; the worker revalidates its schema/hash/approval binding before collecting cases.
 
-Milestone 6 uses a CLI coordinator to start a fixed repository-owned Playwright runner with validated data and one active run. Each case uses a fresh browser context and resets synthetic state. Mock reset/retrieval helpers are local test facilities, not authentication substitutes. Milestone 7 adds thin dashboard routes around these same modules; it does not replace the runner. Replay runs without importing the planner or loading `.env`.
+Milestone 6 uses a CLI coordinator to start a fixed repository-owned Playwright runner with validated data and one active run. Each case uses a fresh browser context and resets synthetic state. Mock reset/retrieval helpers are local test facilities, not authentication substitutes. Milestone 7 adds thin dashboard routes around these same modules; it does not replace the runner. Replay does not load `.env` or call the planner.
 
 ## Authentication and mock boundary
 

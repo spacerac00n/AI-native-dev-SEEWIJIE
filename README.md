@@ -123,7 +123,7 @@ Stop existing dev servers. On this development machine, the developer already ap
 env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
 ```
 
-No `.env` is loaded, no planner is imported, and no model call is made. Playwright starts fresh local API/demo servers in test mode, resets synthetic backend state before each case, and uses a new browser context per case. No dashboard server is needed. An unapproved, superseded, tampered, or unsupported plan is rejected before a server/browser starts. A concurrent executor is rejected. Retries are disabled.
+Execution does not load `.env` or call the planner/model. Playwright starts fresh local API/demo servers in test mode, resets synthetic backend state before each case, and uses a new browser context per case. No dashboard server is needed. An unapproved, superseded, tampered, or unsupported plan is rejected before a server/browser starts. A concurrent executor is rejected. Retries are disabled.
 
 Each invocation prints its unique `artifacts/executor/<run-id>/` path. Completed executions also save `data/runs/<run-id>.json`. Exit 0 means every case passed; exit 1 indicates rejection, an assertion failure, or an execution error. Inspect the structured outcome to distinguish them. The optional `--external-target` flag uses the same fixed loopback addresses without starting servers; it requires an already running API with `VERIQA_TEST_MODE=1` and resets its synthetic state.
 

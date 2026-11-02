@@ -1,6 +1,6 @@
 # Deterministic execution and evidence
 
-Use `npm run execute -- <plan-id> <exact-revision>` from the repository root. The CLI calls `PlanStore.requireApproved` and runs only the returned revision snapshot. Schema, digest, current revision and existing human approval must agree. It never creates approvals. A fresh clone must import, review and explicitly approve a new local revision first. Replay neither loads `.env` nor imports/calls the planner; OpenAI settings are removed from runner/server child environments.
+Use `npm run execute -- <plan-id> <exact-revision>` from the repository root. The CLI calls `PlanStore.requireApproved` and runs only the returned revision snapshot. Schema, digest, current revision and existing human approval must agree. It never creates approvals. A fresh clone must import, review and explicitly approve a new local revision first. Replay does not load `.env` or call the planner; OpenAI settings are removed from runner/server child environments.
 
 The maintained `tests/executor/adapters.ts` maps every supported Zod action/assertion to fixed routes and semantic locators. Plans cannot supply code, selectors, origins or request methods. UI matchers use Playwright's retrying assertions; API matchers compare actual status/body data using Playwright `expect`. API home checks share the browser's real cookie session. Click adapters wait for the appropriate response and pending control update before continuing. Mock OTP reads use the visibly labelled local delivery, with no authentication shortcut.
 
