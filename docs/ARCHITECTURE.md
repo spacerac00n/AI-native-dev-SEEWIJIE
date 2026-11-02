@@ -2,7 +2,7 @@
 
 Status: Milestones 2–7 implement the workspace, demo flows, live planning, JSON revisions/approvals, and deterministic approved-plan execution with structured evidence. The unified dashboard connects generation, review, approval, execution, history and evidence comparison.
 
-Milestone 8 intentionally breaks the checklist write described below: `PATCH /tasks/:taskId` mutates a cloned response rather than stored per-email tasks. Refresh therefore loses the change. This is a labelled application defect, with detection evidence in [AI_WORKFLOW.md](AI_WORKFLOW.md); the architecture and approved assertions are unchanged. Milestone 9 will restore the required persistence behavior.
+Milestone 8 seeded a checklist write defect: `PATCH /tasks/:taskId` mutated a cloned response rather than stored per-email tasks. Milestone 9 restores the stored task reference, so the next home read retains the change. Separate clean seed/fix commits and unchanged-plan failing/passing executions are preserved in [AI_WORKFLOW.md](AI_WORKFLOW.md); the architecture and approved assertions are unchanged.
 
 ## Implemented foundation
 

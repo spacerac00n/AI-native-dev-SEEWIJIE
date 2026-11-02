@@ -456,3 +456,79 @@ Limitations: one real Chromium execution of three approved cases establishes thi
    Inspect Action 7's successful PATCH with completed true, Action 8's fresh GET home with completed false, and Assertion 4's unchecked failure.
 4. In **Compare runs**, choose Before `86b3c3f5` and After `395693c2`. Confirm the same-plan/revision/hash message and both clean commits. Expand case1 and compare the actual PNGs and expected/actual values. This is baseline → regression, with no fixed run yet.
 5. Inspect `git show d2b776ba74431cbce08172d7f24a60195f03e646 -- apps/api/src/demo.ts`: only the labelled response-copy regression was seeded. For another execution, keep the same approved revision and use **Execute approved plan**; it creates a new UUID and must retain this original failure. Record the then-current SHA rather than calling a later documentation commit the seed SHA.
+
+## Milestone 9 — Checklist persistence fix and preserved retest (November 2, 2026)
+
+Developer direction: fix only the detected checklist persistence defect on `codex/m8-checklist-regression`, preserve the seed commit and all evidence, replay the exact existing human-approved revision with successful screenshots, compare before/after in the dashboard, run existing regressions, document and push. Milestone 10 and merging into main are excluded. Read AGENTS.md, PLAN, this history, EXECUTION, DASHBOARD, DEMO and relevant demo/executor/approval code before editing.
+
+Before changing source, SHA-256 fingerprinted **all 1,366 existing files** under `data/` and `artifacts/`. Both Milestone 8 manifests also matched, including the complete failed run, its duplicate data record, baseline, original plan and human approval. Rechecked the original run: seed SHA `d2b776ba74431cbce08172d7f24a60195f03e646`, dirty false, 3 discovered/executed, 2 passed / 1 failed, exit 1; case1 assertion 4 expected true and observed false. Reference: `artifacts/verification/m9/pre-fix-sha256.json`.
+
+AI assistance: diagnosed the cloned response in `apps/api/src/demo.ts`, removed `structuredClone`, and added a short remark explaining why PATCH must retain the stored tasks. `homeFor(email)` returns the map's actual task array, so the existing explicit boolean assignment now changes the state used by subsequent home reads. This restores the original small in-memory design without adding another persistence layer. No plan, expectation, approval, executor, UI, test or dependency was changed. Existing persistence checks cover the correction; no redundant test was added.
+
+Separate source-only commit: **`1965faeb53ae987c1f3943141ca1a0199b2a919b`**, **`fix: restore checklist persistence`**. Its parent is the Milestone 8 evidence documentation commit `f292555eef947625c6e43366492a0c0dae1bf028`; seed `d2b776ba74431cbce08172d7f24a60195f03e646` remains an ancestor. No reset, rebase, squash, amendment or deletion occurred.
+
+### Fresh servers and exact approved retest
+
+Found old repository listeners on 3000/5173/5174 (PIDs 53887/52620/52688), inspected their working directories and parent launcher, then stopped that confirmed `concurrently` launcher, PID 52568. After regression suites completed, checked all three ports were free and Git HEAD was the clean fix commit. Started a fresh `npm run dev:qa` with every `OPENAI_` environment setting removed. Recorded new listener PIDs 60774/60773/60683, all started at **21:25:32 Singapore time**, repository working directories, and `/api/qa/status` with execution enabled and no active run. References: `artifacts/verification/m9/pre-server-check.json`, `fresh-server-check.json`, and `dev-qa/` startup metadata/stdout/stderr. Root `.env` was not loaded for replay and no generation action or OpenAI request occurred.
+
+CUA opened the actual dashboard at `http://127.0.0.1:5174`, expanded the saved revision/hash and approval, confirmed successful-case screenshots checked, and clicked **Execute approved plan**. No import, plan edit, reapproval or generation occurred. The actual completed record is:
+
+| Field | Actual value |
+| --- | --- |
+| New run ID | `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` |
+| Fixed tested SHA / worktreeDirty | `1965faeb53ae987c1f3943141ca1a0199b2a919b` / **false** |
+| Plan / exact revision | `vp1` / `d61ba281-a45b-47da-9ae2-5bf3f5747695` |
+| Content hash | `01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f` |
+| Existing human approval | `0d20cfb2-7e27-4693-adef-27287f2b8362`, See Wijie, `2026-11-02T08:34:02.309Z` |
+| Source / mode / execution | `live-ai` / `replay` / `real-playwright` |
+| Started / finished UTC | `2026-11-02T13:26:14.966Z` / `2026-11-02T13:26:17.494Z` |
+| Discovered / executed / passed / failed / skipped | **3 / 3 / 3 / 0 / 0** |
+| Actual child exit / signal / outcome | **0** / null / `passed` |
+| Playwright / total duration | 2.2 seconds / 2528 ms |
+| Attempted / passed assertions | **8 / 8**, no retries |
+
+Actual child argv, also preserved in `command.json`:
+
+```sh
+"/Users/grassjelly/.hermes/node/bin/node" "/Users/grassjelly/Desktop/Bytedance-AI-Native/node_modules/@playwright/test/cli.js" "test" "--config" "playwright.executor.config.ts"
+```
+
+Case1 executed the unchanged checkbox click followed by real navigation to `/home`; assertion 4 expected **true**, observed **true**, passed. Its genuine final screenshot shows the checked task. Cases2/3 passed their existing domain-rejection/logout assertions. Initial unauthenticated 401s in browser logs are expected; no run/case errors occurred. stderr contains only the existing NO_COLOR/FORCE_COLOR warning.
+
+### Preserved comparison and artifacts
+
+CUA selected **Before** `395693c2-5ad9-4842-a203-2e077eb1cd2c` and **After** `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` in **Compare runs**. The actual UI confirms the same plan/revision/content hash, clean seed/fix SHAs, case1 assertion-failed → passed, expected true unchanged, actual false → true. Cases2/3 remain passed. Expanded the fixed run's approval/command and case1 before comparing. Read-only record checks also establish identical full plan/provenance and human approval snapshots, including timestamp/reviewer, across both runs.
+
+Preserve both complete directories and their separate `data/runs/<run-id>.json` records:
+
+- Before: `artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/`, **25 indexed artifacts**, three PNGs, one intact failure trace ZIP, original logs/observations/native report and failed screenshot. No files were modified.
+- After: `artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/`, **23 indexed artifacts**, `attempt.json` with `captureSuccessScreenshots: true`, `input.json`, `command.json`, `playwright.json`, `stdout.log`, `stderr.log`, and all three cases' `observation.json`, `result.json`, and `browser-api.log.json`. All three cases have real `test-finished-1.png` captures under their native `test-results/plan-...-chromium/` directories. Successful traces are absent under the unchanged retain-on-failure policy; no substitute was created.
+- UI proof: `artifacts/verification/m9/dashboard-fixed.jpg`, `dashboard-comparison.jpg`, and `dashboard-comparison.txt`.
+- Preservation/identity audit: `artifacts/verification/m9/audit.json`; new full-run fingerprints: `fixed-run-sha256.json`. Both run JSON copies are byte-identical to their corresponding data records, every indexed file exists, the original trace passes ZIP integrity checks, and no execution lock remains. All 1,366 preexisting files still match the pre-fix fingerprints, including earlier failures, planner interactions and actual approvals. No evidence was overwritten or relabelled.
+
+### Actual regressions and retained environment failure
+
+Each command capture under `artifacts/verification/m9/<label>/` contains actual argv, start/finish times, tested SHA/dirty flag, stdout, stderr and exit code. All post-commit checks below used `1965faeb53ae987c1f3943141ca1a0199b2a919b`, dirty false, with OpenAI environment removed. The earlier `typecheck-precommit/` passed (exit 0) on parent `f292555eef947625c6e43366492a0c0dae1bf028`, dirty true; it is not claimed as clean-commit evidence.
+
+| Command / capture label | Exit | Actual outcome |
+| --- | --- | --- |
+| `npm test` / `baseline` | 0 | 24 discovered/executed/passed, 0 failed/skipped, 6.9 seconds; includes both task persistence baseline checks. |
+| `npm run test:unit` / `unit` | 0 | 63 executed/passed, 0 failed/cancelled/skipped, 1.054 seconds. Planner tests use labelled offline transport; no live generation. |
+| `npm run test:executor` / `executor` | 0 | 7 Node checks passed (parent plus six checks), 13.978 seconds. Inner real runs: 8 adapter cases passed; one intentional wrong expectation failed; eight intentionally unavailable-target cases produced setup connection refusals. These are synthetic runner checks, not application regressions. |
+| Initial `npm run test:dashboard` / `dashboard` | 1 | 2 discovered/executed/failed. First approval encountered an API connection refusal; second check lacked the first test's passing fixture record. Not a checklist product failure. |
+| Isolated `npm run test:dashboard` / `dashboard-isolated` | 0 | 2 discovered/executed/passed, 0 failed/skipped, 11.6 seconds. Real inner fixture pass/failure evidence retained. |
+| `npm run typecheck` / `typecheck` | 0 | All four workspaces plus runner/config/test types passed. |
+| `npm run build` / `build` | 0 | Contracts, compiled API and both Vite apps built successfully. |
+
+Coding-agent correction: I started typecheck/build while the first dashboard suite's watched servers were running. The overlapping contracts rebuild caused server restarts; dashboard stderr records `ECONNREFUSED 127.0.0.1:3000` at the approval request and its error context records the resulting empty JSON response. Preserved the complete failed attempt, then ran the unchanged suite alone after builds ended: 2/2 passed. This is an environment interference incident, not evidence of a product fix from a same-source flaky assertion. No test, timeout or approval gate was relaxed. Routine restricted-sandbox `ps`/Git index writes were retried with appropriate host permissions; these diagnostic failures executed no product tests. No additional human correction was needed.
+
+Native report references:
+
+- Baseline: `artifacts/playwright/2026-11-02T13-23-52.193Z-382c11eb-d2ce-4a13-9186-52349c7a3eda/` (JSON/HTML).
+- Initial dashboard failure: `artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/` (JSON/HTML, two original screenshots/traces).
+- Isolated dashboard pass: `artifacts/dashboard/2026-11-02T13-25-04.006Z-c5b51003-9567-4c61-a63e-3feebcad58c0/` (JSON/HTML and desktop/mobile evidence); inner runs `3dd217dd-ff0a-4bea-bede-6a1b10411980` (3 passed) and `ec9054e0-027b-4674-a6dd-30e913d843e8` (one intentional assertion failure).
+- Executor synthetic summary: `artifacts/runner-checks/e738772d-8250-4563-b014-b8e44feab1fd/`; inner runs `dfe87524-4296-4f04-a8d6-a83a0a7de2e2` (8 passed), `9ff4d5bc-d378-497a-b62c-ab9f187efab9` (intentional mismatch), `c9b9c52f-63e7-4554-8052-1c504372e571` (refused target). The initial failed dashboard attempt's actual intentional-failure execution `9d125b6c-0d9e-4b20-9796-97e5da40f6ae` also remains separate.
+
+Limitations remain: one local Chromium retest of three reviewed cases establishes the observed correction, not exhaustive coverage or long-term stability. Backend storage is in memory and OTP delivery is explicitly mocked. External-target metadata describes the repository; fresh-process checks corroborate the running code, without independent build attestation. All generated evidence remains complete, local and ignored by Git, as in earlier milestones; the branch push publishes source/documentation. Fresh-clone reproduction/evidence packaging is pending Milestone 10, which was not started. Exact human verification steps are in [DEMO.md](DEMO.md).
+
+Final static/documentation review: Python audit exited 0 over the six intended Markdown updates and 27 local links; limited credential-pattern scan found no matches; `git diff --check` exited 0. Confirmed source/tests/fixtures/dependencies are unchanged since the fixed execution and branch remains `codex/m8-checklist-regression`. Repeated the preservation audit after documentation changes: all 1,366 earlier fingerprints and the new fixed-run manifest still match. This documentation follows the tested source fix in a separate commit; push confirmation is recorded after publication.

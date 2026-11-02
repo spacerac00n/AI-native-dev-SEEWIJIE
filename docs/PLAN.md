@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–8 are implemented and verified, including a clean seeded application regression detected by the unchanged approved plan through the dashboard. The defect remains in place; Milestones 9–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–9 are implemented and verified, including detection of a seeded regression and a separate clean fix/retest using the unchanged approved plan through the dashboard. Milestone 10 remains pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -105,7 +105,7 @@ Acceptance criteria:
 
 Demonstrate detection against deliberately defective committed code.
 
-Verified: commit `d2b776ba74431cbce08172d7f24a60195f03e646` updates a checklist response copy without saving the change. Dashboard replay `395693c2-5ad9-4842-a203-2e077eb1cd2c` of the unchanged approved `vp1` revision executed all three cases: two passed, case1 failed its persistence assertion, exit 1, dirty false. Original baseline `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d` remains unchanged and selectable alongside this failure in comparison. Screenshot, trace, HTTP evidence and limitations are recorded in AI_WORKFLOW.md. No fix has been made.
+Verified: commit `d2b776ba74431cbce08172d7f24a60195f03e646` updates a checklist response copy without saving the change. Dashboard replay `395693c2-5ad9-4842-a203-2e077eb1cd2c` of the unchanged approved `vp1` revision executed all three cases: two passed, case1 failed its persistence assertion, exit 1, dirty false. Original baseline `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d` remains unchanged and selectable alongside this failure in comparison. Screenshot, trace, HTTP evidence and limitations are recorded in AI_WORKFLOW.md. The later fix is recorded separately in Milestone 9.
 
 Acceptance criteria:
 
@@ -118,6 +118,8 @@ Acceptance criteria:
 ## 9. Fixes and preserved retests
 
 Correct the detected defects without losing the failing record.
+
+Verified: `1965faeb53ae987c1f3943141ca1a0199b2a919b` (`fix: restore checklist persistence`) updates stored tasks directly. After restarting all three servers, dashboard replay `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` of the exact existing approved `vp1` revision passed 3/3, exit 0, dirty false, with three genuine screenshots. Comparison confirms the same plan/revision/hash/approval and case1 assertion-failed → passed, expected true unchanged, actual false → true. All 1,366 preexisting data/artifact files remain unchanged. Baseline 24/24, unit 63/63, executor 7/7, isolated dashboard 2/2, typecheck and build passed. An initial dashboard environment failure is retained and explained in AI_WORKFLOW.md. Milestone 10 and merging remain out of scope.
 
 Acceptance criteria:
 
