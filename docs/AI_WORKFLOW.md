@@ -301,3 +301,71 @@ Implementation commit: `b1ab51d0d17e52c989b3fa51218fe485ec7e501b` — `feat: exe
 After committing, ran `env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695` again (exit 0). Run `66a116f4-8fcd-4f58-9756-3abda827281d` records that exact SHA and `worktreeDirty: false`: 3 discovered/executed/passed, 0 failed/skipped, Playwright 3.1 seconds, total 3451 ms. Saved identical result JSON at `data/runs/66a116f4-8fcd-4f58-9756-3abda827281d.json` and `artifacts/executor/66a116f4-8fcd-4f58-9756-3abda827281d/run.json`; preserve the full artifact directory. Raw outer command capture is `artifacts/verification/m6/clean-live-replay-f9c8be9c-e95f-462d-a88b-d03c2df40600/`. Earlier worktree and failed records remain separate.
 
 The initial broad credential-pattern audit flagged two `sk-` substrings inside long `task-...` evidence directory names. Reviewed as false positives, then ran an exact configured-key scan plus token-boundary credential scan across all 22 changed files and both built frontend asset directories: exit 0, no keys or credential tokens found. `.env` remains ignored/untracked; generated data/evidence are not staged. The implementation commit contains source/tests/docs only. Clean replay confirms runtime code; this follow-up commit records its evidence without rewriting history.
+
+## Milestone 7 — Unified VeriQA dashboard (November 2, 2026)
+
+Read AGENTS, PLAN, EXECUTION, architecture/workflow history and the current planner, plan/approval store, executor, contracts, UI/backend and tests first. Implemented the dashboard in the existing React/Vite app and a thin `/api/qa` Hono route group, reusing the existing OpenAI planner, exact-revision approval gate and deterministic executor. No database, new dependency, generated executable code, or replacement runner was introduced. Consulted official [Hono context](https://hono.dev/docs/api/context), [request](https://hono.dev/docs/api/request) and [body-limit](https://hono.dev/docs/middleware/builtin/body-limit) documentation and [Playwright capture options](https://playwright.dev/docs/test-use-options).
+
+The UI has separate AI generation, Zod validation, human approval and real execution stages; requirement entry; complete case/action/expectation and provenance/review-note inspection; exact-hash approval; optional real successful-case screenshots; immutable history; individual assertion/log/screenshot/trace inspection; and two-run comparison. Comparison matches case IDs and flags changed plan/revision/hash, expected values, definitions, actual values and statuses. It never labels an arbitrary green result as a code fix. Screenshot absence in older runs remains visible. The selected run is shown above a bounded, scrollable history list.
+
+Trade-offs and boundaries: dashboard runs use the existing executor's external-target mode against the same running local API/demo. `npm run dev:qa` explicitly enables synthetic resets; normal dev remains reset-disabled. The API allocates a run UUID and holds only active HTTP-launched IDs in memory; restart leaves incomplete attempts visible. New dashboard proposals get a server-allocated fresh plan ID to avoid superseding the approved walkthrough revision. Existing CLI generation behavior is retained. Indexed artifact reads validate relative paths and real-path containment including symlinks. Mutation requests require bounded JSON, a custom action header and local origin/host. Local file-owner/reviewer-label trust remains unchanged. D18 and DASHBOARD.md record these choices.
+
+### Real dashboard baseline and live generation
+
+Started `npm run dev:qa`, then used CUA against the actual dashboard at `http://127.0.0.1:5174`. The UI selected the existing genuinely human-approved live-AI `vp1` revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`, with unchanged approval `0d20cfb2-7e27-4693-adef-27287f2b8362`. Clicked **Execute approved plan** with successful-case screenshot capture enabled. The UI first showed Running/Not finalized, then displayed the actual completed result:
+
+- Run `f8ee6b89-c9f8-4200-b17d-01f4b1636d84`: 3 discovered/executed/passed, 0 failed/skipped, exit 0, Playwright 2.5 seconds, total recorded duration 2820 ms.
+- Source `24542ec41eef809f44f59a5c0786cfacb6c344f1`, `worktreeDirty: true`, identifying the parent plus uncommitted Milestone 7 work rather than a clean test of the older commit.
+- `data/runs/f8ee6b89-c9f8-4200-b17d-01f4b1636d84.json` and `artifacts/executor/f8ee6b89-c9f8-4200-b17d-01f4b1636d84/` preserve original plan/provenance/approval, actual command/output/assertions and three genuine successful-case PNGs.
+- Compared this run to retained clean Milestone 6 run `66a116f4-8fcd-4f58-9756-3abda827281d`. The dashboard visibly confirmed “Same plan, revision and content hash. Case expectations are directly comparable.” Both passed; this is a baseline/replay comparison, not defect/fix evidence.
+
+Through the same UI, clicked **Generate test plan** once with the non-confidential synthetic requirements displayed in the dashboard. Real OpenAI HTTP 200 produced three cases and saved:
+
+| Field | Actual value |
+| --- | --- |
+| Saved plan / revision | `plan-9ccc54db-aa21-443e-9e79-50a7ade756a1` / `fe049ac7-ce24-48f8-bc28-de1131ba9451` |
+| Content hash | `4fb8600a4dd65930fdaa7cf8d03561d5458efb85407dab63a0b1445e0909f695` |
+| Returned model | `gpt-4.1-mini-2025-04-14` |
+| Response / request ID | `resp_01ac1698ca5b847c016ae866f3313887d2bbb460b4f69c34a0` / `req_1bdccf5900454f0a9488e8985f7f23f3` |
+| Input / output / total tokens | 1128 / 759 / 1887 |
+| Generated UTC time | `2026-11-02T10:33:29.632Z` |
+| Actual state | Validated, unapproved, unexecuted; reviewer blank, review confirmation unchecked, execution disabled. |
+
+Live interaction: `artifacts/planner/75783153-0277-4d03-8e13-8bef8cadc632/interaction.json`; saved revision under `data/plans/<new-plan-id>/<revision>.json`. Separate coding-agent observations in that interaction's `review.md` note that c3's title overstates before/after-logout coverage: final-only assertions establish post-logout rejection. The original model content was not silently rewritten. A human still needs to assess the actual new cases/notes and explicitly approve; no new genuine approval was created by the coding agent. Existing `vp1` remains current and approved. `artifacts/verification/m7/ui-verification.json` references the actual replay, screenshots, live interaction and observed compatible comparison.
+
+### Automated verification and retained failures
+
+Every captured invocation writes actual stdout/stderr and command/exit/time/source metadata under its own `artifacts/verification/m7/<label>-<UUID>/` directory. Worktree checks used parent `24542ec41eef809f44f59a5c0786cfacb6c344f1`, dirty true.
+
+| Command | Exit | Actual outcome |
+| --- | --- | --- |
+| `npm run typecheck` during implementation | 0 | All workspace/config/test types passed. |
+| Initial `npm run test:unit` | 1 | 63 executed: 62 passed, 1 failed. Oversized request was rejected, but generic HTTP error handling incorrectly returned 409 instead of 413. Original output retained. |
+| `npm run test:unit` after correcting 413 handling | 0 | 63/63 passed, 0 failed/cancelled/skipped, 1.055 seconds. Six new tests cover approval/hash/confirmation, unavailable reset mode, request origin/header/body boundaries, existing-planner delegation with an explicitly offline transport, partial/invalid history and artifact traversal/symlinks. |
+| Initial `npm run test:dashboard` | 0 | 2/2 real browser workflow tests passed, 12.1 seconds. Inner executor: three-case manual fixture passed; one deliberately wrong expectation failed with actual evidence. |
+| `npm test` | 0 | All 24 existing real browser/API baseline cases executed/passed, 0 failed/skipped, 6.5 seconds. |
+| `npm run test:executor` | 0 | All 7 verification tests passed, 14.844 seconds; inner real Playwright runs: 8 adapter cases passed, 1 intentional assertion mismatch, 8 refused-target setup errors. |
+| `npm run test:dashboard` after evidence-preview/mobile refinements | 0 | 2/2 passed, 11.8 seconds, real pass/failure evidence retained separately. |
+| `npm run test:dashboard` after moving run inspection above history | 0 | 2/2 passed, 12.7 seconds, additional genuine screenshots retained. |
+| `npm run typecheck` / `npm run build` after separating the React entry point | 0 / 0 | All workspaces/configs/tests and compiled API/frontends passed. |
+
+Captured verification folders under `artifacts/verification/m7/`:
+
+- `unit-4ab25b0a-b344-4208-a600-a91b4c1f0d7e/`: original failed unit check, never replaced.
+- `unit-final-697866c5-06dc-475e-9a29-d5542ad8bc64/`: 63 passing checks.
+- `baseline-d05c9070-15e0-4d91-ad8c-18bf1abc03e2/`: 24 passing static Playwright checks.
+- `executor-16ef2640-f3f6-40b5-ba81-23b707b9adcd/`: 7 passing executor checks.
+- `dashboard-367e7405-b3d1-4462-acf7-a8746970325e/`, `dashboard-final-03b4d1b4-5d96-4792-aa97-9e2730ec427f/`, `dashboard-layout-4b29cf13-04b8-4136-8fa9-6704e4cedb0b/`: separately retained passing browser runs.
+- `typecheck-876d8d8d-6844-4bc8-ad23-d5e6d53b2672/`, `build-7f408ef2-489a-4d5b-b83a-899ac113a203/`, `typecheck-final-80ba7f07-8b12-4b72-948d-28f1a1e848b4/`, `build-final-dde06cd2-a3a9-4710-b6e4-3215c3197ce2/`: successful types/builds.
+
+The initial dashboard suite preserves HTML/JSON and desktop/comparison/mobile PNGs under `artifacts/dashboard/2026-11-02T10-27-44.981Z-c49fc2b9-3415-464f-8e7d-fcf5cc7326aa/`. Subsequent directories `2026-11-02T10-30-42.682Z-f7281b1d-48fe-4470-be7f-11936dcb7752/` and `2026-11-02T10-38-30.022Z-041c3842-0c17-4fca-9b8f-e0dbe01c0a3a/` remain separate. The latter's real execution runs are `7fd66f02-f7c3-4e22-a547-af2c5b292e0a` (3/3 passed) and `566f0f4d-dc94-4754-85cc-32c0c69b3027` (1 actual assertion failed, exit 1), under `artifacts/executor/`. Automated reviewer labels explicitly say SYNTHETIC and live only in isolated dashboard fixture data roots. They are not actual human review of an AI proposal.
+
+Existing baseline report: `artifacts/playwright/2026-11-02T10-28-30.790Z-4d743e83-c5d3-4ba8-9aea-1cea77d99440/`. Executor verification summary/data: `artifacts/runner-checks/0fe707cd-27a0-478c-8e16-d6afc51c3884/`; its pass/failure/unavailable runs are `924e46f4-90a5-408d-831e-7eb490109d2c`, `650a926b-5cb0-4fe6-b6f2-a0b841505ba3`, and `090bed44-4638-475a-bc7b-a41eed9898e2` respectively. Older Milestone 3–6 reports remain untouched.
+
+Coding-agent corrections and review: preserved the discovered HTTP-status failure and corrected its handler; stripped ANSI only in display previews; prevented stale asynchronous log responses from replacing a newly selected log; distinguished unknown worktree state from clean; fixed same-run reselection retaining its current result; and separated React component/bootstrap modules after development hot edits emitted duplicate-createRoot warnings. The last warning occurred during editing, followed by Vite full reload; fresh-server browser suites passed. No human correction beyond the requested scope/design constraints was needed. No unexplained same-source flakiness was observed. Model quality/coverage observations remain separate from product verdicts and human approval.
+
+Human walkthrough and local startup are in DEMO.md and DASHBOARD.md. Real defect/fix evidence remains unfinished Milestones 8–9, while the comparison UI already operates on actual existing runs. Preserve whole selected executor directories, actual plans/approvals, live interaction and dashboard test reports. Generated files remain ignored and are not part of the source push.
+
+Final review verification: `npm run test:dashboard` also passed 2/2 after separating React bootstrap and adding the same-run reselection check (12.4 seconds), and again after the compact screenshot adjustment (12.3 seconds). Captures: `dashboard-entry-db4a7e12-4a75-4c7a-92f9-1d426a29e5fd/` and `dashboard-preview-9c125592-c44a-479b-91db-ea8866104e13/`. Final release `npm run typecheck` and `npm run build` both exited 0; captures `typecheck-release-3d7b4839-8665-4156-9476-923c7afec046/` and `build-release-6fc92e2c-c874-4f7e-a952-89dc829e7ad3/`. A Python audit verified nine Markdown documents, twenty-three local links and all indexed files/exit codes in three selected run records. It also confirmed the original approved `vp1` revision is unchanged and the new live proposal has no approval file. `git diff --check` exited 0.
+
+The focused final overview capture used `npm run test:dashboard -- --grep "exact approval"`: exit 0, 1 selected/discovered/executed/passed browser check, 6.1 seconds, with three real passing inner executor cases. It saved an actual viewport screenshot of the workflow's unapproved synthetic fixture, not a placeholder or AI image, under `artifacts/dashboard/2026-11-02T10-45-12.047Z-7b4421ec-951e-4661-8061-8b4fdccdf69e/test-results/dashboard-dashboard-exact--02a93-rtions-screenshots-and-logs-chromium/dashboard-workflow.png`. Command capture: `artifacts/verification/m7/dashboard-workflow-preview-1ecbe366-f714-47c2-97b1-2751cae69062/`. Pre-commit audit exited 0 over all 27 staged source/test/doc files and 3 built browser assets: no configured key or credential token found, `.env` untracked, no generated evidence staged, and no dependency changes in any workspace manifest. Staged whitespace check exited 0.

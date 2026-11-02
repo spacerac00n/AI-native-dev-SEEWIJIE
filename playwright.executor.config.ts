@@ -15,7 +15,8 @@ export default defineConfig({
   expect: { timeout: 3_000 },
   outputDir: resolve(directory, "test-results"),
   reporter: [["list"], ["json", { outputFile: resolve(directory, "playwright.json") }]],
-  use: { screenshot: "only-on-failure", trace: "retain-on-failure", actionTimeout: 5_000, navigationTimeout: 5_000 },
+  use: { screenshot: process.env.VERIQA_SUCCESS_SCREENSHOTS === "1" ? "on" : "only-on-failure",
+    trace: "retain-on-failure", actionTimeout: 5_000, navigationTimeout: 5_000 },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: process.env.VERIQA_EXTERNAL_TARGET === "1" ? [] : [
     { command: "npm run dev --workspace @veriqa/api", env: { VERIQA_TEST_MODE: "1" },

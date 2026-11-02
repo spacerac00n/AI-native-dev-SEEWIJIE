@@ -1,22 +1,22 @@
 # Architecture
 
-Status: Milestones 2–6 implement the workspace, demo flows, live planning, JSON revisions/approvals, and deterministic approved-plan execution with structured evidence. The dashboard remains a shell; its reporting UI is Milestone 7.
+Status: Milestones 2–7 implement the workspace, demo flows, live planning, JSON revisions/approvals, and deterministic approved-plan execution with structured evidence. The unified dashboard connects generation, review, approval, execution, history and evidence comparison.
 
 ## Implemented foundation
 
-- The React + Vite demo runs at `http://127.0.0.1:5173` with email login, mock OTP delivery, home/checklist, and logout. The dashboard at `http://127.0.0.1:5174` remains a shell. Both use a same-origin `/api` development proxy.
+- The React + Vite demo runs at `http://127.0.0.1:5173` with email login, mock OTP delivery, home/checklist, and logout. The dashboard at `http://127.0.0.1:5174` is the unified QA workspace. Both use a same-origin `/api` development proxy.
 - One Hono process listens at `http://127.0.0.1:3000`. `GET /api/health` returns `{"status":"ok","service":"veriqa-api"}`; `apps/api/src/demo.ts` owns `/api/demo` authentication and task routes.
 - `packages/contracts/` exports Zod request/response schemas and inferred types for health, OTP challenges, errors, and home/tasks. It compiles to ESM JavaScript and declarations before consumers run; no source-path aliases or runtime TypeScript imports are needed by the compiled API.
 - `packages/contracts/src/plans.ts` adds versioned plan/case/action/assertion, saved revision, approval, and run-result metadata schemas. `apps/api/src/plans.ts` stores/revalidates JSON; `plan-cli.ts` provides the human review commands without a new API or dashboard.
 - Root npm scripts install/build/run the four workspaces. The dev command also watches shared contracts. Both web apps deliberately use plain browser styling.
 - Three tests in `tests/smoke/` check connectivity; 21 in `tests/demo/` check authentication, email-domain rejection, and home/tasks. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes reports to unique ignored `artifacts/playwright/` directories. Reports include actual source SHA/dirty status. This is developer baseline tooling, separate from the approved-plan executor and its reporter.
-- Fifty-seven Node unit/contract/planner/result tests in `tests/unit/` check contracts, storage, CLI rejection, and revision-bound approval. Playwright ignores that directory and continues to run only its 24 real browser/API baseline checks. The separate executor config runs saved cases; `npm run test:executor` verifies runner mechanics with explicitly synthetic approval fixtures.
+- Sixty-three Node unit/contract/planner/result/API tests in `tests/unit/` check contracts, storage, CLI rejection, and revision-bound approval. Playwright ignores that directory and continues to run only its 24 real browser/API baseline checks. The separate executor config runs saved cases; `npm run test:executor` verifies runner mechanics with explicitly synthetic approval fixtures.
 
 Exact setup commands and local URLs are in [README.md](../README.md). Only live generation needs a server-side key from the root `.env`. Demo auth/task state lives only in process memory.
 
 ## Components and responsibilities
 
-The following table describes component responsibilities. Execution is implemented below; dashboard endpoints and UI remain planned.
+The following table describes component responsibilities. Execution and the dashboard endpoints/UI are implemented below.
 
 | Component | Planned location | Responsibility |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ AI output is data. The executor maps allowed action types to repository-maintain
 
 Validate at import and on every stored read. Approval is a separate developer action bound to both revision UUID and content hash; approval fields inside a definition are rejected. Every import creates a new unapproved revision, even when reverting older content. `PlanStore.requireApproved(id, revision)` verifies current revision, schema, digest, and approval binding and fails closed otherwise. `npm run plan -- check` exercises this gate only, without executing actions. The executor calls it and executes the returned immutable snapshot; the worker revalidates its schema/hash/approval binding before collecting cases.
 
-Milestone 6 uses a CLI coordinator to start a fixed repository-owned Playwright runner with validated data and one active run. Each case uses a fresh browser context and resets synthetic state. Mock reset/retrieval helpers are local test facilities, not authentication substitutes. No dashboard or execution HTTP route was added. Replay runs without importing the planner or loading `.env`.
+Milestone 6 uses a CLI coordinator to start a fixed repository-owned Playwright runner with validated data and one active run. Each case uses a fresh browser context and resets synthetic state. Mock reset/retrieval helpers are local test facilities, not authentication substitutes. Milestone 7 adds thin dashboard routes around these same modules; it does not replace the runner. Replay runs without importing the planner or loading `.env`.
 
 ## Authentication and mock boundary
 
@@ -133,3 +133,13 @@ Prove the working baseline first. Seed deliberate defects in a `test(seed):` com
 After validation, the existing store saves an immutable unapproved revision. Safe interaction records use fresh artifact IDs and retain unsuccessful attempts. Authorization headers and raw transport errors are never logged; credential-like output is rejected/redacted. HTTP errors, network/timeout failures, refusal, incomplete and invalid output cannot grant approval. Requirements are untrusted input and must not contain secrets or confidential materials. No automatic retries or test verdicts. `store: false` requests no provider-side response storage.
 
 The CLI is the intentionally chosen entry point instead of an additional Hono endpoint. Import/inspect/check of an existing AI plan does not load `.env` or make an API call. Unit tests use explicitly labelled isolated offline transports; only real interactions are marked `live-openai`.
+
+## Unified dashboard (Milestone 7)
+
+The React dashboard uses `/api/qa` Hono routes for saved plans, live generation, explicit approval, asynchronous run launch/history and artifact reads. Shared Zod schemas validate request and response boundaries. Requirements go to the existing planner, which assigns a server-allocated fresh dashboard plan ID before saving; CLI generation retains its prior ID behavior. This prevents unrelated new proposals from superseding the approved walkthrough revision. Actual model output and server-allocated identity remain visible in interaction/saved records. No generation grants approval.
+
+`npm run dev:qa` opts the existing API into reset-enabled test mode. Dashboard executions use the existing executor's external-target mode against the running local demo, avoiding a second API process on port 3000. Normal `npm run dev` keeps reset controls absent and the dashboard explains why execution is disabled. The executor accepts an allocated run UUID and optional success-screenshot flag; all actions, approval checks, isolation, verdicts and evidence publication remain in the existing runner. The API holds only active run IDs in memory; disk attempts remain visible as incomplete after restart.
+
+`RunStore` reads finalized records plus earlier attempt/rejection directories, preserving all old evidence. Invalid records fail closed as execution errors. Artifact access requires a validated run UUID, an indexed relative path, and a real path contained within that run (including symlink checks). Responses have fixed MIME types, no sniffing and a restrictive content policy; traces download as ZIP. The local-only mutation guard requires a JSON action header and checks browser origin/host. This is the existing single-operator localhost trust model, not an identity service.
+
+Comparison matches case IDs and shows expected/actual values, definitions/status changes, screenshots and traces. Only equal plan ID/revision/hash is described as directly comparable. The dashboard never labels arbitrary pairs as a seeded defect and fix. Downloaded raw logs are unchanged; display previews strip ANSI colors and are size-bounded. Endpoint and operation details are in [DASHBOARD.md](DASHBOARD.md).

@@ -27,7 +27,7 @@ Return only a definition. The developer must approve it before future execution.
 
 export async function generatePlan(options: {
   requirements: string; apiKey: string; model: string; store: PlanStore; artifactRoot: string;
-  transport?: typeof fetch;
+  transport?: typeof fetch; planId?: string;
 }) {
   const { requirements, apiKey, model, store } = options;
   if (!requirements.trim() || requirements.length > 20000) throw new Error("Requirements must contain 1–20000 characters");
@@ -93,7 +93,8 @@ export async function generatePlan(options: {
       },
     });
     if (!plan.success) throw new Error("Invalid AI output: references, actions or provenance rejected; no plan saved");
-    const saved = store.save(plan.data);
+    // The dashboard allocates a new ID so a new proposal cannot supersede an approved demo plan.
+    const saved = store.save({ ...plan.data, id: options.planId ?? plan.data.id });
     record.outcome = "validated-unapproved";
     record.planId = saved.plan.id;
     record.revision = saved.revision;

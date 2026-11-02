@@ -10,6 +10,7 @@
   },
   "packageManager": "npm@10.9.8",
   "scripts": {
+    "dev:qa": "VERIQA_TEST_MODE=1 npm run dev",
     "dev": "npm run build --workspace @veriqa/contracts && concurrently --kill-others --names contracts,api,demo,qa \"npm run dev --workspace @veriqa/contracts\" \"npm run dev --workspace @veriqa/api\" \"npm run dev --workspace @veriqa/demo-web\" \"npm run dev --workspace @veriqa/qa-dashboard\"",
     "typecheck": "npm run build --workspace @veriqa/contracts && npm run typecheck --workspaces && tsc --noEmit -p tsconfig.json",
     "build": "npm run build --workspace @veriqa/contracts && npm run build --workspace @veriqa/api && npm run build --workspace @veriqa/demo-web && npm run build --workspace @veriqa/qa-dashboard",
@@ -17,7 +18,8 @@
     "test:unit": "npm run build --workspace @veriqa/contracts && npm run test:unit --workspace @veriqa/api",
     "plan": "npm run build --workspace @veriqa/contracts && npm run plan --workspace @veriqa/api --",
     "execute": "npm run build --workspace @veriqa/contracts && npm run execute --workspace @veriqa/api --",
-    "test:executor": "npm run build --workspace @veriqa/contracts && node --import tsx --test tests/integration/executor.test.ts"
+    "test:executor": "npm run build --workspace @veriqa/contracts && node --import tsx --test tests/integration/executor.test.ts",
+    "test:dashboard": "npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

@@ -6,7 +6,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–6 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 57 unit/contract tests, 24 Playwright baseline tests, and separate executor integration checks. The approved live-AI plan has executed with all three cases passing. The QA dashboard workflow remains planned. See [the milestone plan](docs/PLAN.md).
+Milestones 1–7 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection, and a unified QA dashboard. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 63 unit/API/contract tests, 24 Playwright baseline tests, 7 executor checks and 2 dashboard browser checks. The approved live-AI plan has executed with all three cases passing. The dashboard connects generation, review, explicit approval, execution, history and evidence comparison. See [the milestone plan](docs/PLAN.md).
 
 The intended demonstration is:
 
@@ -21,7 +21,7 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 - Playwright Test for real browser/API execution and deterministic assertions.
 - Local JSON files and filesystem artifacts for persistence.
 
-The demo uses simple native forms, buttons, and checkboxes. The QA dashboard remains a health-check shell. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
+The demo uses simple native forms, buttons, and checkboxes. The QA dashboard provides a complete review and execution workspace. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
 Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. No intentional application defects have been introduced.
 
@@ -53,14 +53,16 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 
 | Command | Behaviour |
 | --- | --- |
-| `npm run dev` | Starts the demo, dashboard shell, Hono, and the shared-contract watcher. |
+| `npm run dev` | Starts demo, dashboard, Hono, and contracts watcher; synthetic reset controls stay disabled. |
+| `npm run dev:qa` | Starts the same workspace with synthetic reset controls enabled, allowing dashboard execution. |
 | `npm run typecheck` | Checks all four workspaces, Vite/Playwright configs, and unit/browser tests. |
 | `npm run build` | Builds contracts, compiled Node API, and both web apps into their respective `dist/` directories. |
 | `npm test -- --list` | Lists all 24 tests without executing them. |
 | `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
 | `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
 | `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
-| `npm run test:unit` | Runs the 57 contract/storage/CLI/planner/result tests using Node's test runner; no browser/server required. |
+| `npm run test:unit` | Runs the 63 contract/storage/CLI/planner/result/API tests using Node's test runner; no browser/server required. |
+| `npm run test:dashboard` | Runs two real browser workflow checks against isolated manual fixtures, with explicitly synthetic approvals and preserved real evidence. |
 | `npm run test:executor` | Checks approval/validation/locking, all adapters, real assertion failure evidence, and unavailable-target handling using explicitly synthetic runner-check approvals. |
 | `npm run execute -- <plan-id> <revision>` | Replays an exact saved human-approved revision through real Chromium/API actions; starts/stops fresh API/demo servers. |
 | `npm run plan -- import fixtures/manual-demo-plan.json` | Validates and stores a new **unapproved**, manually authored revision. |
@@ -72,6 +74,20 @@ The root commands build contracts before consumers, so they work after a clean i
 Milestone 3 verification on November 2, 2026: type checks and builds exited 0; Playwright discovered and executed 24 tests, all passed in 6.6 seconds, with 0 failed, 0 skipped, and no retries. A separate compiled-API check verified normal-clock login, task persistence, logout, and absent test-control routes. Earlier failures and their evidence remain in [the command and evidence record](docs/AI_WORKFLOW.md).
 
 Milestone 4 verification on November 2, 2026: 37/37 unit tests and 24/24 existing browser/API tests passed; type checks and builds exited 0. The CLI accepted the manual fixture, rejected an unsupported action, and blocked its unapproved revision. These checks do not execute the structured fixture.
+
+## Use the unified dashboard
+
+```sh
+npm run dev:qa
+```
+
+Open <http://127.0.0.1:5174>. The dashboard loads saved plans and existing history. On this machine it selects the current human-approved `vp1` revision by default. Inspect its actions, expected results and provenance, then choose **Execute approved plan**. A new run appears with real assertions, Git state, logs and optional screenshots for successful cases. No key or model call is needed for saved-plan replay.
+
+To propose new tests, enter natural-language requirements and choose **Generate test plan**. The existing server-side planner loads the root `.env` only for that action. Each proposal receives a fresh plan ID and remains unapproved. Inspect all cases and review notes, enter your reviewer name, check the explicit review confirmation, then choose **Approve exact revision**. Approval binds both revision and content hash. New generation never changes the existing approved walkthrough plan.
+
+Use **Run history** to inspect individual cases, raw output, failure screenshots and trace downloads. **Compare runs** shows two selected records, matching case IDs and assertion differences; it warns when revisions or hashes differ. Old runs without screenshots show that absence. Rejected, corrupt, incomplete, and active attempts cannot appear passed. Run `npm run dev:qa` only with synthetic demo data: each case resets backend state. Stop it before running the standalone Playwright suites or managed CLI executor.
+
+See [dashboard operation and API boundaries](docs/DASHBOARD.md) and the [baseline walkthrough](docs/DEMO.md). The newly generated Milestone 7 proposal is intentionally unapproved and needs an actual human review; existing `vp1` approval remains valid.
 
 ## Generate a live AI test plan
 

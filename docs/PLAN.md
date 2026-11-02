@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–6 are implemented and verified, including human-approved live-plan replay; Milestones 7–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–7 are implemented and verified, including human-approved live-plan replay through the unified dashboard; Milestones 8–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -90,6 +90,8 @@ Acceptance criteria:
 ## 7. Dashboard, reporting, and complete baseline journey
 
 Connect the workflow with simple UI controls and inspectable evidence.
+
+Implemented a single React workspace with requirement entry/live planning, case/provenance review, exact-revision approval, execution, history, case evidence and two-run comparison. Hono routes reuse the existing planner/store/executor and serve only indexed, contained artifacts. Real baseline replay of approved `vp1` through the dashboard passed 3/3; a new real live proposal was generated and left unapproved. Automated UI approval tests use clearly labelled synthetic fixture reviewers. No seeded product defect/fix evidence is claimed before Milestones 8–9. See DASHBOARD.md, DEMO.md and AI_WORKFLOW.md.
 
 Acceptance criteria:
 

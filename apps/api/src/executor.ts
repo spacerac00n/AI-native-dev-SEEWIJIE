@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JSONReport, JSONReportSpec, JSONReportSuite } from "@playwright/test/reporter";
-import { caseExecutionSchema, executionRecordSchema, type CaseExecution, type ExecutionRecord } from "@veriqa/contracts";
+import { caseExecutionSchema, executionRecordSchema, revisionSchema, type CaseExecution, type ExecutionRecord } from "@veriqa/contracts";
 import { PlanStore } from "./plans.js";
 
 export const repositoryRoot = fileURLToPath(new URL("../../../", import.meta.url));
@@ -32,9 +32,10 @@ function specs(suites: JSONReportSuite[]): JSONReportSpec[] {
 
 export async function executeApprovedPlan(options: {
   planId: string; revision: string; dataRoot: string; externalTarget?: boolean;
+  runId?: string; captureSuccessScreenshots?: boolean;
 }): Promise<ExecutionRecord> {
   const started = Date.now();
-  const runId = randomUUID();
+  const runId = revisionSchema.parse(options.runId ?? randomUUID());
   const artifactRoot = join(repositoryRoot, "artifacts/executor");
   mkdirSync(artifactRoot, { recursive: true });
   const directory = join(artifactRoot, runId);
@@ -44,7 +45,8 @@ export async function executeApprovedPlan(options: {
   const commandArgs = [require.resolve("@playwright/test/cli"), "test", "--config", "playwright.executor.config.ts"];
   const command = [process.execPath, ...commandArgs].map((value) => JSON.stringify(value)).join(" ");
   const attempt = { runId, planId: options.planId, revision: options.revision, testedCommit, worktreeDirty,
-    startedAt: new Date(started).toISOString(), invocation: ["execute", options.planId, options.revision,
+    startedAt: new Date(started).toISOString(), captureSuccessScreenshots: options.captureSuccessScreenshots ?? false,
+    invocation: ["execute", options.planId, options.revision,
       ...(options.externalTarget ? ["--external-target"] : [])] };
   write(join(directory, "attempt.json"), attempt);
   console.log(`Executor artifacts: ${relative(repositoryRoot, directory)}`);
@@ -61,7 +63,8 @@ export async function executeApprovedPlan(options: {
     void _status;
     write(join(directory, "input.json"), { saved, approval });
     const env = { ...process.env, VERIQA_EXECUTION_DIR: directory,
-      VERIQA_EXTERNAL_TARGET: options.externalTarget ? "1" : "0" };
+      VERIQA_EXTERNAL_TARGET: options.externalTarget ? "1" : "0",
+      VERIQA_SUCCESS_SCREENSHOTS: options.captureSuccessScreenshots ? "1" : "0" };
     // Replay does not load .env or import the planner, and browser/server children receive no OpenAI settings.
     for (const key of Object.keys(env)) if (key.startsWith("OPENAI_")) delete (env as NodeJS.ProcessEnv)[key];
     const stdoutPath = join(directory, "stdout.log");

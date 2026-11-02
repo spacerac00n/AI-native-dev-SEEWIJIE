@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { existsSync, linkSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, linkSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import {
   approvedBySchema, planApprovalSchema, planIdSchema, revisionSchema, savedPlanSchema, testPlanSchema,
@@ -40,6 +40,24 @@ function writeJson(path: string, value: unknown, replace = false) {
 // Small synchronous files and a single local writer are sufficient for this MVP.
 export class PlanStore {
   constructor(private readonly root: string) {}
+
+  list() {
+    const plans: ReturnType<PlanStore["inspect"]>[] = [];
+    const errors: string[] = [];
+    const root = join(this.root, "plans");
+    if (!existsSync(root)) return { plans, errors };
+    for (const id of readdirSync(root)) {
+      if (!planIdSchema.safeParse(id).success) continue;
+      for (const file of readdirSync(join(root, id))) {
+        const revision = file.replace(/\.json$/, "");
+        if (!revisionSchema.safeParse(revision).success) continue;
+        try { plans.push(this.inspect(id, revision)); }
+        catch { errors.push(`Cannot validate saved plan ${id}, revision ${revision}`); }
+      }
+    }
+    plans.sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return { plans, errors };
+  }
 
   private planDirectory(id: string) {
     return join(this.root, "plans", planIdSchema.parse(id));

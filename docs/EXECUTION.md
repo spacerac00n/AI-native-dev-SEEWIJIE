@@ -41,7 +41,7 @@ Each unique run directory retains:
 - `test-results/...`: native Playwright screenshot, trace, error context and attachments when produced. Capture/startup failures may prevent screenshots; never create substitutes.
 - `run.json`: finalized dashboard record. Rejected attempts instead have `rejection.json` and no executed-case claim.
 
-Raw Playwright reports/traces can contain absolute local source paths and synthetic session/OTP data. The dashboard must use validated relative index paths for artifact access and serve them only from the chosen run directory. Treat all plan/log text as display data. No artifact HTTP routes or dashboard views are implemented in this milestone.
+Raw Playwright reports/traces can contain absolute local source paths and synthetic session/OTP data. The dashboard must use validated relative index paths for artifact access and serve them only from the chosen run directory. Treat all plan/log text as display data. The Milestone 7 dashboard implements these reads through `/api/qa` with indexed-path and real-path containment checks; see [DASHBOARD.md](DASHBOARD.md).
 
 Raw stdout/stderr are appended during execution so partial output survives interruption. An abruptly killed coordinator may leave an attempt without `run.json` and a stale lock. Show this as incomplete, never passed. Inspect `.active-run/owner.json` and confirm that coordinator/runner are stopped before manually removing a stale lock; do not remove its run evidence. Normal failures release the lock. This local single-operator MVP does not add a recovery worker or database.
 
@@ -53,3 +53,11 @@ Raw stdout/stderr are appended during execution so partial output survives inter
 4. Open the labelled runner-check failed screenshot and `npx playwright show-trace <trace-path>`; compare the real rendered value with the deliberately wrong expectation. This is executor verification, not a seeded app defect.
 5. Inspect unavailable-target evidence: `execution-error`, connection refusal, no passing cases. Check rejected attempts contain no browser launch/result claim.
 6. Preserve the complete approved-plan run, plan revision/approval, runner-check failure, unavailable-target run, and earlier reports. For later defect/fix demonstration, run the same revision against separate clean seed/fix commits and retain both runs.
+
+## Dashboard launch and optional successful screenshots
+
+`npm run dev:qa` starts the API/demo/dashboard with synthetic reset controls enabled. The dashboard launches the same executor in external-target mode, allocating a run UUID before returning HTTP 202. A pending response is never a passing result. The runner still rechecks exact revision/approval/hash, resets each case, and determines outcomes through Playwright.
+
+The dashboard's optional successful-case screenshot control enables Playwright's `screenshot: on` mode for that run. Default CLI behavior remains failure-only capture. This records genuine final browser output for both passing and failing cases, with no placeholders or retroactive screenshots added to old runs. The selected setting is preserved in `attempt.json`, and native PNG attachment paths enter the existing run/case artifact indexes. Failed traces remain retained; successful traces are not added.
+
+History includes finalized records and rejected/incomplete artifact attempts, including earlier Milestone 6 evidence. The active in-memory set identifies currently HTTP-launched runs; an interrupted process leaves incomplete evidence until inspected. Comparison supports current records before actual defect/fix runs exist, but explicitly distinguishes changed plan/revision/hash and absent screenshots. It does not imply a code fix from a green result alone.

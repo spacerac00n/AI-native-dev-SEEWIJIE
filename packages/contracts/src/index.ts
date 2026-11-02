@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export * from "./plans.js";
 export * from "./execution.js";
+export * from "./dashboard.js";
 
 // Both web apps validate the real API response at the network boundary.
 export const healthResponseSchema = z.object({

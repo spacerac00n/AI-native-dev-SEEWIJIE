@@ -2,6 +2,9 @@ import { serve } from "@hono/node-server";
 import type { HealthResponse } from "@veriqa/contracts";
 import { Hono } from "hono";
 import { createDemoRoutes } from "./demo.js";
+import { createQaRoutes } from "./qa.js";
+import { repositoryRoot } from "./executor.js";
+import { resolve } from "node:path";
 
 const app = new Hono();
 
@@ -12,6 +15,8 @@ app.get("/api/health", (context) => context.json({
 } satisfies HealthResponse));
 
 app.route("/api/demo", createDemoRoutes(process.env.VERIQA_TEST_MODE === "1"));
+app.route("/api/qa", createQaRoutes({ dataRoot: resolve(repositoryRoot, process.env.VERIQA_DATA_DIR ?? "data"),
+  executionEnabled: process.env.VERIQA_TEST_MODE === "1" }));
 
 const server = serve({
   fetch: app.fetch,
