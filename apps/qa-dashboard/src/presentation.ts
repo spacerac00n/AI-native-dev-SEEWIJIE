@@ -9,6 +9,14 @@ const names: Record<string, string> = {
 export const targetName = (target: string) => names[target] ?? target.replaceAll("-", " ");
 // Labels are for display only. Selection and approval still use the original exact IDs.
 export const runLabel = (run: RunSummary, index?: number) => `${index === undefined ? "Test run" : `Run ${index}`} · ${date(run.startedAt)}`;
+// Keep menu labels brief; the full saved title stays in the review panel.
+export function planOptionLabel(plan: PlanInspection) {
+  const title = plan.plan.title.replace(/\s*\([^)]*\)/g, "").replace(/^Manually authored\s+/i, "").replace(/\s+verification\b/gi, "")
+    .split(/\s+(?:with|in)\s+|[,;:]/i)[0]!.trim();
+  const concise = title.length > 32 ? `${title.slice(0, 29).trimEnd()}…` : title;
+  const status = plan.status === "approved" ? "Approved" : plan.status === "superseded" ? "Superseded" : "Not approved";
+  return `${status} · ${concise.charAt(0).toUpperCase()}${concise.slice(1)}`;
+}
 export function expectation(definition: CaseExecution["assertions"][number]["definition"]) {
   switch (definition.type) {
     case "checked": return `${targetName(definition.target)} should be ${definition.expected ? "checked" : "unchecked"}.`;

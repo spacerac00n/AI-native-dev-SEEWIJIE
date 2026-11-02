@@ -2,7 +2,7 @@ import { healthResponseSchema, planInspectionSchema, planListSchema, qaStatusSch
   runDetailSchema, runListSchema, type PlanInspection, type RunDetail, type RunSummary } from "@veriqa/contracts";
 import { useCallback, useEffect, useState } from "react";
 import { comparable, date, display, request } from "./api";
-import { actionDescription, expectation, runLabel } from "./presentation";
+import { actionDescription, expectation, planOptionLabel, runLabel } from "./presentation";
 import { Badge, Comparison, RunInspection, TechnicalDetails } from "./Evidence";
 
 const initialRequirements = `Using synthetic accounts only, verify passwordless login with an exact @e.ntu.edu.sg email and a correct mock OTP.
@@ -142,7 +142,7 @@ export default function App() {
           <small className="muted">Live OpenAI · synthetic data only</small></details>
           <label className="field-label" htmlFor="saved-plan">Or load a saved revision</label>
           <select id="saved-plan" value={selected?.revision ?? ""} disabled={!!busy} onChange={(event) => selectPlan(event.target.value)}>
-            {plans.length === 0 && <option value="">No saved plans yet</option>}{plans.map((plan) => <option key={plan.revision} value={plan.revision}>{plan.plan.title} · {plan.status} · saved {date(plan.createdAt)}</option>)}
+            {plans.length === 0 && <option value="">No saved plans yet</option>}{plans.map((plan) => <option key={plan.revision} value={plan.revision}>{planOptionLabel(plan)}</option>)}
           </select><button className="text-button refresh" type="button" onClick={() => void action("Refreshing…", refresh)} disabled={!!busy}>↻ Refresh</button>
         </section>
 {selected && <section className="panel plan-review"><div className="between"><strong>{selected.plan.title}</strong><span className="small muted">{selected.plan.cases.length} cases</span></div>

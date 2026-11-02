@@ -2,7 +2,7 @@
 
 Run `npm run dev:qa`, then open `http://127.0.0.1:5174`. All services stay on loopback. Normal `npm run dev` keeps synthetic reset controls disabled, so inspection/generation/approval work but execution is disabled. Do not run separate baseline tests or managed executor servers on these ports at the same time.
 
-Results lead each view: readable test titles, status counts and plain-English failure explanations. Expand a test once for real screenshots; individual checks and logs/traces have separate disclosures. Run identifiers, Git state, revisions, hashes, approval provenance, commands, exit codes and raw records are preserved behind collapsed **Technical details**. History and comparison selectors use dates and readable labels. Before/After indicates selected order, without inferring a code fix from a green result.
+Results lead each view: readable test titles, status counts and plain-English failure explanations. Expand a test once for real screenshots; individual checks and logs/traces have separate disclosures. Run identifiers, Git state, revisions, hashes, approval provenance, commands, exit codes and raw records are preserved behind collapsed **Technical details**. History and comparison selectors use dates and readable labels. The saved-plan dropdown shows only approval status and a concise title; the review panel retains the full title. Before/After indicates selected order, without inferring a code fix from a green result.
 
 ## Workflow
 
