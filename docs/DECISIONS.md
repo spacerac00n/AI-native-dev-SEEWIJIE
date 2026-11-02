@@ -1,6 +1,6 @@
 # Initial architectural decisions
 
-Status: accepted direction for the MVP. Milestones 2–3 implement workspace tooling, health checks, and demo authentication/home; AI QA capabilities remain planned. Update this record when evidence changes a decision.
+Status: accepted direction for the MVP. Milestones 2–4 implement workspace tooling, demo authentication/home, and manual-plan contracts/storage/approval. AI generation and dynamic execution remain planned. Update this record when evidence changes a decision.
 
 ## D01 — A small TypeScript workspace
 
@@ -73,3 +73,19 @@ Store tasks per exact email in memory. Persist them across refresh and re-login,
 Mount reset and server-time-advance routes only with `VERIQA_TEST_MODE=1`, which Playwright sets on its own API process. Reset all maps and the clock before every demo test; advance exactly to expiry boundaries without sleeps. The helpers do not issue sessions or skip validation. Check the normal compiled API separately to confirm the helpers return 404 and real time is used.
 
 The developer controls remain outside the UI and normal startup. One serial worker prevents one test's reset from invalidating another's session. These trusted fixtures are development tooling, not AI-generated actions or the future test executor.
+
+## D13 — A CLI and strict named demo operations
+
+Implement manual-plan import, full inspection, explicit `--by`/`--confirm` approval, and an approval-only check in a small root CLI. Keep storage in the backend module and schemas in shared contracts; add no dashboard, database, network API, or executor. Source version 1 permits only `manual-fixture`, so manually authored definitions cannot claim live AI provenance.
+
+Use named routes/controls and typed UI expectations plus two fixed read-only API checks. Reject generic URLs/selectors/methods/code. Allow negative literal input values to test application rejection. Structural validation cannot establish correct product policy or a valid action sequence, so approval still requires a human review of expectations.
+
+## D14 — Immutable revisions, canonical digest, current pointer
+
+Every import creates a UUID revision, even if its canonical plan content matches an older revision. Bind approval to both UUID and SHA-256 digest, and accept only the current revision at the future execution gate. This prevents an edit or rollback from reviving an older approval while preserving historical evidence. The CLI never automatically approves an imported plan; synthetic approvals in tests use isolated temporary storage.
+
+Store approvals under plan ID/revision for direct lookup, refining the earlier proposed flat approval-ID layout. Publish immutable JSON via a temporary file and exclusive hard link; rename only the current pointer. Prefer a single local writer over locking or transaction infrastructure. Revalidate schemas, identity, and digests on reads. The local file owner remains trusted; this is not a tamper-proof identity/audit service.
+
+## D15 — Unit contracts separate from real browser baseline
+
+Use the existing `tsx` dependency with Node's test runner for contract/store/CLI tests. Exclude `tests/unit/` from Playwright discovery. Preserve unit stdout/stderr/exit metadata and CLI rejection evidence separately from real Playwright reports. Synthetic run-metadata examples validate the schema only and never count as executed product cases. Future execution must use the approval gate; Milestone 4 deliberately supplies no runner.

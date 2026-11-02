@@ -1,14 +1,16 @@
 # Architecture
 
-Status: Milestones 2–3 implement the workspace and real demo authentication/home flows. AI planning, approval, replay, and QA reporting below remain the target design.
+Status: Milestones 2–4 implement the workspace, demo flows, and structured manual plans with JSON storage and an approval CLI. AI generation, structured-plan execution, replay, and QA reporting remain the target design.
 
 ## Implemented foundation
 
 - The React + Vite demo runs at `http://127.0.0.1:5173` with email login, mock OTP delivery, home/checklist, and logout. The dashboard at `http://127.0.0.1:5174` remains a shell. Both use a same-origin `/api` development proxy.
 - One Hono process listens at `http://127.0.0.1:3000`. `GET /api/health` returns `{"status":"ok","service":"veriqa-api"}`; `apps/api/src/demo.ts` owns `/api/demo` authentication and task routes.
 - `packages/contracts/` exports Zod request/response schemas and inferred types for health, OTP challenges, errors, and home/tasks. It compiles to ESM JavaScript and declarations before consumers run; no source-path aliases or runtime TypeScript imports are needed by the compiled API.
+- `packages/contracts/src/plans.ts` adds versioned plan/case/action/assertion, saved revision, approval, and future run-result metadata schemas. `apps/api/src/plans.ts` stores/revalidates JSON; `plan-cli.ts` provides the human review commands without a new API or dashboard.
 - Root npm scripts install/build/run the four workspaces. The dev command also watches shared contracts. Both web apps deliberately use plain browser styling.
 - Three tests in `tests/smoke/` check connectivity; 21 in `tests/demo/` check authentication, email-domain rejection, and home/tasks. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes reports to unique ignored `artifacts/playwright/` directories. Reports include actual source SHA/dirty status. This is developer baseline tooling, not the future AI-plan executor or QA reporter.
+- Thirty-seven Node unit/contract tests in `tests/unit/` check contracts, storage, CLI rejection, and revision-bound approval. Playwright ignores that directory and continues to run only its 24 real browser/API baseline checks.
 
 Exact setup commands and local URLs are in [README.md](../README.md). No OpenAI key or environment file is needed. Demo auth/task state lives only in process memory.
 
@@ -22,6 +24,7 @@ The following table describes the target responsibilities; the current implement
 | QA dashboard | `apps/qa-dashboard/` | React + Vite requirements input, plan review/approval, execution controls, and evidence display. |
 | Backend | `apps/api/` | One Hono process with separate demo-auth and QA route groups; planner calls, approvals, run coordination, storage, and reporting. |
 | Shared contracts | `packages/contracts/` | TypeScript types and Zod schemas for requirements, plans, approvals, and run records. |
+| Plan store/CLI | `apps/api/src/plans.ts`, `plan-cli.ts` | Implemented local JSON revisions, inspection, explicit approval, and a future execution gate. |
 | Trusted executor | `tests/executor/` | Playwright Test configuration and maintained adapters that interpret approved actions and execute assertions. |
 | Baseline checks | `tests/demo/` | Deterministic tests proving the demo works before defects are seeded. |
 | Workspace smoke checks | `tests/smoke/` | Implemented connectivity and rendered-page checks. |
@@ -49,15 +52,26 @@ Saved plan -----------> QA API --------------------> Zod validation
 
 The OpenAI key and model configuration stay in the backend environment. The browser never receives the API key. Replay bypasses the planner call and still enters validation, approval verification, and the same executor.
 
-## Plan and execution contract
+## Implemented plan contract; planned execution
 
-A plan contains a schema version, immutable revision identifier, source requirements, generation provenance, and cases. Each case contains an ID, requirement reference, preconditions, ordered actions, and explicit assertions. Initial candidate actions are navigation to known demo routes, filling known controls, clicking known controls, and reading a challenge's mock OTP; initial assertions check URL, visibility, text, and supported API outcomes. Milestone 4 will define the exact discriminated Zod union and limits.
+A version-1 definition contains its ID/title, `source: manual-fixture`, fixed `demo-web` target, requirements, and cases. Each case has requirement references, `fresh-demo-state` precondition, ordered actions, and final assertions. Each import wraps it in an immutable revision UUID, canonical SHA-256 content digest, and creation timestamp. The committed fixture is in `fixtures/manual-demo-plan.json`; it is not approved or AI-generated.
+
+| Vocabulary | Supported values |
+| --- | --- |
+| Navigation | `/`, `/login`, `/home`; no supplied origin or arbitrary URL. |
+| Fill | Named `email` or `otp` input; bounded literal text, or an OTP reference after `read_mock_otp`. Negative input values are intentionally permitted for rejection tests. |
+| Click | Known request/verify/logout/different-email/health buttons and the two checklist controls. |
+| Mock delivery | Read the displayed mock OTP into one case-local value. |
+| UI expectations | URL, visibility, nonblank exact text, and boolean checkbox state for known targets. |
+| API expectations | Fixed GET health (200 plus exact body) and GET home (200 plus email, or 401 plus exact error). No generic request operation. |
+
+Strict objects reject unknown keys/operations. Limits are 20 requirements/cases, 50 actions and 20 assertions per case, plus bounded text. IDs must be unique, requirement references must resolve, and a mock OTP must be read before use. Schemas validate capabilities and value types, not whether requirements or action order are logically correct. Review remains mandatory. Future click adapters must wait for each pending form/task write before the next action; no dynamic adapter is implemented here.
 
 AI output is data. The executor maps allowed action types to repository-maintained code and Playwright `expect` assertions. It never evaluates generated JavaScript, shell commands, arbitrary network requests, or dynamic assertion code. Targets, locators, and API operations are limited to supported demo capabilities. Schema-valid output can still have incorrect expectations, so human review remains necessary.
 
-Validate at generation/import and again before execution. Approval is a separate developer action bound to an exact plan revision or content hash; AI-supplied approval fields are not trusted. Edits create a new revision and invalidate approval. Replay requires a matching approval and compatible schema; a changed schema requires validation and renewed review as needed.
+Validate at import and on every stored read. Approval is a separate developer action bound to both revision UUID and content hash; approval fields inside a definition are rejected. Every import creates a new unapproved revision, even when reverting older content. `PlanStore.requireApproved(id, revision)` verifies current revision, schema, digest, and approval binding and fails closed otherwise. `npm run plan -- check` exercises this gate only, without executing actions. A future executor must call it and execute the returned immutable snapshot; compatible schema/approval checks also apply to replay.
 
-The QA API starts a fixed, repository-owned Playwright runner with validated data. It accepts one active run and rejects a second request as busy. Use one worker initially and a fresh browser context plus reset synthetic state for each case. Mock reset/retrieval helpers are local test facilities, not successful-authentication substitutes.
+In Milestone 6, the QA API will start a fixed, repository-owned Playwright runner with validated data and one active run. Each case will use fresh browser context and reset synthetic state. Mock reset/retrieval helpers are local test facilities, not authentication substitutes. No execution route or interpreter exists in Milestone 4.
 
 ## Authentication and mock boundary
 
@@ -84,12 +98,15 @@ Playwright alone opts into `VERIQA_TEST_MODE=1`. Then `POST /__test/reset` clear
 
 ## Persistence and evidence
 
-- `data/plans/<plan-id>/<revision>.json`: requirements, cases, schema version, origin (`live-ai` or `manual-fixture`), and available model/generation metadata.
-- `data/approvals/<approval-id>.json`: approved plan revision/hash, developer approval event, and timestamp.
-- `data/runs/<run-id>.json`: plan/approval references, selected mode (`live` or `replay`), start/end time, tested Git SHA, dirty-worktree indicator, configuration without secrets, command/exit code, counts, outcomes, and artifact references.
+- `data/plans/<plan-id>/<revision>.json`: implemented immutable saved definition with revision UUID, canonical digest, and creation timestamp. Version 1 supports only `manual-fixture`; live AI provenance comes later.
+- `data/plans/<plan-id>/current.json`: implemented pointer to the latest revision UUID.
+- `data/approvals/<plan-id>/<revision>.json`: implemented immutable approval ID, exact revision/hash, reviewer label, decision, and timestamp. Historical approvals remain inspectable but cannot approve a newer/current definition.
+- `data/runs/<run-id>.json`: planned persistence only. The current run-result metadata schema supports manual-fixture replay, exact plan/approval references, real-Playwright label, commit/dirty status, times, command/exit code, consistent counts/outcome, and relative artifact paths. Zero-execution/unapproved passes and inconsistent results are rejected. These schemas do not produce execution evidence.
 - `artifacts/<run-id>/`: actual Playwright output, logs, screenshots, and selected traces. Preserve assertion details even if a screenshot or trace cannot be captured.
 
-Use generated identifiers, fixed storage roots, and atomic JSON writes. A run's pending record may become final; once finalized it is not overwritten by a rerun. Each rerun gets a new ID and can refer to its predecessor. Capture provenance at run start; the interview defect/fix runs must test clean committed versions. Never copy API keys or session secrets into reports or committed evidence.
+The default store root is repository `data/`, optionally overridden by `VERIQA_DATA_DIR` for isolated tests. Validate path IDs before filesystem access. Write JSON to a temporary sibling, publish immutable records using an exclusive hard link, and atomically rename only the current pointer. This assumes a local filesystem and one writer; it is not a multi-file database transaction. Local file ownership is trusted, and reviewer names are audit labels rather than authenticated identities.
+
+Future run records will finalize without overwrite, and each rerun will get a new ID. Capture provenance at run start; interview defect/fix runs must test clean committed versions. Never copy keys or session secrets into reports or committed evidence.
 
 Local working outputs stay ignored by default once tooling exists. Explicitly retain a small reviewed, sanitized demonstration set with its original provenance. A cached plan, developer approval, mock delivery event, and real execution result must remain visibly distinct.
 

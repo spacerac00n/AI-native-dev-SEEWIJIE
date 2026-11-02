@@ -6,7 +6,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–3 provide the workspace and a working demo: email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory, and logout. The 24 Playwright browser/API baseline tests cover this flow and workspace connectivity. AI planning, approved-plan replay, and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
+Milestones 1–4 provide the workspace, a working demo, and validated manual test plans with revision-bound human approval. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 37 unit/contract tests and 24 Playwright baseline tests. AI generation, execution of structured plans, and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
 
 The intended demonstration is:
 
@@ -47,24 +47,53 @@ The cache flag keeps npm's cache inside the ignored `.cache/` directory; depende
 
 The health response is `{"status":"ok","service":"veriqa-api"}`. Both app buttons should show `API is healthy (veriqa-api).` after clicking. This confirms API connectivity, not a QA test verdict.
 
-The dev command builds shared contracts, watches them for edits, and starts all three services. All services bind to loopback; ports are fixed and Vite will not silently switch ports. Stop with Ctrl+C before running tests because tests start their own servers on these ports.
+The dev command builds shared contracts, watches them for edits, and starts all three services. All services bind to loopback; ports are fixed and Vite will not silently switch ports. Stop with Ctrl+C before verification: root commands rebuild contracts, and browser tests start their own servers on these ports.
 
 ## Verified commands
 
 | Command | Behaviour |
 | --- | --- |
 | `npm run dev` | Starts the demo, dashboard shell, Hono, and the shared-contract watcher. |
-| `npm run typecheck` | Checks all four workspaces, Vite configs, Playwright config, and smoke tests. |
+| `npm run typecheck` | Checks all four workspaces, Vite/Playwright configs, and unit/browser tests. |
 | `npm run build` | Builds contracts, compiled Node API, and both web apps into their respective `dist/` directories. |
 | `npm test -- --list` | Lists all 24 tests without executing them. |
 | `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
 | `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
 | `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
+| `npm run test:unit` | Runs the 37 contract/storage/CLI tests using Node's test runner; no browser/server required. |
+| `npm run plan -- import fixtures/manual-demo-plan.json` | Validates and stores a new **unapproved**, manually authored revision. |
+| `npm run plan -- inspect manual-demo-baseline` | Prints the current plan, revision UUID, SHA-256 digest, and approval status. |
 | `npm run start --workspace @veriqa/api` | Starts only the compiled API after `npm run build`; stop other API processes first. |
 
 The root commands build contracts before consumers, so they work after a clean install. `npm run build` creates artifacts; it does not start or deploy the built web apps. The documented UI/API workflow uses `npm run dev` and its Vite proxies.
 
 Milestone 3 verification on November 2, 2026: type checks and builds exited 0; Playwright discovered and executed 24 tests, all passed in 6.6 seconds, with 0 failed, 0 skipped, and no retries. A separate compiled-API check verified normal-clock login, task persistence, logout, and absent test-control routes. Earlier failures and their evidence remain in [the command and evidence record](docs/AI_WORKFLOW.md).
+
+Milestone 4 verification on November 2, 2026: 37/37 unit tests and 24/24 existing browser/API tests passed; type checks and builds exited 0. The CLI accepted the manual fixture, rejected an unsupported action, and blocked its unapproved revision. These checks do not execute the structured fixture.
+
+## Create, inspect, and approve a manual plan
+
+The committed [manual fixture](fixtures/manual-demo-plan.json) defines three cases covering login/task persistence, invalid email domain, and protected home access. Its source is `manual-fixture`, **not AI-generated**. Create and review a local revision:
+
+```sh
+npm run plan -- import fixtures/manual-demo-plan.json
+npm run plan -- inspect manual-demo-baseline
+```
+
+Read the full actions and assertions. Copy the exact `revision` UUID from the output. Only after a human review, replace `REVISION_FROM_INSPECT` and `Your name` below:
+
+```sh
+npm run plan -- approve manual-demo-baseline REVISION_FROM_INSPECT --by "Your name" --confirm
+npm run plan -- check manual-demo-baseline REVISION_FROM_INSPECT
+```
+
+`approve` is an explicit local operator decision. `check` only verifies the approval gate and prints the definition; it performs **no Playwright execution**. An unapproved, superseded, or mismatched revision exits 1. The development fixture is currently unapproved; synthetic approvals in isolated unit tests are not human approvals.
+
+To edit, change the source JSON and run `import` again. Every import creates a new revision requiring new approval, including when reverting to identical older content. Old definitions and approvals remain inspectable with `npm run plan -- inspect manual-demo-baseline REVISION_FROM_OLDER_IMPORT`; older revisions cannot pass the current-revision gate. Keep one writer/operator at a time.
+
+Storage defaults to `data/plans/<plan-id>/<revision>.json`, a `current.json` pointer, and `data/approvals/<plan-id>/<revision>.json`. Plans and approvals are immutable through the tool; reads revalidate schemas and digests. `VERIQA_DATA_DIR` can select an isolated local storage root (used by unit tests); relative overrides resolve from the repository root. Local file ownership is trusted; the reviewer name is an audit label, not an identity service.
+
+The supported vocabulary uses known demo paths, inputs, buttons/checkboxes, mock OTP reads, and typed UI assertions or fixed read-only health/home API checks. No URLs, raw selectors, arbitrary methods, scripts, or generated code are accepted. Schema validity does not prove that an expected result is correct; human review is still needed. Live AI origins and dynamic execution are deferred.
 
 ## Try the demo
 
@@ -100,7 +129,9 @@ npx playwright show-report artifacts/playwright/<run-id>/html
 
 For a retained failure trace, use `npx playwright show-trace <path-to-trace.zip>` with the path printed in the failure output. These viewer commands open existing evidence; they do not execute tests.
 
-Future plans and QA run records will use JSON under `data/`; this persistence is not implemented yet. Never commit API keys, real credentials, or confidential assessment material. The ignore rules cover local configuration, generated outputs, and PDFs.
+Unit-test evidence is retained under `artifacts/unit/<run-id>/` (stdout, stderr, command/exit-code metadata); CLI validation evidence is under `artifacts/cli/<run-id>/`. See [AI_WORKFLOW.md](docs/AI_WORKFLOW.md) for the actual paths and counts.
+
+Plans and approvals now use local JSON under `data/`. Run-result metadata has a contract but no structured-plan executor or QA run writer exists yet. For the interview, retain the manual source, its saved revision/digest and eventual real human approval, unit/CLI evidence, baseline Playwright reports, and earlier meaningful failure evidence. A later approved AI-generated replay fixture is still required for the final AI demonstration. Never commit keys, real credentials, confidential material, or unreviewed generated artifacts.
 
 ## Project documentation
 

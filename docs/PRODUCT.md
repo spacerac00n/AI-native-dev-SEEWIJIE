@@ -1,6 +1,6 @@
 # Product definition
 
-Status: Milestones 1–3 implement the workspace and demo authentication/home baseline. The QA workflow below remains planned.
+Status: Milestones 1–4 implement the workspace, demo baseline, and manual-plan contract/storage/approval CLI. Live AI generation, structured-plan execution, and the QA dashboard workflow remain planned.
 
 ## Target developer and problem
 
@@ -44,6 +44,8 @@ Playwright resets all synthetic state before each demo case and advances a fixed
 
 ## QA workflow requirements
 
+Milestone 4 provides a manually authored fixture and a local CLI to import, inspect, approve an exact revision, and check its approval gate. It does not execute that definition. Source `manual-fixture` is explicit; no model call or AI provenance is claimed. A human must review actions and expectations before issuing the approval command. The existing developer-authored Playwright baseline is separate from structured-plan execution.
+
 1. Enter requirements and request live generation, or load a saved approved plan for replay.
 2. Validate every plan against the supported action schema, regardless of origin. Reject unsupported actions and malformed definitions before execution.
 3. Inspect requirement coverage and expected outcomes; record explicit developer approval before a new or edited plan can run.
@@ -52,6 +54,8 @@ Playwright resets all synthetic state before each demo case and advances a fixed
 6. Run a new execution against the fix and preserve both records.
 
 Live generation and replay share the same validation, approval, execution, and reporting rules. A saved draft or cached AI response is not automatically approved. Replay reuses the reviewed definition, not browser responses or historical pass/fail results.
+
+Implemented plan limits: known demo routes/controls, bounded case/action counts, typed UI expectations, and fixed read-only API checks. Invalid definitions, unknown operations, malformed outcomes, duplicate IDs, and broken requirement/mock-OTP references are rejected. Schema-valid expectations still need human review. Importing an edit creates an unapproved revision; older definitions/approvals are retained but superseded, and reverting content cannot revive an old approval.
 
 ## MVP boundary
 

@@ -128,3 +128,50 @@ Baseline coverage: valid browser login and HTTP-only cookie; nine rejected email
 Root README now includes installation/start commands, all/focused test commands, type checking, builds, compiled API startup, report/trace viewers, policies, and a manual walkthrough. No manual verification blocks this baseline; an optional human walkthrough uses the labelled mock code and synthetic account. Stop normal dev servers before tests. No API key, `.env`, real email delivery, or external service is required.
 
 Final documentation/static review: `git diff --check` exited 0; an inline Python audit exited 0 for seven Markdown files, twelve local links, and ten milestone/acceptance sections. Reviewed the staged scope for generated outputs and secrets before publication. Earlier failed and passing execution directories remain separate.
+
+## Milestone 4 — Validated plans and human approval (November 2, 2026)
+
+Developer direction: implement strict structured contracts, local JSON plans/approvals, revision-bound human review, a labelled manual fixture, and contract/approval tests. Do not implement OpenAI integration or dynamic Playwright execution. Read AGENTS, PRODUCT, ARCHITECTURE, DECISIONS, and PLAN first. Preserved the preexisting README clarification that demo memory uses `Map` while updating the root command reference.
+
+AI assistance: authored the static manual fixture, Zod contracts, backend storage module, small CLI, and Node unit tests. This fixture is development-authored source data (`manual-fixture`), not output from a live AI planner; no model call or AI provenance was fabricated. Consulted [Zod's schema documentation](https://zod.dev/api) and [Node filesystem documentation](https://nodejs.org/docs/latest-v22.x/api/fs.html). Reused existing dependencies; added no database, framework, API endpoint, or dashboard functionality.
+
+Trade-offs: fixed named demo operations rather than arbitrary selectors/URLs/code; canonical content digest plus a fresh UUID per import; immutable JSON revisions and approvals with only a current pointer updated; synchronous local files and one writer instead of database transactions. Approval binds revision and digest, so editing or reverting content cannot revive an older approval. A future executor must call `requireApproved`; the CLI `check` exercises only that gate. Decisions D13–D15 record the boundaries and local-file trust assumptions.
+
+The 37 unit tests cover a valid three-case fixture; malformed plans; unknown/generated-code actions; external navigation; raw selectors; unsupported inputs/API operations/methods; invalid expected outcomes; missing assertions; injected approval; unsupported AI origin; duplicate/broken references; OTP-read ordering; digest stability; persistence; explicit approval; edit/revert invalidation; historical evidence; tamper/hash rejection; storage traversal; CLI confirmation; and consistent future run metadata. Synthetic approval/run examples exist only in isolated unit-test fixtures and never count as human approval or actual product execution.
+
+### Actual commands and outcomes
+
+| Command | Exit code | Observed outcome |
+| --- | --- | --- |
+| `npm run typecheck && npm run build` | 0 | All four workspaces, configs, and unit/browser test types passed; both frontends, contracts, and API built. |
+| `npm run test:unit` | 0 | Node runner discovered/executed 37 tests: 37 passed, 0 failed/cancelled/skipped, 1.276 seconds. Actual stdout/stderr and command metadata retained by an inline Node capture wrapper. |
+| Existing `npm run dev` stopped with Ctrl+C | 0 | Stopped the agent-owned launcher before baseline execution; no stale server was reused. |
+| `npm test -- --list` | 0 | 24 cases discovered in 2 files, 0 executed; unit tests correctly excluded. |
+| `npm test` | 0 | 24 existing real Playwright browser/API cases executed/passed, 0 failed/skipped, no retries, 6.7 seconds. The structured manual fixture was not executed. |
+| `npm run plan -- import fixtures/manual-demo-plan.json` | 0 | Validated and persisted a new unapproved revision labelled `manual-fixture`. |
+| `npm run plan -- inspect manual-demo-baseline 6b3fce76-f62f-49fc-b5be-ad4a333c984d` | 0 | Printed the full saved definition, digest, current revision status, and `approval: null`. |
+| `npm run plan -- check manual-demo-baseline 6b3fce76-f62f-49fc-b5be-ad4a333c984d` | 1 (expected) | Rejected the unapproved revision with an explicit human-approval requirement; no execution occurred. |
+| `npm run plan -- import artifacts/cli/2026-11-02T06-56-36.339Z-2bed14da-0746-4fc5-b829-698a934e52dd/invalid-plan.json` | 1 (expected) | Rejected an unsupported `evaluate` action before saving; the valid current pointer stayed unchanged. |
+| Final `npm run typecheck && npm run build` | 0 | Passed after making relative storage-root resolution independent of npm's workspace working directory. |
+| Final `npm run test:unit` | 0 | All 37 tests passed, 0 failed/skipped, 1.085 seconds; CLI test now also checks a relative data root from the API workspace directory. |
+
+All new automated tests passed on their first run. Expected CLI rejections are validation evidence, not failed product assertions. No invalid definition was executed or turned into a successful run. No new product/runner failures or unchanged-source flakiness were observed in these suites. During development, the existing long-running Vite watcher emitted React duplicate-`createRoot` warnings while contracts rebuilt, then scheduled full-page reloads. The fresh-server baseline passed; no UI change was made for this development-only observation. Earlier Milestone 3 failure evidence remains untouched.
+
+Final code-review correction: resolve a relative `VERIQA_DATA_DIR` from the repository root rather than inheriting npm's API-workspace cwd. This was found during review, not presented as an observed failing test. Strengthened the existing isolated CLI test and reran relevant checks. No additional human correction was needed.
+
+### Retained artifacts and source provenance
+
+The worktree verification used parent commit `3044ea989c4718a9e4301436e8fd184002ff6546` with uncommitted Milestone 4 changes (`worktreeDirty: true`), not a claim that the older commit contained the new contracts. Unit and Playwright evidence record the actual source state; clean-commit confirmation is reported after publication.
+
+- Unit evidence: `artifacts/unit/2026-11-02T06-53-36.682Z-24c0b7c5-04b1-40b7-93be-59cc7c220c1f/` contains `stdout.log`, `stderr.log`, and `command.json` with actual command/exit/source metadata.
+- Final unit evidence after the path-resolution correction: `artifacts/unit/2026-11-02T07-05-43.255Z-c9337a5a-c275-431e-a4f3-10e72b04aac1/`, with the same raw-output and command metadata files. The earlier passing record remains separate.
+- Discovery only: `artifacts/playwright/2026-11-02T06-55-16.121Z-41ff2c46-d77f-4689-bb9c-21660693ca0a/`; no executed cases.
+- Real baseline: `artifacts/playwright/2026-11-02T06-55-16.740Z-b792fb8a-2686-4131-a95a-b1e89f440932/` contains JSON/HTML results for 24 passed static tests. No failure screenshots/traces were produced because all passed.
+- CLI evidence: `artifacts/cli/2026-11-02T06-56-36.339Z-2bed14da-0746-4fc5-b829-698a934e52dd/` contains actual stdout/stderr, expected/actual exit codes, invalid input, and verification metadata for import/inspect/approval blocking/invalid-plan rejection.
+- Manual source: `fixtures/manual-demo-plan.json` is committed and visibly labelled. The local immutable record is `data/plans/manual-demo-baseline/6b3fce76-f62f-49fc-b5be-ad4a333c984d.json`, with digest `d837270152490da272a90135f361ba1f43be72ba8732270d27b1ff8b8e6d3379`.
+
+Human action: inspect the fixture and its exact revision, then use the README approval command with your reviewer name and `--confirm` if the expectations are correct. The local fixture remains **unapproved**; the agent did not record a human approval on the developer's behalf. Unit-test approvals used an explicit synthetic actor and temporary storage. Approval alone does not run tests at this milestone.
+
+Worth retaining for the interview: the manual fixture, immutable saved revision/digest, eventual actual human approval, CLI rejection evidence, contract-test logs, real baseline JSON/HTML, and the earlier development-failure evidence. Generated outputs remain ignored pending sanitization/review. A later approved AI-generated plan and real replay evidence are still needed for the final AI-native journey; the manual fixture does not replace them.
+
+Static/documentation review: `git diff --check` exited 0; an inline Python audit exited 0 for seven Markdown files, fourteen local links, ten milestone/acceptance sections, and unchanged lockfile dependencies across all five package manifests. The README retains the preexisting `Map` clarification and adds all new operator/verification commands.

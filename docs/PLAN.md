@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–3 are implemented and verified; Milestones 4–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–4 are implemented and verified; Milestones 5–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -48,6 +48,8 @@ Acceptance criteria:
 ## 4. Supported test contract, storage, and approval
 
 Define the safe executable vocabulary and review boundary.
+
+Verification: 37 unit/contract/storage/CLI tests and all 24 existing Playwright baseline tests pass; type checks/builds pass. The root CLI imports and inspects the manually authored fixture, rejects invalid definitions, and blocks an unapproved revision. Actual human review/approval is still pending for the local fixture. No AI generation or structured-plan execution is implemented.
 
 Acceptance criteria:
 

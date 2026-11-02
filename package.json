@@ -13,7 +13,9 @@
     "dev": "npm run build --workspace @veriqa/contracts && concurrently --kill-others --names contracts,api,demo,qa \"npm run dev --workspace @veriqa/contracts\" \"npm run dev --workspace @veriqa/api\" \"npm run dev --workspace @veriqa/demo-web\" \"npm run dev --workspace @veriqa/qa-dashboard\"",
     "typecheck": "npm run build --workspace @veriqa/contracts && npm run typecheck --workspaces && tsc --noEmit -p tsconfig.json",
     "build": "npm run build --workspace @veriqa/contracts && npm run build --workspace @veriqa/api && npm run build --workspace @veriqa/demo-web && npm run build --workspace @veriqa/qa-dashboard",
-    "test": "npm run build --workspace @veriqa/contracts && playwright test"
+    "test": "npm run build --workspace @veriqa/contracts && playwright test",
+    "test:unit": "npm run build --workspace @veriqa/contracts && npm run test:unit --workspace @veriqa/api",
+    "plan": "npm run build --workspace @veriqa/contracts && npm run plan --workspace @veriqa/api --"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

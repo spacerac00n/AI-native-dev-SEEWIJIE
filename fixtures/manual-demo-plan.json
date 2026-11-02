@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "manual-demo-baseline",
+  "title": "Manually authored demo review fixture (not AI-generated)",
+  "source": "manual-fixture",
+  "target": "demo-web",
+  "requirements": [
+    { "id": "login", "text": "A valid synthetic NTU email and its mock OTP open the protected home page." },
+    { "id": "tasks", "text": "Checklist changes are stored by the backend and survive page refresh." },
+    { "id": "domain", "text": "Other email domains must be rejected." },
+    { "id": "protected-home", "text": "Unauthenticated home requests must be rejected by the backend." }
+  ],
+  "cases": [
+    {
+      "id": "login-and-task",
+      "title": "Log in and preserve a checklist change",
+      "requirementIds": ["login", "tasks"],
+      "precondition": "fresh-demo-state",
+      "actions": [
+        { "type": "navigate", "path": "/login" },
+        { "type": "fill", "input": "email", "value": "synthetic.student@e.ntu.edu.sg" },
+        { "type": "click", "target": "request-otp" },
+        { "type": "read_mock_otp" },
+        { "type": "fill", "input": "otp", "value": { "from": "mock-otp" } },
+        { "type": "click", "target": "verify-otp" },
+        { "type": "click", "target": "review-requirements" },
+        { "type": "navigate", "path": "/home" }
+      ],
+      "assertions": [
+        { "type": "url", "path": "/home" },
+        { "type": "text", "target": "welcome-heading", "expected": "Welcome, synthetic.student@e.ntu.edu.sg" },
+        { "type": "checked", "target": "review-requirements", "expected": true },
+        { "type": "api", "operation": "home", "expected": { "status": 200, "email": "synthetic.student@e.ntu.edu.sg" } }
+      ]
+    },
+    {
+      "id": "reject-other-domain",
+      "title": "Reject an email outside the exact domain",
+      "requirementIds": ["domain"],
+      "precondition": "fresh-demo-state",
+      "actions": [
+        { "type": "navigate", "path": "/login" },
+        { "type": "fill", "input": "email", "value": "synthetic.student@example.com" },
+        { "type": "click", "target": "request-otp" }
+      ],
+      "assertions": [
+        { "type": "visible", "target": "login-heading", "expected": true },
+        { "type": "text", "target": "error-message", "expected": "Use a valid email ending exactly with @e.ntu.edu.sg." }
+      ]
+    },
+    {
+      "id": "reject-unauthenticated-home",
+      "title": "Require a session for home data",
+      "requirementIds": ["protected-home"],
+      "precondition": "fresh-demo-state",
+      "actions": [{ "type": "navigate", "path": "/home" }],
+      "assertions": [
+        { "type": "url", "path": "/login" },
+        { "type": "api", "operation": "home", "expected": { "status": 401, "error": "Authentication required." } }
+      ]
+    }
+  ]
+}
