@@ -573,3 +573,9 @@ Passing native reports: `artifacts/dashboard/2026-11-02T14-39-45.425Z-da5ba187-1
 The developer showed that the saved-revision dropdown still contained long generated titles and saved timestamps. Changed only its display labels to approval status plus a concise title (for example, **Approved · Passwordless login**). A small frontend helper removes trailing coverage clauses and redundant title wording, and bounds unusually long labels. Full saved titles, exact revision values, approvals and stored records remain unchanged; users can review full context in the existing panel. The dropdown no longer includes dates. Verification is delegated to the requested GPT-6 Luna medium agent; no new product tests or model calls are needed for this label change.
 
 Luna verification: `npm run typecheck` exited 0; the read-only helper inspection exited 0 across all four saved revisions, confirming exact revision option values, four unchanged saved-plan snapshots and the unchanged approval snapshot. `git diff --check` exited 0; no backend source changes. Actual receipt/logs: `artifacts/verification/concise-plan-options/receipt.json` and sibling command logs. No browser/product cases were executed for this label-only refinement.
+
+### Human correction — identify the review section
+
+Added the requested **Test Plan Review** heading above the existing selected-plan title. This is a single semantic heading change in App.tsx; plan content, controls and execution behavior are unchanged. Verification is delegated to GPT-6 Luna medium as requested for this dashboard work.
+
+Luna verification: `npm run typecheck` and `git diff --check` both exited 0. Logs/exit receipts are under `artifacts/verification/plan-review-heading/`. No browser tests were run for this heading-only change.

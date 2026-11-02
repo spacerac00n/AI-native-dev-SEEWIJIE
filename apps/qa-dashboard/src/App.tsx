@@ -145,7 +145,7 @@ export default function App() {
             {plans.length === 0 && <option value="">No saved plans yet</option>}{plans.map((plan) => <option key={plan.revision} value={plan.revision}>{planOptionLabel(plan)}</option>)}
           </select><button className="text-button refresh" type="button" onClick={() => void action("Refreshing…", refresh)} disabled={!!busy}>↻ Refresh</button>
         </section>
-{selected && <section className="panel plan-review"><div className="between"><strong>{selected.plan.title}</strong><span className="small muted">{selected.plan.cases.length} cases</span></div>
+{selected && <section className="panel plan-review"><h2>Test Plan Review</h2><div className="between"><strong>{selected.plan.title}</strong><span className="small muted">{selected.plan.cases.length} cases</span></div>
           <TechnicalDetails><p>Plan: {selected.plan.id}</p><code>{selected.revision}<br />{selected.contentHash}</code><pre>{display(selected.plan.provenance)}</pre></TechnicalDetails>
           <details className="provenance"><summary>Requirements & review notes</summary>
             <ol>{selected.plan.requirements.map((item) => <li key={item.id}>{item.text}</li>)}</ol>
