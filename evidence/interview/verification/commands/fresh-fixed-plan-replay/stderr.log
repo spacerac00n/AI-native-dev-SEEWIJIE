@@ -1,0 +1,27 @@
+node:net:1919
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /var/folders/0d/p75cxkzx7zx4d_s757jsschc0000gn/T/tsx-501/74103.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:1919:21)
+    at listenInCluster (node:net:1998:12)
+    at Server.listen (node:net:2120:5)
+    at file:///private/tmp/veriqa-m10-fresh-20261102-2335/node_modules/tsx/dist/cli.mjs:53:32174
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///private/tmp/veriqa-m10-fresh-20261102-2335/node_modules/tsx/dist/cli.mjs:53:32152)
+    at async file:///private/tmp/veriqa-m10-fresh-20261102-2335/node_modules/tsx/dist/cli.mjs:55:542 {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '/var/folders/0d/p75cxkzx7zx4d_s757jsschc0000gn/T/tsx-501/74103.pipe',
+  port: -1
+}
+
+Node.js v22.23.2
+npm error Lifecycle script `execute` failed with error:
+npm error code 1
+npm error path /private/tmp/veriqa-m10-fresh-20261102-2335/apps/api
+npm error workspace @veriqa/api@0.0.0
+npm error location /private/tmp/veriqa-m10-fresh-20261102-2335/apps/api
+npm error command failed
+npm error command sh -c tsx src/execute-cli.ts vp1 ***

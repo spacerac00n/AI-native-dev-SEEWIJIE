@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "node",
+    "/private/tmp/m10-dashboard-check.cjs",
+    "/private/tmp/veriqa-m10-fresh-20261102-2335"
+  ],
+  "cwd": "/private/tmp/veriqa-m10-fresh-20261102-2335",
+  "exitCode": 1,
+  "durationSeconds": 16.783
+}

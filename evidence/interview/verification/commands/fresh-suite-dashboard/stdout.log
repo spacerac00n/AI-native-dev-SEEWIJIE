@@ -1,0 +1,17 @@
+
+> veriqa@0.0.0 test:dashboard
+> npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+Dashboard verification: /private/tmp/veriqa-m10-fresh-20261102-2335/artifacts/dashboard/2026-11-02T15-50-08.481Z-840c0980-64b5-4f95-89c5-bda6e5c99ec2
+
+Running 2 tests using 1 worker
+
+Dashboard verification: /private/tmp/veriqa-m10-fresh-20261102-2335/artifacts/dashboard/2026-11-02T15-50-08.481Z-840c0980-64b5-4f95-89c5-bda6e5c99ec2
+  ✓  1 [chromium] › tests/dashboard/dashboard.spec.ts:17:1 › dashboard exact approval, real execution, case assertions, screenshots and logs (4.4s)
+  ✓  2 [chromium] › tests/dashboard/dashboard.spec.ts:49:1 › dashboard preserves a real assertion failure and compares runs without claiming a fix (5.7s)
+
+  2 passed (11.7s)

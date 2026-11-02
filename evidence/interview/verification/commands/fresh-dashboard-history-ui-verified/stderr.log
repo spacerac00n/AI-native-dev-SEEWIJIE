@@ -1,0 +1,6 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.comparison-case').filter({ hasText: 'Successful login with valid' }).first().locator('.trace-link') to be visible[22m
+[2m    63 × locator resolved to hidden <a class="trace-link" href="/api/qa/runs/395693c2-5ad9-4842-a203-2e077eb1cd2c/artifacts?path=test-results%2Fplan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium%2Ftrace.zip">↓ Download Playwright trace</a>[22m
+
+    at /private/tmp/m10-dashboard-check.cjs:27:66

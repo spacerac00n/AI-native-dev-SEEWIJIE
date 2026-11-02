@@ -1,0 +1,60 @@
+{
+  "verifiedAt": "2026-11-02T15:39:31.237624+00:00",
+  "beforeRunId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+  "afterRunId": "2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77",
+  "seedCommit": "d2b776ba74431cbce08172d7f24a60195f03e646",
+  "fixedCommit": "1965faeb53ae987c1f3943141ca1a0199b2a919b",
+  "bothWorktreesCleanAtExecution": true,
+  "unchangedEarlierFiles": 1366,
+  "samePlanRevisionHashAndHumanApproval": true,
+  "caseTransitions": [
+    {
+      "caseId": "case1",
+      "before": "assertion-failed",
+      "after": "passed"
+    },
+    {
+      "caseId": "case2",
+      "before": "passed",
+      "after": "passed"
+    },
+    {
+      "caseId": "case3",
+      "before": "passed",
+      "after": "passed"
+    }
+  ],
+  "case1Checkbox": {
+    "expectedBefore": true,
+    "expectedAfter": true,
+    "actualBefore": false,
+    "actualAfter": true
+  },
+  "afterCounts": {
+    "discovered": 3,
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "afterExitCode": 0,
+  "artifacts": [
+    {
+      "runId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+      "indexedFiles": 25,
+      "screenshots": 3,
+      "traces": 1
+    },
+    {
+      "runId": "2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77",
+      "indexedFiles": 23,
+      "screenshots": 3,
+      "traces": 0
+    }
+  ],
+  "afterAttemptedAssertions": 8,
+  "afterPassedAssertions": 8,
+  "seedIsAncestorOfSeparateSourceOnlyFix": true,
+  "executionLockReleased": true,
+  "noSourceTestPlanApprovalOrExecutorChangesBeyondDemoFix": true
+}

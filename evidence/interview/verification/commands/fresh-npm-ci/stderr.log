@@ -1,0 +1,4 @@
+npm error Exit handler never called!
+npm error This is an error with npm itself. Please report this error at:
+npm error   <https://github.com/npm/cli/issues>
+npm error A complete log of this run can be found in: /private/tmp/veriqa-m10-fresh-20261102-2335/.cache/npm/_logs/2026-11-02T15_38_09_906Z-debug-0.log

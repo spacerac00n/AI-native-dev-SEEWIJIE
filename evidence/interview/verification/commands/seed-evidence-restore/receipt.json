@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "evidence:restore",
+    "--",
+    "--target",
+    "/private/tmp/veriqa-m10-seed-20261102-2350"
+  ],
+  "cwd": "/private/tmp/veriqa-m10-seed-20261102-2350",
+  "exitCode": 1,
+  "durationSeconds": 0.077
+}

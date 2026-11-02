@@ -1,0 +1,11 @@
+
+> veriqa@0.0.0 evidence:verify
+> npm run build --workspace @veriqa/contracts && node --import tsx scripts/interview-evidence.ts verify
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+{
+  "verified": 88
+}

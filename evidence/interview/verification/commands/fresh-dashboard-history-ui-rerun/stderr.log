@@ -1,0 +1,17 @@
+locator.click: Error: strict mode violation: locator('.comparison-case').filter({ hasText: 'Successful login' }).locator('summary') resolved to 14 elements:
+    1) <summary>…</summary> aka locator('summary').filter({ hasText: 'Successful login with valid @' })
+    2) <summary>Logs & traces</summary> aka getByText('Logs & traces').first()
+    3) <summary>Individual checks</summary> aka getByText('Individual checks').first()
+    4) <summary>Technical details</summary> aka getByText('Technical details').nth(1)
+    5) <summary>Technical details</summary> aka getByText('Technical details').nth(2)
+    6) <summary>Technical details</summary> aka getByText('Technical details').nth(3)
+    7) <summary>Technical details</summary> aka getByText('Technical details').nth(4)
+    8) <summary>Logs & traces</summary> aka getByText('Logs & traces').nth(1)
+    9) <summary>Individual checks</summary> aka getByText('Individual checks').nth(1)
+    10) <summary>Technical details</summary> aka getByText('Technical details').nth(5)
+    ...
+
+Call log:
+[2m  - waiting for locator('.comparison-case').filter({ hasText: 'Successful login' }).locator('summary')[22m
+
+    at /private/tmp/m10-dashboard-check.cjs:22:119

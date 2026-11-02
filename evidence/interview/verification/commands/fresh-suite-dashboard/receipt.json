@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "test:dashboard"
+  ],
+  "cwd": "/private/tmp/veriqa-m10-fresh-20261102-2335",
+  "exitCode": 0,
+  "durationSeconds": 12.356
+}

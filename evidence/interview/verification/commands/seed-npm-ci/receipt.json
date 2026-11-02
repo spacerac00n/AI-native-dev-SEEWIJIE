@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "npm",
+    "ci",
+    "--cache",
+    ".cache/npm"
+  ],
+  "cwd": "/private/tmp/veriqa-m10-seed-20261102-2350",
+  "exitCode": 0,
+  "durationSeconds": 10.66
+}

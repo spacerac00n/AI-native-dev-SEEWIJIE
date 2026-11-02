@@ -24,3 +24,5 @@ npm run evidence:restore
 Both commands validate inventory, SHA-256 and exact plan/approval/run relationships. Restore preflights every destination, skips identical files, rejects conflicting files and symlinks, and publishes new files exclusively. A failed write may leave a partial set; rerunning fills missing identical records. It never imports, generates or approves a plan. Stop all development/execution processes during restore. A development checkout containing the original unsanitized trace intentionally reports a conflict; use a fresh clone rather than replacing that original.
 
 See [the interview walkthrough](../../docs/DEMO.md) and [fresh-clone verification](../../docs/M10_VERIFICATION.md).
+
+Actual independent Milestone 10 receipts and new-run summaries are in the [verification supplement](verification/README.md), with their own SHA-256 list. These are separate from the 88 immutable historical payload files.

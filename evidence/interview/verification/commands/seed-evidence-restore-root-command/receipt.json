@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "evidence:restore",
+    "--",
+    "--target",
+    "/private/tmp/veriqa-m10-seed-20261102-2350"
+  ],
+  "cwd": "/Users/grassjelly/Desktop/Bytedance-AI-Native",
+  "exitCode": 0,
+  "durationSeconds": 0.501
+}

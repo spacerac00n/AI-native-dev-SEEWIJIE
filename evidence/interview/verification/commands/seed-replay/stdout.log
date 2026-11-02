@@ -1,0 +1,83 @@
+
+> veriqa@0.0.0 execute
+> npm run build --workspace @veriqa/contracts && npm run execute --workspace @veriqa/api -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/api@0.0.0 execute
+> tsx src/execute-cli.ts vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+
+Executor artifacts: artifacts/executor/96135467-a968-4092-8992-894e882ce22d
+
+Running 3 tests using 1 worker
+
+  ✘  1 [chromium] › tests/executor/plan.spec.ts:18:3 › case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence (3.9s)
+  ✓  2 [chromium] › tests/executor/plan.spec.ts:18:3 › case2: Reject login with invalid non-@e.ntu.edu.sg emails (428ms)
+  ✓  3 [chromium] › tests/executor/plan.spec.ts:18:3 › case3: Logout clears session and blocks access to protected home (671ms)
+
+
+  1) [chromium] › tests/executor/plan.spec.ts:18:3 › case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence › Assertion 4: checked 
+
+    Error: expect(locator).toBeChecked() failed
+
+    Locator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })
+    Expected: checked
+    Received: unchecked
+    Timeout:  3000ms
+
+    Call log:
+      - Expect "toBeChecked" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms
+      - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })
+        10 × locator resolved to <input type="checkbox"/>
+           - unexpected value "unchecked"
+
+
+       at adapters.ts:129
+
+      127 |     observations.push({ index, definition, expected, actual: await readActual().catch(() => null),
+      128 |       status: assertion ? "failed" : "execution-error" });
+    > 129 |     if (assertion) throw new AssertionFailure(error.message);
+          |                          ^
+      130 |     throw error;
+      131 |   }
+      132 | }
+        at verifyAssertion (/private/tmp/veriqa-m10-seed-20261102-2350/tests/executor/adapters.ts:129:26)
+        at /private/tmp/veriqa-m10-seed-20261102-2350/tests/executor/plan.spec.ts:43:9
+
+    attachment #1: case-observation (application/json) ─────────────────────────────────────────────
+    artifacts/executor/96135467-a968-4092-8992-894e882ce22d/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/attachments/case-observation-b625c71badb8bbaaa905a6a459a76cec7e238479.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts/executor/96135467-a968-4092-8992-894e882ce22d/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts/executor/96135467-a968-4092-8992-894e882ce22d/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/executor/96135467-a968-4092-8992-894e882ce22d/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/executor/96135467-a968-4092-8992-894e882ce22d/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/executor/plan.spec.ts:18:3 › case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence 
+  2 passed (7.7s)
+{
+  "runId": "96135467-a968-4092-8992-894e882ce22d",
+  "outcome": "assertion-failed",
+  "counts": {
+    "discovered": 3,
+    "executed": 3,
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0
+  },
+  "record": "data/runs/96135467-a968-4092-8992-894e882ce22d.json",
+  "artifacts": "artifacts/executor/96135467-a968-4092-8992-894e882ce22d"
+}

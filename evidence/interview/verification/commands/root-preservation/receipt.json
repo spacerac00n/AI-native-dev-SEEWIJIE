@@ -1,0 +1,9 @@
+{
+  "argv": [
+    "python3",
+    "artifacts/verification/m9/audit.py"
+  ],
+  "exitCode": 0,
+  "unchangedEarlierFiles": 1366,
+  "note": "Legacy audit rewrote its summary timestamp. New output retained here; original summary restored byte-for-byte from packaged original, whose SHA-256 matches originalSha256. No run, plan or approval was modified."
+}

@@ -1,0 +1,34 @@
+
+> veriqa@0.0.0 execute
+> npm run build --workspace @veriqa/contracts && npm run execute --workspace @veriqa/api -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/api@0.0.0 execute
+> tsx src/execute-cli.ts vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+
+Executor artifacts: artifacts/executor/23b180b4-535f-4564-a1de-cc65d6fc9103
+
+Running 3 tests using 1 worker
+
+  ✓  1 [chromium] › tests/executor/plan.spec.ts:18:3 › case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence (751ms)
+  ✓  2 [chromium] › tests/executor/plan.spec.ts:18:3 › case2: Reject login with invalid non-@e.ntu.edu.sg emails (378ms)
+  ✓  3 [chromium] › tests/executor/plan.spec.ts:18:3 › case3: Logout clears session and blocks access to protected home (675ms)
+
+  3 passed (4.1s)
+{
+  "runId": "23b180b4-535f-4564-a1de-cc65d6fc9103",
+  "outcome": "passed",
+  "counts": {
+    "discovered": 3,
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "record": "data/runs/23b180b4-535f-4564-a1de-cc65d6fc9103.json",
+  "artifacts": "artifacts/executor/23b180b4-535f-4564-a1de-cc65d6fc9103"
+}

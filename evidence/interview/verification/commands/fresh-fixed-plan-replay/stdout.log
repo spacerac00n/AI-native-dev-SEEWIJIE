@@ -1,0 +1,12 @@
+
+> veriqa@0.0.0 execute
+> npm run build --workspace @veriqa/contracts && npm run execute --workspace @veriqa/api -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/api@0.0.0 execute
+> tsx src/execute-cli.ts vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+

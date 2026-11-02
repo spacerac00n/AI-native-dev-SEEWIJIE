@@ -31,7 +31,7 @@ The following table describes component responsibilities. Execution and the dash
 | Baseline checks | `tests/demo/` | Deterministic tests proving the demo works before defects are seeded. |
 | Workspace smoke checks | `tests/smoke/` | Implemented connectivity and rendered-page checks. |
 | Persistence | `data/`, `artifacts/` | Local JSON records and actual execution evidence. |
-| Replay fixture | `fixtures/approved-plans/` | Sanitized approved plan and provenance for the final offline demonstration. |
+| Interview package | `evidence/interview/`, `scripts/interview-evidence.ts` | Exact historical plan/approval/run snapshots, reviewed artifacts, integrity manifest and conflict-safe restoration. |
 
 Keep planner, storage, and reporter modules inside the backend initially. Separate processes or packages are unnecessary unless the implementation demonstrates a concrete need. npm workspaces manage the application and contracts packages; root scripts coordinate development and verification.
 
@@ -145,3 +145,7 @@ The React dashboard uses `/api/qa` Hono routes for saved plans, live generation,
 `RunStore` reads finalized records plus earlier attempt/rejection directories, preserving all old evidence. Invalid records fail closed as execution errors. Artifact access requires a validated run UUID, an indexed relative path, and a real path contained within that run (including symlink checks). Responses have fixed MIME types, no sniffing and a restrictive content policy; traces download as ZIP. The local-only mutation guard requires a JSON action header and checks browser origin/host. This is the existing single-operator localhost trust model, not an identity service.
 
 Comparison matches case IDs and shows expected/actual values, definitions/status changes, screenshots and traces. Only equal plan ID/revision/hash is described as directly comparable. The dashboard never labels arbitrary pairs as a seeded defect and fix. Downloaded raw logs are unchanged; display previews strip ANSI colors and are size-bounded. Endpoint and operation details are in [DASHBOARD.md](DASHBOARD.md).
+
+## Historical evidence restoration
+
+Milestone 10 adds no runtime component. A repository-owned CLI verifies the focused tracked interview payload and restores it into existing `data/` and `artifacts/` layouts. It restores the original approval for the original revision; it never calls plan import or approval creation. Existing dashboard readers, executor gate and deterministic assertions are unchanged. The published failed trace is a documented sanitized derivative; historical structured records remain byte-identical. See [the package boundaries](../evidence/interview/README.md) and [fresh-clone verification](M10_VERIFICATION.md).

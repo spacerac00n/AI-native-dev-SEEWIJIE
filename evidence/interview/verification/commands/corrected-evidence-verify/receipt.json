@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "evidence:verify"
+  ],
+  "cwd": "/private/tmp/veriqa-m10-corrected-20261102-2352",
+  "exitCode": 0,
+  "durationSeconds": 0.757
+}

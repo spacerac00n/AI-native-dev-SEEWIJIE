@@ -1,0 +1,4 @@
+{
+  "command": "Python stdlib zipfile/json/hashlib audit of published derivative versus untouched local original",
+  "exitCode": 0
+}

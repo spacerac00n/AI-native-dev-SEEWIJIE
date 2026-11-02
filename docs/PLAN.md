@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–9 are implemented and verified, including detection of a seeded regression and a separate clean fix/retest using the unchanged approved plan through the dashboard. Milestone 10 implementation is prepared; independent fresh-clone verification and publication are recorded in [M10_VERIFICATION.md](M10_VERIFICATION.md). See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–9 are implemented and verified, including detection of a seeded regression and a separate clean fix/retest using the unchanged approved plan through the dashboard. Milestone 10 implementation and independent fresh-clone verification are complete; actual results and publication tracking are in [M10_VERIFICATION.md](M10_VERIFICATION.md). See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -131,6 +131,8 @@ Acceptance criteria:
 ## 10. Fresh-clone reproduction and interview handoff
 
 Make the complete journey easy to inspect and reproduce.
+
+Verified: 88 authentic historical payload files with declared trace redaction and integrity manifest; original approval and dashboard comparison restored in fresh clones. Clean fixed replays passed 3/3 without a key. A separate unchanged seed checkout executed 3 cases, 2 passed / 1 persistence assertion failed. Baseline 24/24, unit 67/67, executor 7/7, dashboard 2/2, typecheck and build passed. The corrected trace package passed another fresh restore/replay and 448-line trace parse check. README and DEMO.md provide explicit reproduction commands. Final publication confirmation follows the evidence commit.
 
 Acceptance criteria:
 

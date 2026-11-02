@@ -6,13 +6,48 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–7 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection, and a unified QA dashboard. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 63 unit/API/contract tests, 24 Playwright baseline tests, 7 executor checks and 2 dashboard browser checks. The approved live-AI plan has executed with all three cases passing. The dashboard connects generation, review, explicit approval, execution, history and evidence comparison. See [the milestone plan](docs/PLAN.md).
+Milestones 1–7 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection, and a unified QA dashboard. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 67 unit/API/contract/restoration tests, 24 Playwright baseline tests, 7 executor checks and 2 dashboard browser checks. The approved live-AI plan has executed with all three cases passing. The dashboard connects generation, review, explicit approval, execution, history and evidence comparison. See [the milestone plan](docs/PLAN.md).
 
 Milestone 8's deliberately seeded persistence defect is preserved at `d2b776ba74431cbce08172d7f24a60195f03e646`: run `395693c2-5ad9-4842-a203-2e077eb1cd2c`, 2 passed / 1 failed, exit 1. Milestone 9 fixes stored checklist updates in separate commit `1965faeb53ae987c1f3943141ca1a0199b2a919b`. New clean dashboard run `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` passed 3/3, exit 0, using the exact same human-approved `vp1` revision. Case1 still expects true; actual false → true. Both complete evidence directories and the original baseline remain separate. See [the comparison walkthrough](docs/DEMO.md) and [actual verification outcomes](docs/AI_WORKFLOW.md#milestone-9--checklist-persistence-fix-and-preserved-retest-november-2-2026). Milestone 10 packages the original evidence and safe restoration; see [fresh-clone verification](docs/M10_VERIFICATION.md).
 
 The intended demonstration is:
 
 Requirement → AI-generated test plan → Review → Real execution → Failed assertion → Evidence → Code fix → Successful retest.
+
+## Reproduction instructions — fresh clone, no OpenAI key
+
+Use Node **22.23.2** and npm **10.9.8**. Keep ports 3000, 5173 and 5174 free and run server/test commands sequentially.
+
+```sh
+git clone --branch codex/m10-reproduction https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
+cd veriqa
+npm ci --cache .cache/npm
+npx playwright install chromium
+npm run evidence:verify
+npm run evidence:restore
+env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+npm run dev:qa
+```
+
+The replay creates a **new run with 3 passing cases** using the original human-approved AI plan and genuine Playwright execution. It needs no key or new approval. Open <http://127.0.0.1:5174> to inspect the restored historical failure (**2 passed / 1 failed**) and fixed retest (**3 passed / 0 failed**) in **Compare runs**, alongside your new run. Stop `dev:qa` before running further replays/tests.
+
+### Reproduce the seeded defect in a separate checkout
+
+With all servers stopped, run from the fixed checkout above:
+
+```sh
+git clone --no-hardlinks . ../veriqa-seeded
+git -C ../veriqa-seeded checkout --detach d2b776ba74431cbce08172d7f24a60195f03e646
+npm run evidence:restore -- --target "$(cd ../veriqa-seeded && pwd)"
+cd ../veriqa-seeded
+npm ci --cache .cache/npm
+npx playwright install chromium
+env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+```
+
+Expect **2 passed / 1 failed, exit 1**, with checklist expected true / actual false. This intentional product assertion failure gets a separate new run ID and preserves the historical pair. The original seed is checked out unchanged. Restore runs from the fixed checkout because the old seed predates the evidence script. See [the detailed seeded-reproduction guide](docs/DEMO.md#reproduce-the-original-defect-independently) for result interpretation.
+
+See [the interview walkthrough](docs/DEMO.md) for exact historical run IDs, approval inspection, screenshots/logs/traces and failure interpretation; [the evidence inventory](evidence/interview/README.md) for redactions/integrity boundaries; and [actual fresh-clone verification](docs/M10_VERIFICATION.md) for commands, exits and outcomes. Restoration skips identical files and refuses conflicts rather than replacing local records.
 
 ## Stack and scope
 
@@ -26,10 +61,6 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 The demo uses simple native forms, buttons, and checkboxes. The QA dashboard provides a complete review and execution workspace. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
 Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. The deliberate Milestone 8 application defect is labelled in code and Git history.
-
-## Fresh-clone interview
-
-Follow [the interview guide](docs/DEMO.md) to restore the reviewed [88-file evidence package](evidence/interview/README.md), inspect the original failure/fix comparison, replay without an API key, and reproduce the original seed in a separate checkout.
 
 ## Setup
 
@@ -60,6 +91,8 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 | Command | Behaviour |
 | --- | --- |
 | `npm run dev` | Starts demo, dashboard, Hono, and contracts watcher; synthetic reset controls stay disabled. |
+| `npm run evidence:verify` | Verifies all 88 packaged payload hashes, indexed artifacts and historical plan/approval/run relationships. |
+| `npm run evidence:restore` | Restores exact historical records; skips identical files and rejects all conflicts before writing. |
 | `npm run dev:qa` | Starts the same workspace with synthetic reset controls enabled, allowing dashboard execution. |
 | `npm run typecheck` | Checks all four workspaces, Vite/Playwright configs, and unit/browser tests. |
 | `npm run build` | Builds contracts, compiled Node API, and both web apps into their respective `dist/` directories. |
@@ -67,7 +100,7 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 | `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
 | `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
 | `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
-| `npm run test:unit` | Runs the 63 contract/storage/CLI/planner/result/API tests using Node's test runner; no browser/server required. |
+| `npm run test:unit` | Runs the 67 contract/storage/CLI/planner/result/API/restoration tests using Node's test runner; no browser/server required. |
 | `npm run test:dashboard` | Runs two real browser workflow checks against isolated manual fixtures, with explicitly synthetic approvals and preserved real evidence. |
 | `npm run test:executor` | Checks approval/validation/locking, all adapters, real assertion failure evidence, and unavailable-target handling using explicitly synthetic runner-check approvals. |
 | `npm run execute -- <plan-id> <revision>` | Replays an exact saved human-approved revision through real Chromium/API actions; starts/stops fresh API/demo servers. |
@@ -183,7 +216,7 @@ Use Ctrl+C to stop an existing dev launcher before testing. Playwright rejects o
 
 Each test invocation prints a unique directory under `artifacts/playwright/<timestamp>-<id>/` containing `results.json` and an HTML report. Results include the tested Git SHA and whether the worktree was dirty. Failed browser tests retain screenshots and traces when available; successful runs do not retain them. There are no automatic retries, and a new run does not overwrite an earlier directory. Milestone 2's older `artifacts/smoke/` reports are also preserved.
 
-The `--list` command also creates a separate discovery-only report: its tests have no execution results and must not be presented as passed executions. The recorded passing Milestone 3 worktree report is `artifacts/playwright/2026-11-02T05-23-44.301Z-eea9537c-25b2-4fbd-955e-1bd086f32de4/results.json`. The earlier failed checkbox report, screenshot, and trace remain separate. Generated evidence is ignored by Git, so fresh clones create their own reports.
+The `--list` command also creates a separate discovery-only report: its tests have no execution results and must not be presented as passed executions. The recorded passing Milestone 3 worktree report is `artifacts/playwright/2026-11-02T05-23-44.301Z-eea9537c-25b2-4fbd-955e-1bd086f32de4/results.json`. The earlier failed checkbox report, screenshot, and trace remain separate. New generated evidence is ignored by Git. The reviewed original M8/M9 interview payload is explicitly tracked under `evidence/interview/`; fresh clones also create their own new reports.
 
 To inspect a run, replace `<run-id>` with the directory printed by the test command:
 

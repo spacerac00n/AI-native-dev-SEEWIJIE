@@ -1,0 +1,13 @@
+
+> veriqa@0.0.0 evidence:restore
+> npm run build --workspace @veriqa/contracts && node --import tsx scripts/interview-evidence.ts restore
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+{
+  "verified": 88,
+  "restored": 0,
+  "unchanged": 88
+}
