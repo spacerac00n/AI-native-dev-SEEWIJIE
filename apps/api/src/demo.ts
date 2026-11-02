@@ -134,8 +134,8 @@ export function createDemoRoutes(testMode: boolean) {
     const parsed = updateTaskRequestSchema.safeParse(await context.req.json().catch(() => null));
     if (!parsed.success) return context.json({ error: "Provide a boolean completed value." }, 400);
 
-    // Deliberate Milestone 8 regression: update only the response copy, losing the saved change.
-    const home = structuredClone(homeFor(context.get("email")));
+    // Keep the stored tasks so PATCH changes survive the next home read.
+    const home = homeFor(context.get("email"));
     const task = home.tasks.find((item) => item.id === context.req.param("taskId"));
     if (!task) return context.json({ error: "Task not found." }, 404);
     // An explicit value makes repeated requests safe; the server owns checklist state.
