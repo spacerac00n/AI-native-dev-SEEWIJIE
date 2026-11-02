@@ -16,6 +16,9 @@ for (const app of [
     await page.goto(app.url);
     await expect(page).toHaveTitle(app.title);
     await expect(page.getByRole("heading", { level: 1, name: app.title })).toBeVisible();
+    if (app.title === "VeriQA Dashboard") {
+      await page.getByText("Technical details", { exact: true }).first().click();
+    }
     await expect(page.getByRole("status")).toHaveText("API health has not been checked.");
 
     // No request mocking: the click must reach Hono through this app's Vite proxy.
