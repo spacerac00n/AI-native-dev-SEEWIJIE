@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestone 1 is complete. Milestone 2's implementation and verification are complete, with the requested commit/push as its publication step; Milestones 3–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–3 are implemented and verified; Milestones 4–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -34,12 +34,15 @@ Acceptance criteria:
 
 Build a correct, reproducible login → mock OTP → home → logout application.
 
+Verification: 21 demo tests plus 3 workspace smoke tests pass (24 total); type checks and builds pass. Normal compiled API checks confirm real-clock auth/task behaviour and unavailable test controls. One checklist interaction failure was corrected and its original screenshot/trace preserved. The developer clarified passwordless exact-domain email login and a backend-backed checklist for this milestone.
+
 Acceptance criteria:
 
-- Real Hono endpoints enforce credentials, challenge-bound OTP validation, expiry, single use, sessions, protected access, and logout.
+- Real Hono endpoints enforce valid emails ending exactly with `@e.ntu.edu.sg`, challenge-bound OTP validation, expiry, single use, sessions, protected access, and logout.
 - Mock delivery is explicitly labelled and uses synthetic data; no external OTP service is required.
-- Record authentication policies, fixture accounts, and deterministic test setup, including expiry checks without fragile timing assumptions.
-- Playwright checks cover valid login, invalid credentials/OTP, expired and reused OTP, protected access, and logout, with isolated state.
+- The authenticated home page welcomes the email and has a tiny checklist whose backend state survives refresh.
+- Record authentication policies, synthetic fixture emails, and deterministic test setup, including expiry checks without fragile timing assumptions.
+- Playwright checks cover valid login, rejected/spoofed email domains, wrong/expired/reused OTPs, protected access, task toggle/refresh, and logout, with isolated state.
 - Record the actual passing baseline command, counts, and tested commit before any deliberate defect is introduced.
 
 ## 4. Supported test contract, storage, and approval

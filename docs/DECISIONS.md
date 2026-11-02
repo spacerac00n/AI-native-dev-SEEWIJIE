@@ -1,6 +1,6 @@
 # Initial architectural decisions
 
-Status: accepted direction for the MVP. Milestone 2 implements workspace tooling and health checks; later product capabilities remain planned. Update this record when evidence changes a decision.
+Status: accepted direction for the MVP. Milestones 2–3 implement workspace tooling, health checks, and demo authentication/home; AI QA capabilities remain planned. Update this record when evidence changes a decision.
 
 ## D01 — A small TypeScript workspace
 
@@ -16,7 +16,7 @@ Reject arbitrary generated scripts. They offer more flexibility but make executi
 
 ## D03 — Mock delivery with real authentication behaviour
 
-Use a local, labelled mock OTP store and synthetic credentials. Keep credential checking, OTP challenge binding, expiry, single use, session creation, protected access, and logout in the actual Hono backend.
+Use a local, labelled mock OTP store and synthetic emails. Following the developer's Milestone 3 clarification, login is passwordless and accepts only valid emails ending exactly with `@e.ntu.edu.sg`. Keep email checks, OTP challenge binding, expiry, single use, session creation, protected access, and logout in the actual Hono backend.
 
 Real SMS/email delivery introduces credentials, costs, and external failures. Mocking the entire login result would fail to test authentication. The chosen boundary keeps delivery reproducible while exercising the behaviour under test. It is a local demo, not a production authentication design.
 
@@ -61,3 +61,15 @@ Both Vite servers proxy `/api` to the loopback Hono process. This lets the shell
 Use three Playwright checks: direct health JSON, demo rendering plus API connectivity, and dashboard rendering plus API connectivity. Start fresh servers, reject port conflicts, use one Chromium worker, and disable retries. Unique report directories preserve each invocation; `--list` discovery reports remain separate from actual executions.
 
 This verifies the workspace boundary without introducing the future AI-plan executor or persistence system. Reports and dependency/build caches stay ignored; the committed workflow record contains the actual commands, counts, exit codes, and local artifact references.
+
+## D11 — In-memory email sessions and checklist baseline
+
+Generate six-digit codes using Node crypto, valid for five minutes and one successful use. Validate the exact lowercase email suffix without trimming/case conversion. Store one-hour random opaque sessions on the server; use an HTTP-only, SameSite=Strict cookie on local HTTP. Deleting the server entry on logout ensures an old cookie cannot restore access.
+
+Store tasks per exact email in memory. Persist them across refresh and re-login, but clear them on API restart. This meets the developer's demo-state requirement without introducing JSON storage for temporary auth/tasks; future plans/reports will still use files. The mock inbox intentionally reveals a known challenge's code and does not demonstrate real mailbox ownership. No production authentication claim is made.
+
+## D12 — Opted-in test clock and state reset
+
+Mount reset and server-time-advance routes only with `VERIQA_TEST_MODE=1`, which Playwright sets on its own API process. Reset all maps and the clock before every demo test; advance exactly to expiry boundaries without sleeps. The helpers do not issue sessions or skip validation. Check the normal compiled API separately to confirm the helpers return 404 and real time is used.
+
+The developer controls remain outside the UI and normal startup. One serial worker prevents one test's reset from invalidating another's session. These trusted fixtures are development tooling, not AI-generated actions or the future test executor.

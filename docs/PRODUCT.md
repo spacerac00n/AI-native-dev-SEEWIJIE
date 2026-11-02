@@ -1,6 +1,6 @@
 # Product definition
 
-Status: planned MVP. Milestone 2 provides app shells and API-health smoke checks; the authentication and QA workflow requirements below remain unimplemented.
+Status: Milestones 1–3 implement the workspace and demo authentication/home baseline. The QA workflow below remains planned.
 
 ## Target developer and problem
 
@@ -31,13 +31,16 @@ Reports distinguish product assertion failures, invalid test definitions, and en
 
 Start with a working application before introducing defects:
 
-1. Valid synthetic credentials create a pending OTP challenge; invalid credentials do not authenticate.
+1. A syntactically valid synthetic email ending exactly with `@e.ntu.edu.sg` creates an OTP challenge. Reject other domains, spoofed suffixes, and non-exact domain variants. Login is passwordless.
 2. OTP delivery uses a clearly labelled mock interface, with no SMS/email provider.
 3. The backend checks that an OTP belongs to the challenge, is correct, is unexpired, and has not already been consumed.
 4. Successful verification creates a real local session and allows access to the home page.
 5. Unauthenticated access to protected content is rejected by the backend, and logout invalidates access.
+6. The home page welcomes the authenticated email and shows a tiny checklist. Changes update backend state and survive page refresh.
 
-The exact synthetic credentials, OTP lifetime, session policy, and reproducible test setup will be recorded with the working baseline in Milestone 3. Test isolation must not depend on a previous test's session or OTP.
+Implemented policy: generate six-digit OTPs with five-minute validity; use one-hour opaque server sessions in HTTP-only, SameSite=Strict cookies. Tasks persist per exact email in memory across refresh/re-login. Backend restart clears challenges, sessions, and tasks. Example account: `synthetic.student@e.ntu.edu.sg`; no real delivery or mailbox verification occurs. Exact setup/commands are in [README.md](../README.md).
+
+Playwright resets all synthetic state before each demo case and advances a fixed test clock for exact expiry boundaries. These helpers exist only on an opted-in test server and never bypass authentication. Normal startup uses real time. Baseline tests must pass before Milestone 4 begins.
 
 ## QA workflow requirements
 

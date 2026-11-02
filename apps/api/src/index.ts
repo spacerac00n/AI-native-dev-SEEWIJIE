@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import type { HealthResponse } from "@veriqa/contracts";
 import { Hono } from "hono";
+import { createDemoRoutes } from "./demo.js";
 
 const app = new Hono();
 
@@ -9,6 +10,8 @@ app.get("/api/health", (context) => context.json({
   status: "ok",
   service: "veriqa-api",
 } satisfies HealthResponse));
+
+app.route("/api/demo", createDemoRoutes(process.env.VERIQA_TEST_MODE === "1"));
 
 const server = serve({
   fetch: app.fetch,

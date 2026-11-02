@@ -71,3 +71,60 @@ Local development required network-enabled dependency/browser installation and p
 Final static review: `git diff --check` exited 0. An inline Python audit exited 0, checking all seven Markdown files and eleven local links, retaining ten milestones, and confirming all five package manifests match the lockfile with exact direct dependency versions. Reviewed the file inventory to exclude dependency caches, build outputs, local reports, secrets, and confidential material from the commit.
 
 Human actions for reproduction: use the specified Node/npm versions, install dependencies and Chromium using the README commands, then run `npm run dev` to view the shells or `npm test` with those ports free. No `.env`, API key, authentication setup, or external service is required. Verification servers were stopped after the checks. Commit/push confirmation is reported after publication.
+
+## Milestone 3 — Working demo authentication and home (November 2, 2026)
+
+Human clarification: the developer specified passwordless login using valid emails ending exactly with `@e.ntu.edu.sg`, replacing the original generic credential wording. They also required a welcome message and small backend-backed checklist, in-memory demo state, and current root README commands. Product, architecture, plan, and decisions were updated to reflect this direction. No real accounts, email service, AI planner, dashboard workflow, or intentional defects were added.
+
+AI assistance: read the required context documents; implemented Hono routes, shared Zod contracts, React login/OTP/home forms, and 21 demo tests alongside the existing 3 smoke tests. Consulted the official [Hono cookie helper](https://hono.dev/docs/helpers/cookie), [Hono routing](https://hono.dev/docs/api/routing), [Zod schemas](https://zod.dev/api), and [Playwright API request context](https://playwright.dev/docs/api/class-apirequestcontext) documentation. No dependencies changed.
+
+Implemented rules: exact lowercase domain suffix without trimming; random six-digit OTPs bound to a challenge, expiring after five minutes and consumed once; one-hour opaque sessions stored by the server in an HTTP-only, SameSite=Strict cookie. Both home reads and task writes enforce session validity. Logout deletes the server entry, so replaying its old cookie fails. Tasks persist per email across refresh and re-login until backend restart. The labelled mock inbox reveals only a known challenge's code and sends no email.
+
+Test isolation: Playwright alone sets `VERIQA_TEST_MODE=1`, resets all in-memory maps before each demo case, and advances a fixed server clock for exact expiry checks. These helpers do not create authenticated sessions; all login tests use the real OTP endpoint. Normal startup uses real time and does not register the helpers. Decisions D11–D12 explain the local-demo trade-offs.
+
+### Development failures and corrections
+
+1. Initial `npm run typecheck && npm run build` exited **1**: root Playwright types lacked DOM globals for `page.evaluate(() => document.cookie)` (`TS2584`, test line 58). Workspace checks passed, but the build was not reached. Added DOM types only to the root test configuration; subsequent type checks and builds exited 0. This was a test/tooling configuration failure, not a product assertion.
+2. First `npm test` exited **1** before executing any tests: port 3000 was already occupied. The separate discovery command had listed 24 cases. Inspected listener command lines and working directories, confirmed the existing launcher belonged to this repository, and stopped that launcher with SIGTERM for isolated tests. Kept fresh-server enforcement enabled. This was an environment/startup failure, not an application test failure.
+3. The next `npm test` executed **24** cases: **23 passed, 1 failed**, exit **1**, 6.7 seconds. `locator.check()` failed because the controlled checkbox briefly reverted while waiting for PATCH completion. Inspected its screenshot and error context; the later snapshot showed the saved state. Corrected the UI to reflect the click immediately, use the backend result, and roll back on error. Updated the persistence test to wait until the control is enabled again before checking server state or refreshing. Kept actual backend and refresh assertions. This was a development UI/action-timing failure, not a deliberately seeded defect.
+4. After correction, type checks and builds passed, then the full baseline executed **24/24 passed**, exit **0**, 6.6 seconds. No automatic retries, skipped cases, runner errors, or reported flaky cases. The changed-source retest does not establish long-term stability or conceal the original failure.
+
+No further human correction was needed. The agent corrected its own missing test types and asynchronous checkbox behaviour based on actual failures.
+
+### Actual commands and results
+
+| Command/check | Exit code | Observed result |
+| --- | --- | --- |
+| `node --version` / `npm --version` | 0 / 0 | `v22.23.2` / `10.9.8`. |
+| Initial `npm run typecheck && npm run build` | 1 | Missing DOM test types; build not executed. |
+| `npm run typecheck && npm run build` after test-type correction | 0 | All four workspaces, test/config types, and builds passed. |
+| `npm test -- --list` | 0 | 24 discovered in 2 files, 0 executed. |
+| First `npm test` | 1 | Occupied API port; 0 executed, 1 startup error. |
+| Second `npm test` | 1 | 24 executed; 23 passed, 1 checkbox interaction failure. |
+| `npm run typecheck && npm run build` after checkbox correction | 0 | Type checks and builds passed again. |
+| Third `npm test` | 0 | 24 executed; 24 passed, 0 failed/skipped, 6.6 seconds. |
+| `npm run start --workspace @veriqa/api` | Started successfully | Served the compiled API; after successful checks, deliberate Ctrl+C ended the terminal session with exit 1. |
+| Inline `node --input-type=module` compiled-API check | 0 | Normal-mode reset/clock routes returned 404; real-clock OTP, HTTP-only cookie, home, task save/read, logout, and old-cookie rejection all passed. |
+| `npm test -- tests/demo --list` / `npm test -- tests/smoke --list` | 0 / 0 | Verified focused test selection: 21 demo and 3 smoke cases listed; discovery only, 0 executed. |
+| Final `npm run typecheck && npm run build` | 0 | All workspace/test/config types and builds passed, including disabled form inputs while requests are pending. |
+
+The passing worktree run's JSON records source commit `2d5feff3aa08a471aad634239732171e8dfbc6ee`, `worktreeDirty: true`, and one actual worker. This is the parent revision plus the uncommitted Milestone 3 implementation, not a claim that the older commit contained these features. New reports capture actual SHA/dirty status automatically. Publication and a clean-commit baseline confirmation are reported after the feature commit exists.
+
+### Retained execution evidence
+
+All paths below are local and ignored by Git; none overwrites another run. Each directory contains `results.json` and `html/index.html`.
+
+| Invocation | Directory under `artifacts/playwright/` | Actual execution |
+| --- | --- | --- |
+| Discovery | `2026-11-02T05-20-08.224Z-496bcc4a-b66d-4037-90f1-df497f7a4d7c` | 0 executed; 24 discovery-only cases, not passed tests. |
+| Occupied-port failure | `2026-11-02T05-20-08.851Z-69dd781b-c52d-4e53-8921-562a95cc7663` | 0 executed; startup error retained in JSON. |
+| Failed checkbox run | `2026-11-02T05-21-47.915Z-99c04f75-2b43-424e-858f-d49ec662f966` | 23 passed, 1 failed; screenshot, trace, and error context preserved. |
+| Passing worktree baseline | `2026-11-02T05-23-44.301Z-eea9537c-25b2-4fbd-955e-1bd086f32de4` | 24 executed/passed, 0 failed/skipped, no retries. |
+
+The failed screenshot and `trace.zip` are under that run's `test-results/demo-auth-task-changes-rea-d1cfa-d-survive-a-browser-refresh-chromium/`. They remain available after the successful retest. The DOM compiler error is recorded above; it did not produce Playwright artifacts. No fabricated screenshots, logs, or execution outcomes were added.
+
+Baseline coverage: valid browser login and HTTP-only cookie; nine rejected email/domain variants plus a UI rejection; wrong OTP and valid retry; unknown challenge; expiry exactly at five minutes; consumed-code reuse; unauthenticated/forged home and task requests; checkbox save/refresh in both directions; logout and old-cookie replay; per-email task isolation and re-login persistence; one-hour session expiry; malformed payloads; and the three workspace smoke checks.
+
+Root README now includes installation/start commands, all/focused test commands, type checking, builds, compiled API startup, report/trace viewers, policies, and a manual walkthrough. No manual verification blocks this baseline; an optional human walkthrough uses the labelled mock code and synthetic account. Stop normal dev servers before tests. No API key, `.env`, real email delivery, or external service is required.
+
+Final documentation/static review: `git diff --check` exited 0; an inline Python audit exited 0 for seven Markdown files, twelve local links, and ten milestone/acceptance sections. Reviewed the staged scope for generated outputs and secrets before publication. Earlier failed and passing execution directories remain separate.

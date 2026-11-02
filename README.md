@@ -6,7 +6,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–2 establish the project context and runnable workspace. Two minimal React + Vite apps, a Hono health API, shared TypeScript/Zod contracts, and three Playwright smoke tests are implemented and verified. Authentication, AI planning, approved-plan replay, and the QA reporter are still planned. See [the milestone plan](docs/PLAN.md).
+Milestones 1–3 provide the workspace and a working demo: email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory, and logout. The 24 Playwright browser/API baseline tests cover this flow and workspace connectivity. AI planning, approved-plan replay, and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
 
 The intended demonstration is:
 
@@ -21,9 +21,9 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 - Playwright Test for real browser/API execution and deterministic assertions.
 - Local JSON files and filesystem artifacts for persistence.
 
-Currently each web app has a heading, a health-check button, and a status message. The button calls the real Hono API through Vite's development proxy and validates the response against the shared Zod schema. There are no mocked HTTP responses in the smoke tests.
+The demo uses simple native forms, buttons, and checkboxes. The QA dashboard remains a health-check shell. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
-Later milestones will add login, mock OTP delivery, authenticated home access, and logout. Only delivery will be mocked; authentication rules will execute against the real backend. Live AI planning will require a server-side OpenAI key. Approved-plan replay will perform new Playwright execution without an AI call. None of these later features is implemented yet.
+Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Future live AI planning will require a server-side OpenAI key; future approved-plan replay will perform new Playwright execution without an AI call. No intentional defects have been introduced.
 
 ## Setup
 
@@ -53,21 +53,52 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 
 | Command | Behaviour |
 | --- | --- |
-| `npm run dev` | Starts both app shells, Hono, and the shared-contract watcher. |
+| `npm run dev` | Starts the demo, dashboard shell, Hono, and the shared-contract watcher. |
 | `npm run typecheck` | Checks all four workspaces, Vite configs, Playwright config, and smoke tests. |
 | `npm run build` | Builds contracts, compiled Node API, and both web apps into their respective `dist/` directories. |
-| `npm test -- --list` | Lists the three smoke tests without executing them. |
-| `npm test` | Starts fresh services, runs three real Chromium/API smoke tests, then stops the services. |
+| `npm test -- --list` | Lists all 24 tests without executing them. |
+| `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
+| `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
+| `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
+| `npm run start --workspace @veriqa/api` | Starts only the compiled API after `npm run build`; stop other API processes first. |
 
 The root commands build contracts before consumers, so they work after a clean install. `npm run build` creates artifacts; it does not start or deploy the built web apps. The documented UI/API workflow uses `npm run dev` and its Vite proxies.
 
-Latest verification on November 1, 2026: type checks and builds exited 0; Playwright discovered 3 tests and executed 3, all passed in 4.0 seconds, with 0 failed, 0 skipped, and no retries. The dev command also served both app pages, direct health, and both health proxies with HTTP 200. See [the command and evidence record](docs/AI_WORKFLOW.md).
+Milestone 3 verification on November 2, 2026: type checks and builds exited 0; Playwright discovered and executed 24 tests, all passed in 6.6 seconds, with 0 failed, 0 skipped, and no retries. A separate compiled-API check verified normal-clock login, task persistence, logout, and absent test-control routes. Earlier failures and their evidence remain in [the command and evidence record](docs/AI_WORKFLOW.md).
 
-## Smoke-test evidence
+## Try the demo
 
-Each test invocation prints a unique directory under `artifacts/smoke/<timestamp>-<id>/` containing `results.json` and an HTML report. Per-test artifacts are stored there when produced. Failed browser tests retain screenshots and traces when available; successful runs do not retain them. There are no automatic retries, and a new run does not overwrite an earlier directory.
+1. Run `npm run dev` and open <http://127.0.0.1:5173>.
+2. Enter `synthetic.student@e.ntu.edu.sg` and select **Request OTP**. Use synthetic accounts only.
+3. Copy the six-digit code from **Local mock OTP delivery** into the OTP field and select **Verify OTP**. No email is sent.
+4. Check an item, wait for the controls to become enabled again (save complete), and refresh. The server returns the saved state.
+5. Select **Logout**, then visit <http://127.0.0.1:5173/home>. The UI returns to login and the backend rejects protected requests.
 
-The `--list` command also creates a separate discovery-only report: its tests have no execution results and must not be presented as passed executions. The verified execution report is `artifacts/smoke/2026-11-01T12-28-50.543Z-f71a4c74-030f-4bc5-b675-9112bc7ececa/results.json` on the development machine. Generated evidence is ignored by Git, so fresh clones create their own reports.
+Email addresses must be syntactically valid and end **exactly** with lowercase `@e.ntu.edu.sg`. Other domains, extra domain suffixes, subdomains, whitespace, and uppercase domain variants are rejected. There is no password or real mailbox ownership check in this local mock demo.
+
+OTPs are random six-digit codes, tied to a challenge, valid for five minutes, and consumed once. An incorrect code does not consume the challenge. Sessions last one hour, are stored on the server, and use an opaque HTTP-only, SameSite=Strict cookie on loopback HTTP. Logout deletes the server session as well as the cookie. Home data and task writes both require a valid session.
+
+Tasks are stored per exact email in backend memory, surviving refresh and re-login until the API restarts. Restarting the API clears OTPs, sessions, and tasks. The local mock inbox is intentionally accessible for a known challenge; this is a demonstration, not deployed authentication.
+
+## Deterministic test setup
+
+`npm test` automatically starts the API with `VERIQA_TEST_MODE=1`. Tests reset state before each demo case and advance a fixed server clock to check expiry without sleeping. The helpers cannot issue sessions or skip OTP validation. They are absent (HTTP 404) during normal `npm run dev` or compiled API startup; no manual test-mode configuration is needed.
+
+Use Ctrl+C to stop an existing dev launcher before testing. Playwright rejects occupied ports instead of reusing an unknown server. Run tests serially; reset helpers deliberately clear all synthetic state in the test process.
+
+## Test evidence
+
+Each test invocation prints a unique directory under `artifacts/playwright/<timestamp>-<id>/` containing `results.json` and an HTML report. Results include the tested Git SHA and whether the worktree was dirty. Failed browser tests retain screenshots and traces when available; successful runs do not retain them. There are no automatic retries, and a new run does not overwrite an earlier directory. Milestone 2's older `artifacts/smoke/` reports are also preserved.
+
+The `--list` command also creates a separate discovery-only report: its tests have no execution results and must not be presented as passed executions. The recorded passing Milestone 3 worktree report is `artifacts/playwright/2026-11-02T05-23-44.301Z-eea9537c-25b2-4fbd-955e-1bd086f32de4/results.json`. The earlier failed checkbox report, screenshot, and trace remain separate. Generated evidence is ignored by Git, so fresh clones create their own reports.
+
+To inspect a run, replace `<run-id>` with the directory printed by the test command:
+
+```sh
+npx playwright show-report artifacts/playwright/<run-id>/html
+```
+
+For a retained failure trace, use `npx playwright show-trace <path-to-trace.zip>` with the path printed in the failure output. These viewer commands open existing evidence; they do not execute tests.
 
 Future plans and QA run records will use JSON under `data/`; this persistence is not implemented yet. Never commit API keys, real credentials, or confidential assessment material. The ignore rules cover local configuration, generated outputs, and PDFs.
 

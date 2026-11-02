@@ -1,16 +1,16 @@
 # Architecture
 
-Status: Milestone 2 implements the workspace foundation. Authentication, planning, approval, replay, and QA reporting below remain the target design.
+Status: Milestones 2–3 implement the workspace and real demo authentication/home flows. AI planning, approval, replay, and QA reporting below remain the target design.
 
 ## Implemented foundation
 
-- Two React + Vite app shells run at `http://127.0.0.1:5173` and `http://127.0.0.1:5174`. Each can check API health through a same-origin `/api` development proxy.
-- One Hono process listens at `http://127.0.0.1:3000`, with only `GET /api/health` implemented. It returns `{"status":"ok","service":"veriqa-api"}`.
-- `packages/contracts/` exports a Zod health schema and its inferred TypeScript type. It compiles to ESM JavaScript and declarations before consumers run; no source-path aliases or runtime TypeScript imports are needed by the compiled API.
+- The React + Vite demo runs at `http://127.0.0.1:5173` with email login, mock OTP delivery, home/checklist, and logout. The dashboard at `http://127.0.0.1:5174` remains a shell. Both use a same-origin `/api` development proxy.
+- One Hono process listens at `http://127.0.0.1:3000`. `GET /api/health` returns `{"status":"ok","service":"veriqa-api"}`; `apps/api/src/demo.ts` owns `/api/demo` authentication and task routes.
+- `packages/contracts/` exports Zod request/response schemas and inferred types for health, OTP challenges, errors, and home/tasks. It compiles to ESM JavaScript and declarations before consumers run; no source-path aliases or runtime TypeScript imports are needed by the compiled API.
 - Root npm scripts install/build/run the four workspaces. The dev command also watches shared contracts. Both web apps deliberately use plain browser styling.
-- Three tests in `tests/smoke/` check the real API and both rendered apps, including their health buttons. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes each invocation's reports to a unique ignored `artifacts/smoke/` directory. This is developer smoke tooling, not the future AI-plan executor or QA reporter.
+- Three tests in `tests/smoke/` check connectivity; 21 in `tests/demo/` check authentication, email-domain rejection, and home/tasks. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes reports to unique ignored `artifacts/playwright/` directories. Reports include actual source SHA/dirty status. This is developer baseline tooling, not the future AI-plan executor or QA reporter.
 
-Exact setup commands and local URLs are in [README.md](../README.md). No OpenAI key, environment file, auth state, or application persistence is needed yet.
+Exact setup commands and local URLs are in [README.md](../README.md). No OpenAI key or environment file is needed. Demo auth/task state lives only in process memory.
 
 ## Components and responsibilities
 
@@ -24,13 +24,13 @@ The following table describes the target responsibilities; the current implement
 | Shared contracts | `packages/contracts/` | TypeScript types and Zod schemas for requirements, plans, approvals, and run records. |
 | Trusted executor | `tests/executor/` | Playwright Test configuration and maintained adapters that interpret approved actions and execute assertions. |
 | Baseline checks | `tests/demo/` | Deterministic tests proving the demo works before defects are seeded. |
-| Workspace smoke checks | `tests/smoke/` | Implemented connectivity and rendered-shell checks, before authentication exists. |
+| Workspace smoke checks | `tests/smoke/` | Implemented connectivity and rendered-page checks. |
 | Persistence | `data/`, `artifacts/` | Local JSON records and actual execution evidence. |
 | Replay fixture | `fixtures/approved-plans/` | Sanitized approved plan and provenance for the final offline demonstration. |
 
 Keep planner, storage, and reporter modules inside the backend initially. Separate processes or packages are unnecessary unless the implementation demonstrates a concrete need. npm workspaces manage the application and contracts packages; root scripts coordinate development and verification.
 
-## Data flow
+## Planned QA data flow
 
 ```text
 Developer requirements -> QA API -> OpenAI planner -> Zod validation
@@ -61,9 +61,26 @@ The QA API starts a fixed, repository-owned Playwright runner with validated dat
 
 ## Authentication and mock boundary
 
-The Hono demo route group owns credential checks, pending OTP challenges, expiry/consumption, sessions, protected data, and logout. The React app renders the flow; hiding a page in the browser is not authorization.
+The Hono demo route group owns exact email-domain validation, pending OTP challenges, expiry/consumption, sessions, protected data, and logout. The developer clarified passwordless email login in Milestone 3, replacing the original generic credential wording. The React app renders the flow; hiding a page in the browser is not authorization.
 
 A labelled local mock-delivery store exposes the OTP for a specific challenge to the demo/test workflow. There is no external delivery provider. Tests still submit the OTP through the real verification endpoint and receive a real local session. Synthetic challenge/session records may live in process memory and reset on restart; durable plans, approvals, and evidence use JSON/files. This is a local demonstration, not a production authentication service.
+
+Implemented routes (all under `/api/demo`):
+
+| Method/path | Behaviour |
+| --- | --- |
+| `POST /auth/request-otp` | Validate email syntax and exact lowercase `@e.ntu.edu.sg` suffix; store a random six-digit challenge valid for five minutes. |
+| `GET /mock-otp/:challengeId` | Expose that challenge's explicitly mocked local delivery. |
+| `POST /auth/verify-otp` | Reject malformed/unknown, wrong, expired, or consumed challenges; consume a valid challenge and issue an opaque server session. |
+| `GET /home` | Require an unexpired server session; return its email and per-email checklist. |
+| `PATCH /tasks/:taskId` | Require a session and boolean `completed`; update only that email's checklist. |
+| `POST /auth/logout` | Delete the server session and clear its cookie. |
+
+All demo responses use `Cache-Control: no-store`. Sessions expire after one hour on the backend and use HTTP-only, SameSite=Strict, host-only cookies on local HTTP. Challenge consumption and session creation have no intervening await, preventing duplicate consumption in this single process. Tasks survive browser refresh/re-login but clear with all other state on restart. The UI reflects a checkbox change immediately, disables writes while pending, accepts the server's response, and rolls back on failure.
+
+Vite serves a generic SPA shell at `/home`; personalised home data and task state are returned only by the session-protected Hono endpoints. Loading the shell does not grant access to that data.
+
+Playwright alone opts into `VERIQA_TEST_MODE=1`. Then `POST /__test/reset` clears all maps and sets a fixed clock; `POST /__test/advance-time` advances it for expiry tests. Both are relative to `/api/demo`, never create sessions, and are absent in normal mode. Tests run serially with fresh browser contexts. Normal startup uses `Date.now()` and real expiry; the compiled API was checked separately with the helpers returning 404.
 
 ## Persistence and evidence
 
