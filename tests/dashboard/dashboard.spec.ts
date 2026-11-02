@@ -5,6 +5,7 @@ import { join } from "node:path";
 async function approveFixture(page: Page, revision: string) {
   await page.goto("/");
   await page.getByLabel("Or load a saved revision").selectOption(revision);
+  await expect(page.locator(".proposed-case[open], .requirements-box[open], .provenance[open]")).toHaveCount(0);
   await page.screenshot({ path: test.info().outputPath("dashboard-workflow.png") });
   await expect(page.getByRole("button", { name: "Execute approved plan" })).toBeDisabled();
   await page.getByLabel("Reviewer name").fill("SYNTHETIC DASHBOARD CHECK — not actual human review");
@@ -27,9 +28,10 @@ test("dashboard exact approval, real execution, case assertions, screenshots and
   expect(imageResponse.status()).toBe(200); expect(imageResponse.headers()["content-type"]).toBe("image/png");
   await run.getByRole("button", { name: "browser-api.log.json", exact: true }).first().click();
   await expect(run.getByText("Open original ↗", { exact: true })).toBeVisible();
+  await run.getByText("Raw execution output", { exact: true }).click();
   await run.getByRole("button", { name: "stdout.log", exact: true }).click();
   await expect(run.locator(".log-content").last()).toContainText("3 passed");
-  const runId = await run.locator(".metadata code").first().innerText();
+  const runId = await run.locator(".compact-metadata code").first().innerText();
   await page.getByRole("button", { name: runId.slice(0, 8), exact: true }).click();
   await expect(run).toBeVisible(); // Reselecting the same history row must keep its completed result.
   await page.screenshot({ path: test.info().outputPath("dashboard-passing-run.png"), fullPage: false });
@@ -40,6 +42,8 @@ test("dashboard preserves a real assertion failure and compares runs without cla
   await page.getByRole("button", { name: "Execute approved plan" }).click();
   const run = page.getByRole("region", { name: "Run details" });
   await expect(run.locator(".between > .badge").first()).toHaveText(/assertion failed/, { timeout: 30_000 });
+  await expect(run.locator(".case-result[open]")).toHaveCount(0);
+  await run.getByText("login-and-task", { exact: true }).click();
   await expect(run.getByText('"Deliberately wrong dashboard expectation"', { exact: true })).toBeVisible();
   await expect(run.getByText('"API health has not been checked."', { exact: true })).toBeVisible();
   const trace = run.getByRole("link", { name: "Download Playwright trace" });
@@ -54,6 +58,8 @@ test("dashboard preserves a real assertion failure and compares runs without cla
   await page.getByLabel("Before run").selectOption(passing.metadata.runId);
   await page.getByLabel("After run").selectOption(failing.metadata.runId);
   await expect(page.getByText(/Different plans\/revisions or incomplete evidence/)).toBeVisible();
+  await expect(page.locator(".comparison-case[open]")).toHaveCount(0);
+  await page.locator(".comparison-case > summary").filter({ hasText: "login-and-task" }).click();
   await expect(page.getByText("Expectation changed").first()).toBeVisible();
   await expect(page.getByRole("img", { name: "Real browser output for login-and-task" })).toHaveCount(2);
   await page.screenshot({ path: test.info().outputPath("dashboard-comparison.png"), fullPage: true });

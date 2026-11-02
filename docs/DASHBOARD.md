@@ -2,6 +2,8 @@
 
 Run `npm run dev:qa`, then open `http://127.0.0.1:5174`. All services stay on loopback. Normal `npm run dev` keeps synthetic reset controls disabled, so inspection/generation/approval work but execution is disabled. Do not run separate baseline tests or managed executor servers on these ports at the same time.
 
+The compact overview keeps detailed requirements, cases, provenance, logs and comparison evidence collapsed by default. Expand a row to review it. Workflow status, run metadata and comparison summaries use tables; approval and execution controls remain visible.
+
 ## Workflow
 
 1. Enter natural-language requirements and choose **Generate test plan**. This makes a real server-side OpenAI request; root `.env` is read only for generation. The API saves an immutable, Zod-validated, unapproved revision under a fresh `plan-<UUID>` ID. Existing approved plans are not superseded.
