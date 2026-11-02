@@ -1,0 +1,60 @@
+{
+  "caseId": "case1",
+  "title": "Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence",
+  "requirementIds": [
+    "req1",
+    "req3",
+    "req5",
+    "req6"
+  ],
+  "status": "passed",
+  "durationMs": 646,
+  "phase": "complete",
+  "assertions": [
+    {
+      "index": 0,
+      "definition": {
+        "type": "url",
+        "path": "/home"
+      },
+      "expected": "http://127.0.0.1:5173/home",
+      "actual": "http://127.0.0.1:5173/home",
+      "status": "passed"
+    },
+    {
+      "index": 1,
+      "definition": {
+        "type": "visible",
+        "target": "welcome-heading",
+        "expected": true
+      },
+      "expected": true,
+      "actual": true,
+      "status": "passed"
+    },
+    {
+      "index": 2,
+      "definition": {
+        "type": "text",
+        "target": "welcome-heading",
+        "expected": "Welcome, synthetic.student@e.ntu.edu.sg"
+      },
+      "expected": "Welcome, synthetic.student@e.ntu.edu.sg",
+      "actual": "Welcome, synthetic.student@e.ntu.edu.sg",
+      "status": "passed"
+    },
+    {
+      "index": 3,
+      "definition": {
+        "type": "checked",
+        "target": "review-requirements",
+        "expected": true
+      },
+      "expected": true,
+      "actual": true,
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "artifacts": []
+}

@@ -1,0 +1,114 @@
+{
+  "runId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+  "trace": "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip",
+  "note": "Read from original trace network entries/resources; ordered by recorded request start time. Mock OTP values and session headers omitted from this review.",
+  "requests": [
+    {
+      "startedAt": "2026-11-02T11:07:21.881Z",
+      "method": "POST",
+      "url": "http://127.0.0.1:3000/api/demo/__test/reset",
+      "status": 200
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.078Z",
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/api/demo/home",
+      "status": 401,
+      "tasks": null
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.078Z",
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/api/demo/home",
+      "status": 401,
+      "tasks": null
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.156Z",
+      "method": "POST",
+      "url": "http://127.0.0.1:5173/api/demo/auth/request-otp",
+      "status": 201
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.197Z",
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/api/demo/mock-otp/0046b58a-00bd-46d5-a149-a88eb7259caa",
+      "status": 200
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.238Z",
+      "method": "POST",
+      "url": "http://127.0.0.1:5173/api/demo/auth/verify-otp",
+      "status": 200,
+      "tasks": [
+        {
+          "id": "review-requirements",
+          "title": "Review demo requirements",
+          "completed": false
+        },
+        {
+          "id": "run-baseline",
+          "title": "Run baseline tests",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.289Z",
+      "method": "PATCH",
+      "url": "http://127.0.0.1:5173/api/demo/tasks/review-requirements",
+      "status": 200,
+      "tasks": [
+        {
+          "id": "review-requirements",
+          "title": "Review demo requirements",
+          "completed": true
+        },
+        {
+          "id": "run-baseline",
+          "title": "Run baseline tests",
+          "completed": false
+        }
+      ],
+      "requestBody": {
+        "completed": true
+      }
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.425Z",
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/api/demo/home",
+      "status": 200,
+      "tasks": [
+        {
+          "id": "review-requirements",
+          "title": "Review demo requirements",
+          "completed": false
+        },
+        {
+          "id": "run-baseline",
+          "title": "Run baseline tests",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "startedAt": "2026-11-02T11:07:22.425Z",
+      "method": "GET",
+      "url": "http://127.0.0.1:5173/api/demo/home",
+      "status": 200,
+      "tasks": [
+        {
+          "id": "review-requirements",
+          "title": "Review demo requirements",
+          "completed": false
+        },
+        {
+          "id": "run-baseline",
+          "title": "Run baseline tests",
+          "completed": false
+        }
+      ]
+    }
+  ]
+}

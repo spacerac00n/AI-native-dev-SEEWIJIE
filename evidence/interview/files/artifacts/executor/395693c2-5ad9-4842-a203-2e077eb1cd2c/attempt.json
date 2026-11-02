@@ -1,0 +1,15 @@
+{
+  "runId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+  "planId": "vp1",
+  "revision": "d61ba281-a45b-47da-9ae2-5bf3f5747695",
+  "testedCommit": "d2b776ba74431cbce08172d7f24a60195f03e646",
+  "worktreeDirty": false,
+  "startedAt": "2026-11-02T11:07:21.062Z",
+  "captureSuccessScreenshots": true,
+  "invocation": [
+    "execute",
+    "vp1",
+    "d61ba281-a45b-47da-9ae2-5bf3f5747695",
+    "--external-target"
+  ]
+}

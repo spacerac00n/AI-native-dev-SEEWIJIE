@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–9 are implemented and verified, including detection of a seeded regression and a separate clean fix/retest using the unchanged approved plan through the dashboard. Milestone 10 remains pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–9 are implemented and verified, including detection of a seeded regression and a separate clean fix/retest using the unchanged approved plan through the dashboard. Milestone 10 implementation is prepared; independent fresh-clone verification and publication are recorded in [M10_VERIFICATION.md](M10_VERIFICATION.md). See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 

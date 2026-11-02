@@ -23,3 +23,6 @@ playwright-report/
 .idea/
 .vscode/
 *.pdf
+
+# Explicitly reviewed interview payload (nested data/artifacts/logs are intentional).
+!/evidence/interview/**

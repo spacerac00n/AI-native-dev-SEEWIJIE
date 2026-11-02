@@ -1,0 +1,86 @@
+
+> veriqa@0.0.0 test:dashboard
+> npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+Dashboard verification: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28
+
+Running 2 tests using 1 worker
+
+Dashboard verification: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28
+  ✘  1 [chromium] › tests/dashboard/dashboard.spec.ts:17:1 › dashboard exact approval, real execution, case assertions, screenshots and logs (5.6s)
+Dashboard verification: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28
+  ✘  2 [chromium] › tests/dashboard/dashboard.spec.ts:40:1 › dashboard preserves a real assertion failure and compares runs without claiming a fix (5.5s)
+
+
+  1) [chromium] › tests/dashboard/dashboard.spec.ts:17:1 › dashboard exact approval, real execution, case assertions, screenshots and logs 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Approved by SYNTHETIC DASHBOARD CHECK — not actual human review')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Approved by SYNTHETIC DASHBOARD CHECK — not actual human review') with timeout 5000ms
+      - waiting for getByText('Approved by SYNTHETIC DASHBOARD CHECK — not actual human review')
+
+
+      12 |   await page.getByLabel("I reviewed the actions and expected results for this exact revision.").check();
+      13 |   await page.getByRole("button", { name: "Approve exact revision" }).click();
+    > 14 |   await expect(page.getByText("Approved by SYNTHETIC DASHBOARD CHECK — not actual human review")).toBeVisible();
+         |                                                                                                   ^
+      15 | }
+      16 |
+      17 | test("dashboard exact approval, real execution, case assertions, screenshots and logs", async ({ page }) => {
+        at approveFixture (/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/dashboard/dashboard.spec.ts:14:99)
+        at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/dashboard/dashboard.spec.ts:18:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-exact--02a93-rtions-screenshots-and-logs-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-exact--02a93-rtions-screenshots-and-logs-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-exact--02a93-rtions-screenshots-and-logs-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-exact--02a93-rtions-screenshots-and-logs-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests/dashboard/dashboard.spec.ts:40:1 › dashboard preserves a real assertion failure and compares runs without claiming a fix 
+
+    TypeError: Cannot read properties of undefined (reading 'metadata')
+
+      54 |   const passing = records.find((item) => item.metadata.planId === "dashboard-review-check");
+      55 |   const failing = records.find((item) => item.metadata.planId === "dashboard-failure-check");
+    > 56 |   expect(passing.metadata.counts.passed).toBe(3); expect(failing.metadata.counts.failed).toBe(1);
+         |                  ^
+      57 |   await page.getByRole("button", { name: "03 Compare runs" }).click();
+      58 |   await page.getByLabel("Before run").selectOption(passing.metadata.runId);
+      59 |   await page.getByLabel("After run").selectOption(failing.metadata.runId);
+        at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/dashboard/dashboard.spec.ts:56:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-preser-61320-runs-without-claiming-a-fix-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-preser-61320-runs-without-claiming-a-fix-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-preser-61320-runs-without-claiming-a-fix-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/dashboard/2026-11-02T13-24-36.680Z-ffd9bcc8-4e34-4bb3-a64b-d3d20f99bc28/test-results/dashboard-dashboard-preser-61320-runs-without-claiming-a-fix-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests/dashboard/dashboard.spec.ts:17:1 › dashboard exact approval, real execution, case assertions, screenshots and logs 
+    [chromium] › tests/dashboard/dashboard.spec.ts:40:1 › dashboard preserves a real assertion failure and compares runs without claiming a fix 

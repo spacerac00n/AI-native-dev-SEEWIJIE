@@ -1,59 +1,79 @@
-# Checklist defect and fixed retest walkthrough
+# Interview walkthrough
 
-Milestones 8–9 demonstrate an actual failed persistence assertion and its successful retest using the same human-approved AI-generated plan. The seed and fix are separate commits on `codex/m8-checklist-regression`; both complete evidence sets remain local and unchanged. Milestone 10 is pending.
+The packaged historical demonstration is requirement → live AI proposal → actual human approval → real failed execution → separate code fix → successful retest. New replay uses real Playwright without an OpenAI key.
 
-| | Before: Milestone 8 | After: Milestone 9 |
+## Fresh clone and replay
+
+Use Node **22.23.2**, npm **10.9.8**, and free loopback ports 3000, 5173 and 5174. Run commands sequentially; stop dev servers before executing suites or the managed executor.
+
+```sh
+git clone --branch codex/m10-reproduction https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
+cd veriqa
+npm ci --cache .cache/npm
+npx playwright install chromium
+npm run evidence:verify
+npm run evidence:restore
+npm run evidence:restore
+npm run dev:qa
+```
+
+1. Open <http://127.0.0.1:5174>. In **Plan & execute**, select **Approved · Passwordless login**. Expand the review/approval **Technical details** to inspect original requirements, live-AI provenance, exact revision/hash and actual human approval. Do not import/reapprove this historical revision.
+2. Open **Compare runs**. Choose the failed run at **2 November 2026, 19:07:21 Singapore time** as Before, and passed run at **21:26:14** as After. Browser date formatting can vary; full IDs are in Technical details. Confirm **Same test expectations. Results are directly comparable.**
+3. Expand the successful-login/checklist case. Expected checked stays **true**; observed changes **false → true**. Open screenshots and **Individual checks**. Cases 2/3 stay passed. In Run history, **Logs & traces** opens real observations and browser/API logs; **Technical details → Raw execution output** shows original commands/exit codes.
+4. Download the failed trace. Its published copy has explicitly documented cookie/OTP-text redactions; original screenshots, actions, timing and assertion outcome are preserved. Successful runs have screenshots but no trace under retain-on-failure capture.
+5. Stop `dev:qa` with Ctrl+C, then replay:
+
+```sh
+env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+npm run evidence:verify
+```
+
+The executor does not load `.env` or call OpenAI. Expect a **new UUID**, 3 discovered/executed/passed cases, exit 0 and `execution: real-playwright`. It uses the restored original approval; historical runs stay unchanged. Restart `npm run dev:qa` to inspect the new run alongside them.
+
+## Reproduce the original defect independently
+
+From the fresh fixed checkout, with all servers stopped:
+
+```sh
+git clone --no-hardlinks . ../veriqa-seeded
+git -C ../veriqa-seeded checkout --detach d2b776ba74431cbce08172d7f24a60195f03e646
+npm run evidence:restore -- --target "$(cd ../veriqa-seeded && pwd)"
+cd ../veriqa-seeded
+npm ci --cache .cache/npm
+npx playwright install chromium
+env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+```
+
+The last command should exit **1** with **2 passed / 1 failed**, case1 `assertion-failed`, expected true / actual false. A new UUID is saved in this separate checkout. Read its `data/runs/<new-id>.json`: tested commit must be the exact seed SHA, dirty false, and no setup/connection error. Preserve this directory; it is new reproduction evidence, never the original M8 record. The restoration command runs from the fixed checkout because the historical seed predates the package/script. Do not run the fixed and seed servers together.
+
+## Historical comparison
+
+| | M8: seeded defect | M9: fixed retest |
 | --- | --- | --- |
-| Run ID | `395693c2-5ad9-4842-a203-2e077eb1cd2c` | `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` |
-| Tested Git SHA | `d2b776ba74431cbce08172d7f24a60195f03e646` | `1965faeb53ae987c1f3943141ca1a0199b2a919b` |
-| Commit | `test(seed): introduce checklist persistence regression` | `fix: restore checklist persistence` |
-| worktreeDirty | false | false |
+| Run | `395693c2-5ad9-4842-a203-2e077eb1cd2c` | `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` |
+| Tested commit | `d2b776ba74431cbce08172d7f24a60195f03e646` | `1965faeb53ae987c1f3943141ca1a0199b2a919b` |
+| Dirty | false | false |
 | Discovered / executed | 3 / 3 | 3 / 3 |
 | Passed / failed / skipped | 2 / 1 / 0 | 3 / 0 / 0 |
-| Actual exit code | 1 | 0 |
-| case1 status | assertion-failed | passed |
-| Checkbox expected / actual | true / false | true / true |
+| Exit | 1 | 0 |
+| Persistence expected / actual | true / false | true / true |
 
-Both records embed identical plan/provenance and human approval snapshots:
+Same plan `vp1`, revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`, content SHA-256 `01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f`. Approval `0d20cfb2-7e27-4693-adef-27287f2b8362`, See Wijie, `2026-11-02T08:34:02.309Z`. Original saved plan and approvals are under `evidence/interview/files/data/`; original execution copies are under `files/artifacts/executor/`.
 
-- Plan `vp1`, exact revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`.
-- Content hash `01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f`.
-- Approval `0d20cfb2-7e27-4693-adef-27287f2b8362`, See Wijie, `2026-11-02T08:34:02.309Z`.
-- Source `live-ai`, mode `replay`, execution `real-playwright`. No new OpenAI request, plan edit or approval occurred for the retest.
+<details><summary>Source and trace inspection</summary>
 
-## Inspect the existing dashboard comparison
+```sh
+git show d2b776ba74431cbce08172d7f24a60195f03e646 -- apps/api/src/demo.ts
+git show 1965faeb53ae987c1f3943141ca1a0199b2a919b -- apps/api/src/demo.ts
+npx playwright show-trace artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip
+```
 
-1. Open `http://127.0.0.1:5174` (5173 is the demo). Fresh fixed-code services were left running for inspection. If stopped, run `npm run dev:qa` from the repository root. Keep these ports free before starting; run regression suites separately from dev servers/builds.
-2. In **Plan & execute**, load the approved passwordless-login test plan by its readable title and saved date. Expand **Technical details** in plan review and approval; confirm the exact values above. Existing evidence inspection needs no generation, import or reapproval.
-3. Open **Compare runs**. Select the failed run at **2 November 2026, 19:07:21 Singapore time** as **Before run**, and the passed run at **21:26:14** as **After run** (dates render in the browser’s locale). Confirm “Same test expectations. Results are directly comparable.” Open the comparison’s **Technical details**, then each run’s nested **Technical details**, to verify the full IDs above and clean seed/fix commits.
-4. Expand **case1**. Confirm assertion-failed → passed. Read the behavior summary: the task should remain checked; before it was unchecked, after it was checked. Expand **Individual checks** for the same expected/observed behavior and nested **Technical details** for original boolean observations. The unchanged actions click the task then navigate to `/home`, so this tests persistence across a fresh page load. Open the real screenshots: unchecked before, checked after. Cases2/3 remain passed.
-5. In **Run history**, select the test plan title at each timestamp above. Expand **Technical details** to compare the same approval/hash and actual exit 1 → 0. Expand case1 to inspect assertions, screenshot, **Individual checks**, **Logs & traces**, and **Technical details → Raw execution output**. The full SHA, `worktreeDirty`, counts and exact command are also in each `data/runs/<run-id>.json` record.
-6. Download the original failed case1 **Playwright trace** or open it directly:
+The seed mutates a cloned checklist response. PATCH reports true but the next home GET reads stored false. The fix mutates stored tasks. The reviewed case toggles the task then loads `/home` again; the same deterministic checked assertion detects the regression. See the preserved `artifacts/verification/m8/trace-network-review.json` after restoration.
 
-   ```sh
-   npx playwright show-trace artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip
-   ```
+</details>
 
-   In the failed trace, Action 7's PATCH returns completed true, Action 8's fresh home GET returns false, and assertion 4 fails. The fixed run has three genuine final screenshots; successful traces are absent under the unchanged retain-on-failure setting.
-7. Inspect the separate source commits:
+## Interpret evidence and limitations
 
-   ```sh
-   git show d2b776ba74431cbce08172d7f24a60195f03e646 -- apps/api/src/demo.ts
-   git show 1965faeb53ae987c1f3943141ca1a0199b2a919b -- apps/api/src/demo.ts
-   git merge-base --is-ancestor d2b776ba74431cbce08172d7f24a60195f03e646 1965faeb53ae987c1f3943141ca1a0199b2a919b
-   ```
+A product assertion failure means actions reached the reviewed check and actual behavior differed. An `execution-error` (occupied port, absent Chromium, refused connection, reset failure, timeout before assertion) does not establish the seeded defect. Invalid/unapproved definitions are rejected before browser execution. A rerun always gets a new run ID; never replace an earlier failure.
 
-   The fix changes PATCH from mutating a cloned response to mutating the actual stored tasks. The last command exits 0; history retains the seed followed by evidence documentation and the separate fix.
-
-For another real replay on this configured machine, keep the same saved approved revision and **Capture successful-case screenshots** checked, then click **Execute approved plan**. This creates a separate UUID against the then-current Git SHA; a later documentation commit must not be reported as the original fixed SHA. Preserve the existing before/after pair. Fresh clones do not contain ignored local approvals/runs; fresh-clone setup and evidence packaging remain Milestone 10.
-
-## Evidence to retain
-
-Keep complete directories, not selected screenshots alone:
-
-- `artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/` and `data/runs/395693c2-5ad9-4842-a203-2e077eb1cd2c.json`.
-- `artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/` and `data/runs/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77.json`.
-- Original `data/plans/vp1/` and `data/approvals/vp1/`, plus earlier failures and clean baseline `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d` at `b82a8caafce3fb75d921d8a4f33ecfae80a014f0`.
-- `artifacts/verification/m9/`: preservation manifests, actual command/exit logs, fresh-server checks, `audit.json`, `dashboard-fixed.jpg`, `dashboard-comparison.jpg`, and `dashboard-comparison.txt`.
-
-The audit verifies all 1,366 earlier files unchanged, identical plan/approval snapshots, both immutable result copies, all indexed artifacts, three screenshots per run, original trace integrity and separate seed/fix ancestry. Baseline 24/24, unit 63/63, executor 7/7, isolated dashboard 2/2, typecheck and build passed. An initial dashboard failure caused by overlapping build/server restart remains recorded separately. See [AI_WORKFLOW.md](AI_WORKFLOW.md#milestone-9--checklist-persistence-fix-and-preserved-retest-november-2-2026) for exact commands, timings and report paths. Evidence stays local/ignored. The developer initially chose **Keep commits local**, then explicitly authorized merging into local main and publishing to origin in a follow-up request. See the chronological publication record in AI_WORKFLOW.md. Milestone 10 implementation remains pending.
+Only OTP delivery is mocked. Authentication/session/backend/checklist actions execute for real. Backend data is in memory; restarts reset synthetic users. Three reviewed cases demonstrate selected behavior, not complete QA coverage. AI review notes may be inaccurate and are retained as proposals. Historical external-server records identify Git state without independent build attestation; new managed execution starts fresh source servers. Sanitized trace limitations, exclusions and integrity boundaries are documented in the [package inventory](../evidence/interview/README.md). Actual fresh-clone commands, outcomes and corrective actions are recorded in [M10_VERIFICATION.md](M10_VERIFICATION.md).

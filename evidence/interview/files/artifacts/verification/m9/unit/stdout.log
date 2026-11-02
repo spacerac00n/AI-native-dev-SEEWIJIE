@@ -1,0 +1,400 @@
+
+> veriqa@0.0.0 test:unit
+> npm run build --workspace @veriqa/contracts && npm run test:unit --workspace @veriqa/api
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/api@0.0.0 test:unit
+> tsx --test ../../tests/unit/*.test.ts
+
+TAP version 13
+# Subtest: execution contract accepts a consistent synthetic example with comparison identities
+ok 1 - execution contract accepts a consistent synthetic example with comparison identities
+  ---
+  duration_ms: 4.55975
+  type: 'test'
+  ...
+# Subtest: execution contract rejects wrong revision approval
+ok 2 - execution contract rejects wrong revision approval
+  ---
+  duration_ms: 0.701417
+  type: 'test'
+  ...
+# Subtest: execution contract rejects wrong case identity
+ok 3 - execution contract rejects wrong case identity
+  ---
+  duration_ms: 0.621959
+  type: 'test'
+  ...
+# Subtest: execution contract rejects incomplete passed case
+ok 4 - execution contract rejects incomplete passed case
+  ---
+  duration_ms: 0.36825
+  type: 'test'
+  ...
+# Subtest: execution contract rejects failed assertion in passed case
+ok 5 - execution contract rejects failed assertion in passed case
+  ---
+  duration_ms: 0.29275
+  type: 'test'
+  ...
+# Subtest: execution contract rejects top-level error in passed run
+ok 6 - execution contract rejects top-level error in passed run
+  ---
+  duration_ms: 0.341291
+  type: 'test'
+  ...
+# Subtest: execution contract rejects case artifact traversal
+ok 7 - execution contract rejects case artifact traversal
+  ---
+  duration_ms: 0.53425
+  type: 'test'
+  ...
+# Subtest: execution contract rejects mismatched source provenance
+ok 8 - execution contract rejects mismatched source provenance
+  ---
+  duration_ms: 0.49425
+  type: 'test'
+  ...
+# Subtest: offline transport validates and saves live-shaped output unapproved with server provenance
+ok 9 - offline transport validates and saves live-shaped output unapproved with server provenance
+  ---
+  duration_ms: 27.172875
+  type: 'test'
+  ...
+# Subtest: offline planner rejects unsupported actions without saving a plan or leaking credentials
+ok 10 - offline planner rejects unsupported actions without saving a plan or leaking credentials
+  ---
+  duration_ms: 3.351333
+  type: 'test'
+  ...
+# Subtest: offline planner rejects broken references without saving a plan or leaking credentials
+ok 11 - offline planner rejects broken references without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.945166
+  type: 'test'
+  ...
+# Subtest: offline planner rejects forged approval without saving a plan or leaking credentials
+ok 12 - offline planner rejects forged approval without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.117333
+  type: 'test'
+  ...
+# Subtest: offline planner rejects refusal without saving a plan or leaking credentials
+ok 13 - offline planner rejects refusal without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.002625
+  type: 'test'
+  ...
+# Subtest: offline planner rejects incomplete output without saving a plan or leaking credentials
+ok 14 - offline planner rejects incomplete output without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.3015
+  type: 'test'
+  ...
+# Subtest: offline planner rejects invalid JSON without saving a plan or leaking credentials
+ok 15 - offline planner rejects invalid JSON without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.91025
+  type: 'test'
+  ...
+# Subtest: offline planner rejects HTTP auth error without saving a plan or leaking credentials
+ok 16 - offline planner rejects HTTP auth error without saving a plan or leaking credentials
+  ---
+  duration_ms: 1.971792
+  type: 'test'
+  ...
+# Subtest: offline planner rejects rate limit without saving a plan or leaking credentials
+ok 17 - offline planner rejects rate limit without saving a plan or leaking credentials
+  ---
+  duration_ms: 3.95575
+  type: 'test'
+  ...
+# Subtest: offline planner rejects network error with credential without saving a plan or leaking credentials
+ok 18 - offline planner rejects network error with credential without saving a plan or leaking credentials
+  ---
+  duration_ms: 1.732083
+  type: 'test'
+  ...
+# Subtest: offline planner rejects credential in output without saving a plan or leaking credentials
+ok 19 - offline planner rejects credential in output without saving a plan or leaking credentials
+  ---
+  duration_ms: 2.232375
+  type: 'test'
+  ...
+# Subtest: empty requirements and missing key fail locally before transport
+ok 20 - empty requirements and missing key fail locally before transport
+  ---
+  duration_ms: 0.13675
+  type: 'test'
+  ...
+# Subtest: manual fixture is a valid three-case definition, not an execution result
+ok 21 - manual fixture is a valid three-case definition, not an execution result
+  ---
+  duration_ms: 1.210375
+  type: 'test'
+  ...
+# Subtest: contract rejects malformed document
+ok 22 - contract rejects malformed document
+  ---
+  duration_ms: 0.140709
+  type: 'test'
+  ...
+# Subtest: contract rejects unknown action or generated code
+ok 23 - contract rejects unknown action or generated code
+  ---
+  duration_ms: 0.42675
+  type: 'test'
+  ...
+# Subtest: contract rejects external navigation
+ok 24 - contract rejects external navigation
+  ---
+  duration_ms: 0.266542
+  type: 'test'
+  ...
+# Subtest: contract rejects raw CSS selector
+ok 25 - contract rejects raw CSS selector
+  ---
+  duration_ms: 0.159167
+  type: 'test'
+  ...
+# Subtest: contract rejects unsupported input
+ok 26 - contract rejects unsupported input
+  ---
+  duration_ms: 0.203667
+  type: 'test'
+  ...
+# Subtest: contract rejects OTP reference before reading
+ok 27 - contract rejects OTP reference before reading
+  ---
+  duration_ms: 0.405208
+  type: 'test'
+  ...
+# Subtest: contract rejects generic API request
+ok 28 - contract rejects generic API request
+  ---
+  duration_ms: 0.316458
+  type: 'test'
+  ...
+# Subtest: contract rejects API method injection
+ok 29 - contract rejects API method injection
+  ---
+  duration_ms: 0.398292
+  type: 'test'
+  ...
+# Subtest: contract rejects invalid API status
+ok 30 - contract rejects invalid API status
+  ---
+  duration_ms: 0.440667
+  type: 'test'
+  ...
+# Subtest: contract rejects invalid API body
+ok 31 - contract rejects invalid API body
+  ---
+  duration_ms: 0.384583
+  type: 'test'
+  ...
+# Subtest: contract rejects string in place of boolean
+ok 32 - contract rejects string in place of boolean
+  ---
+  duration_ms: 0.197625
+  type: 'test'
+  ...
+# Subtest: contract rejects blank expected text
+ok 33 - contract rejects blank expected text
+  ---
+  duration_ms: 0.186583
+  type: 'test'
+  ...
+# Subtest: contract rejects no expected assertions
+ok 34 - contract rejects no expected assertions
+  ---
+  duration_ms: 0.155
+  type: 'test'
+  ...
+# Subtest: contract rejects forged approval inside plan
+ok 35 - contract rejects forged approval inside plan
+  ---
+  duration_ms: 0.148042
+  type: 'test'
+  ...
+# Subtest: contract rejects live AI origin without provenance
+ok 36 - contract rejects live AI origin without provenance
+  ---
+  duration_ms: 0.146542
+  type: 'test'
+  ...
+# Subtest: contract rejects duplicate cases
+ok 37 - contract rejects duplicate cases
+  ---
+  duration_ms: 0.173042
+  type: 'test'
+  ...
+# Subtest: contract rejects duplicate requirements
+ok 38 - contract rejects duplicate requirements
+  ---
+  duration_ms: 0.142625
+  type: 'test'
+  ...
+# Subtest: contract rejects unknown requirement reference
+ok 39 - contract rejects unknown requirement reference
+  ---
+  duration_ms: 0.140959
+  type: 'test'
+  ...
+# Subtest: digest ignores object key order but detects changed expectations
+ok 40 - digest ignores object key order but detects changed expectations
+  ---
+  duration_ms: 0.897959
+  type: 'test'
+  ...
+# Subtest: save/load survives a new store instance and starts unapproved
+ok 41 - save/load survives a new store instance and starts unapproved
+  ---
+  duration_ms: 6.5345
+  type: 'test'
+  ...
+# Subtest: invalid input is rejected before any plan is persisted
+ok 42 - invalid input is rejected before any plan is persisted
+  ---
+  duration_ms: 0.589416
+  type: 'test'
+  ...
+# Subtest: explicit test approval binds revision and digest and cannot be overwritten
+ok 43 - explicit test approval binds revision and digest and cannot be overwritten
+  ---
+  duration_ms: 7.420292
+  type: 'test'
+  ...
+# Subtest: editing invalidates approval and preserves the old revision and record
+ok 44 - editing invalidates approval and preserves the old revision and record
+  ---
+  duration_ms: 9.152792
+  type: 'test'
+  ...
+# Subtest: reverting identical content does not resurrect an older approval
+ok 45 - reverting identical content does not resurrect an older approval
+  ---
+  duration_ms: 7.448542
+  type: 'test'
+  ...
+# Subtest: out-of-band content and approval hash changes fail closed
+ok 46 - out-of-band content and approval hash changes fail closed
+  ---
+  duration_ms: 5.6825
+  type: 'test'
+  ...
+# Subtest: IDs and revisions cannot traverse storage directories
+ok 47 - IDs and revisions cannot traverse storage directories
+  ---
+  duration_ms: 0.37425
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit approval flags and checks the exact current revision
+ok 48 - CLI requires explicit approval flags and checks the exact current revision
+  ---
+  duration_ms: 850.436583
+  type: 'test'
+  ...
+# Subtest: result metadata accepts a consistent synthetic contract example
+ok 49 - result metadata accepts a consistent synthetic contract example
+  ---
+  duration_ms: 1.070375
+  type: 'test'
+  ...
+# Subtest: result metadata rejects zero-test pass
+ok 50 - result metadata rejects zero-test pass
+  ---
+  duration_ms: 0.152125
+  type: 'test'
+  ...
+# Subtest: result metadata rejects unapproved pass
+ok 51 - result metadata rejects unapproved pass
+  ---
+  duration_ms: 0.050292
+  type: 'test'
+  ...
+# Subtest: result metadata rejects nonzero pass exit
+ok 52 - result metadata rejects nonzero pass exit
+  ---
+  duration_ms: 0.041417
+  type: 'test'
+  ...
+# Subtest: result metadata rejects inconsistent counts
+ok 53 - result metadata rejects inconsistent counts
+  ---
+  duration_ms: 0.035708
+  type: 'test'
+  ...
+# Subtest: result metadata rejects failure without failed assertions
+ok 54 - result metadata rejects failure without failed assertions
+  ---
+  duration_ms: 0.035417
+  type: 'test'
+  ...
+# Subtest: result metadata rejects successful exit for execution error
+ok 55 - result metadata rejects successful exit for execution error
+  ---
+  duration_ms: 0.089042
+  type: 'test'
+  ...
+# Subtest: result metadata rejects reversed time
+ok 56 - result metadata rejects reversed time
+  ---
+  duration_ms: 0.050916
+  type: 'test'
+  ...
+# Subtest: result metadata rejects artifact traversal
+ok 57 - result metadata rejects artifact traversal
+  ---
+  duration_ms: 0.69275
+  type: 'test'
+  ...
+# Subtest: QA API lists validated revisions and requires explicit exact-hash human confirmation
+ok 58 - QA API lists validated revisions and requires explicit exact-hash human confirmation
+  ---
+  duration_ms: 33.568666
+  type: 'test'
+  ...
+# Subtest: QA execution rejects unapproved plans, wrong hashes and targets without reset controls
+ok 59 - QA execution rejects unapproved plans, wrong hashes and targets without reset controls
+  ---
+  duration_ms: 11.591708
+  type: 'test'
+  ...
+# Subtest: QA mutation guard rejects foreign origins, missing action headers, and untrusted hosts
+ok 60 - QA mutation guard rejects foreign origins, missing action headers, and untrusted hosts
+  ---
+  duration_ms: 4.026333
+  type: 'test'
+  ...
+# Subtest: QA generation calls the existing planner, allocates a fresh ID and stays unapproved
+ok 61 - QA generation calls the existing planner, allocates a fresh ID and stays unapproved
+  ---
+  duration_ms: 9.576666
+  type: 'test'
+  ...
+# Subtest: run history preserves rejected, incomplete, active and invalid records without passes
+ok 62 - run history preserves rejected, incomplete, active and invalid records without passes
+  ---
+  duration_ms: 12.022125
+  type: 'test'
+  ...
+# Subtest: artifact access rejects traversal, unindexed paths and symlink escapes
+ok 63 - artifact access rejects traversal, unindexed paths and symlink escapes
+  ---
+  duration_ms: 5.564333
+  type: 'test'
+  ...
+1..63
+# tests 63
+# suites 0
+# pass 63
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1054.034083

@@ -1,0 +1,29 @@
+{
+  "runId": "2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77",
+  "files": {
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/stderr.log": "4e0bc1953a1684690608a8bc77f657ea04f971cb2937e554a819c1a2508d741a",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/input.json": "0979293f7013293da4ae0ac5e960ecf229ab5619e44b889a52eddcd636478fe6",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/stdout.log": "5ab8ee2e4bad219d98023a3d20723f5b1c4365f55bc9513c8ec51a062fab1e32",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/playwright.json": "a18a56ffb4debf9499fd6d0c2733b9ecf2e46f736ecc243b0466298d19d5d69f",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/command.json": "300c433c85782535c06da612ea3dfbdbc9fd80b1261b9ac86bca476dd59f7706",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/attempt.json": "db3d1f6d488bf78b891ba6b1cce9013902de8a6c70ea054b6c42bac4f45a440d",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/run.json": "515b7ad6fe04e1409922e37beb5c1adc3a608e7c89c1c988821768514f4db809",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/.last-run.json": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/test-finished-1.png": "38087b465181e94475618469a372046d3f84bfb35f9c6c9cf5991723e087b325",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/test-finished-1.png": "5f46ed0a500ec529cacf7a697a10ed9a32ca0c6f3875f484b45b193f053f232e",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/test-finished-1.png": "4bd60eaf7cdde347f2d3829b21922624deee4b3b97ce67708eaf49d644b2fc89",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/attachments/case-observation-ebb58e58955bd68b0726cfb7775d41320940db0b.json": "4a994b3d59491039e5b9d61b12207a3d71e93ea29ea9f3654253cf8214d52ef1",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/attachments/case-observation-acae4d8cdbf0e6ce47df986e2e2543455bfb9797.json": "7336f5c3f49495ce8358f5dd152a504d012d19899158eecb406692fb6a379585",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/attachments/case-observation-03aec602e33eab46f23540ce26102a2253b4f35c.json": "c30857226d4004fa9bd46b5578523f13a0cb70bd87df432b2f4703c195c9adb2",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case1/browser-api.log.json": "cd70a82b882ab9c93dcb65203624e4ab8ff2dfb0de856392acb08d23309ced3a",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case1/result.json": "0044eaa4ec8ccac3d3be10d4b4d25e1c72c8ef0708eea9fd7bff64a8b453e854",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case1/observation.json": "c30857226d4004fa9bd46b5578523f13a0cb70bd87df432b2f4703c195c9adb2",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case2/browser-api.log.json": "cc1e943e9e7de039fb29964e9db0e84fccb3db1979e403e182a48e62d4479226",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case2/result.json": "8f0738a420444a9c84ceb1405259f92c37417a3867c7326a9b6d3ed705ec0f3f",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case2/observation.json": "4a994b3d59491039e5b9d61b12207a3d71e93ea29ea9f3654253cf8214d52ef1",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case3/browser-api.log.json": "13a7021cc4b266f1806352af88b047743ca6ccde5d15ba0ee04449caa30da974",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case3/result.json": "d8417dd0c0dd0d0469ab7892c021a2029b666738bc9bfa2c80ccdc98efd5a7cb",
+    "artifacts/executor/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77/cases/case3/observation.json": "7336f5c3f49495ce8358f5dd152a504d012d19899158eecb406692fb6a379585",
+    "data/runs/2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77.json": "515b7ad6fe04e1409922e37beb5c1adc3a608e7c89c1c988821768514f4db809"
+  }
+}

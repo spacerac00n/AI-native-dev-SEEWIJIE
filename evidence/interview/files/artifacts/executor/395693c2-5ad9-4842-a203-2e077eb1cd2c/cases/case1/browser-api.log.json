@@ -1,0 +1,22 @@
+[
+  {
+    "kind": "http-error",
+    "url": "http://127.0.0.1:5173/api/demo/home",
+    "status": 401
+  },
+  {
+    "kind": "console",
+    "type": "error",
+    "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  },
+  {
+    "kind": "http-error",
+    "url": "http://127.0.0.1:5173/api/demo/home",
+    "status": 401
+  },
+  {
+    "kind": "console",
+    "type": "error",
+    "message": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  }
+]

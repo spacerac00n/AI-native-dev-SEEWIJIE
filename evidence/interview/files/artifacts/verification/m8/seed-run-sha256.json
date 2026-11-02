@@ -1,0 +1,31 @@
+{
+  "runId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+  "files": {
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/attempt.json": "005b142e7b36021a8fd28500106e5984e8a2ffba968023699a0ee9804dff3ef6",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case1/browser-api.log.json": "cd70a82b882ab9c93dcb65203624e4ab8ff2dfb0de856392acb08d23309ced3a",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case1/observation.json": "7ef9ec03998bed246fbeee0929adcb36efa18113e85a05bfca4a9e0c32c41a38",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case1/result.json": "0d94029de81bae56f124f2dda9b556eb3d4674e9fbea58250fd3df7b275c483a",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case2/browser-api.log.json": "cc1e943e9e7de039fb29964e9db0e84fccb3db1979e403e182a48e62d4479226",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case2/observation.json": "7dc4799ea854c88d2050846f2d7071ddfc59e56b20b6ed6253785394889ea6c6",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case2/result.json": "777da96084f9b8f33e02402a32f7145b7fb5506a8bc7e20fdcd19a8cfaa28d29",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case3/browser-api.log.json": "13a7021cc4b266f1806352af88b047743ca6ccde5d15ba0ee04449caa30da974",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case3/observation.json": "c059a39d200601a9cb96772deacc240cf1fec13a710071a4fa1610a249c985ac",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/cases/case3/result.json": "7cbc183d94247f798669eef223b53ab71851897eb120f03238fb1e306caaf71e",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/command.json": "0a526502ca12b152c2a75658dc9a6b12d52507ef66c15f74ec06939100e5268f",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/input.json": "0979293f7013293da4ae0ac5e960ecf229ab5619e44b889a52eddcd636478fe6",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/playwright.json": "a411bed7047b171120e1df5dadaa16f3820f43f18c899e8fb64870f0c9de4c1e",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/run.json": "2a307a90684097bed7d64bdcf0409593e56fa0fb1c8892fbb002081c42ee0e61",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/stderr.log": "6a8da7c5fac073d2d0f4b680747bdf881dd407717e2589d3e1d7116925908cf0",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/stdout.log": "baedb9191c25bbe9cdf05942866aac7b8df4d6d6e1677070be52cdd9a6c1906a",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/.last-run.json": "55c8c5b9fb77d92013312f67128fa9ed2ec61691b03bb354abc41d808a4cab33",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/attachments/case-observation-f26bdfea9c0712bebc9130cd2a7692afe62ee664.json": "7ef9ec03998bed246fbeee0929adcb36efa18113e85a05bfca4a9e0c32c41a38",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/error-context.md": "9b7b386c262c3234315d2d08f53bc940506e8167e89df25217e408a2750e0817",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/test-failed-1.png": "3d866ab3b866251c7a07d0f54cfaf58fa74d8fbd70e6cfde2c96e0e8469964bd",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip": "6a211cda6cc2dd75205a110eb7d4d6565e8ee30477eafa6333f4523bab154d43",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/attachments/case-observation-459f0876f7cce962deafa311da2731a44d331eae.json": "7dc4799ea854c88d2050846f2d7071ddfc59e56b20b6ed6253785394889ea6c6",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/test-finished-1.png": "4bd60eaf7cdde347f2d3829b21922624deee4b3b97ce67708eaf49d644b2fc89",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/attachments/case-observation-ac93a8061eae764e2551aac5e82dff30da22355a.json": "c059a39d200601a9cb96772deacc240cf1fec13a710071a4fa1610a249c985ac",
+    "artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/test-finished-1.png": "5f46ed0a500ec529cacf7a697a10ed9a32ca0c6f3875f484b45b193f053f232e",
+    "data/runs/395693c2-5ad9-4842-a203-2e077eb1cd2c.json": "2a307a90684097bed7d64bdcf0409593e56fa0fb1c8892fbb002081c42ee0e61"
+  }
+}

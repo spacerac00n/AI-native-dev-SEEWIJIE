@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "test:dashboard"
+  ],
+  "startedAt": "2026-11-02T13:24:36.110940+00:00",
+  "testedCommit": "1965faeb53ae987c1f3943141ca1a0199b2a919b",
+  "worktreeDirty": false,
+  "openAIEnvironmentRemoved": true,
+  "exitCode": 1,
+  "finishedAt": "2026-11-02T13:24:49.850800+00:00"
+}

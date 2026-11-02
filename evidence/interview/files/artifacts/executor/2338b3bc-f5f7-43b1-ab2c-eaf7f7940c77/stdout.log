@@ -1,0 +1,8 @@
+
+Running 3 tests using 1 worker
+
+  ✓  1 [chromium] › tests/executor/plan.spec.ts:18:3 › case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence (736ms)
+  ✓  2 [chromium] › tests/executor/plan.spec.ts:18:3 › case2: Reject login with invalid non-@e.ntu.edu.sg emails (362ms)
+  ✓  3 [chromium] › tests/executor/plan.spec.ts:18:3 › case3: Logout clears session and blocks access to protected home (635ms)
+
+  3 passed (2.2s)

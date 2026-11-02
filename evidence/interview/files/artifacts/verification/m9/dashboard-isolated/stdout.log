@@ -1,0 +1,17 @@
+
+> veriqa@0.0.0 test:dashboard
+> npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+Dashboard verification: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/dashboard/2026-11-02T13-25-04.006Z-c5b51003-9567-4c61-a63e-3feebcad58c0
+
+Running 2 tests using 1 worker
+
+Dashboard verification: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/dashboard/2026-11-02T13-25-04.006Z-c5b51003-9567-4c61-a63e-3feebcad58c0
+  ✓  1 [chromium] › tests/dashboard/dashboard.spec.ts:17:1 › dashboard exact approval, real execution, case assertions, screenshots and logs (4.3s)
+  ✓  2 [chromium] › tests/dashboard/dashboard.spec.ts:40:1 › dashboard preserves a real assertion failure and compares runs without claiming a fix (5.8s)
+
+  2 passed (11.6s)

@@ -1,0 +1,48 @@
+{
+  "verifiedAt": "2026-11-02T11:12:27.151556+00:00",
+  "runId": "395693c2-5ad9-4842-a203-2e077eb1cd2c",
+  "testedCommit": "d2b776ba74431cbce08172d7f24a60195f03e646",
+  "worktreeDirty": false,
+  "baselineRunId": "86b3c3f5-5ffd-4a9e-9001-bc6d0437927d",
+  "baselineCommit": "b82a8caafce3fb75d921d8a4f33ecfae80a014f0",
+  "unchangedEarlierFiles": 1326,
+  "unchangedPlanAndApproval": true,
+  "counts": {
+    "discovered": 3,
+    "executed": 3,
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0
+  },
+  "exitCode": 1,
+  "outcome": "assertion-failed",
+  "assertions": {
+    "attempted": 8,
+    "passed": 7,
+    "failed": 1
+  },
+  "indexedArtifacts": 25,
+  "screenshots": 3,
+  "failureTraces": 1,
+  "identicalRunCopies": true,
+  "traceZipIntegrity": true,
+  "executionLockReleased": true,
+  "currentApplicationMatchesSeed": true,
+  "documentationFiles": [
+    "README.md",
+    "docs/AI_WORKFLOW.md",
+    "docs/ARCHITECTURE.md",
+    "docs/DASHBOARD.md",
+    "docs/DEMO.md",
+    "docs/PLAN.md"
+  ],
+  "localMarkdownLinksChecked": 24,
+  "whitespaceExitCode": 0,
+  "limitedCredentialPatternScan": "no matches",
+  "uiEvidence": [
+    "artifacts/verification/m8/dashboard-failure.png",
+    "artifacts/verification/m8/dashboard-comparison.png",
+    "artifacts/verification/m8/dashboard-comparison.txt"
+  ],
+  "traceReview": "artifacts/verification/m8/trace-network-review.json"
+}

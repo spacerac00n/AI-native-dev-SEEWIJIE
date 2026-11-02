@@ -1,0 +1,241 @@
+{
+  "saved": {
+    "revision": "d61ba281-a45b-47da-9ae2-5bf3f5747695",
+    "contentHash": "01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f",
+    "createdAt": "2026-11-02T07:50:51.427Z",
+    "plan": {
+      "schemaVersion": 1,
+      "id": "vp1",
+      "title": "Passwordless login with domain validation, session, protected home, task persistence, and logout",
+      "source": "live-ai",
+      "provenance": {
+        "provider": "openai",
+        "api": "responses",
+        "promptVersion": "veriqa-planner-v2",
+        "requestedModel": "gpt-4.1-mini",
+        "model": "gpt-4.1-mini-2025-04-14",
+        "responseId": "resp_05c98ef2c0c46630016ae840d68db487d2966ec16261b0b2e7",
+        "requestId": "req_79887de0ec074210811e35ba33a82fae",
+        "generatedAt": "2026-11-02T07:50:51.423Z",
+        "requirementsText": "Using synthetic accounts only, verify passwordless email login in the local VeriQA demo.\nOnly valid email addresses ending exactly with @e.ntu.edu.sg are accepted; reject other domains and spoofed suffixes.\nA correct mock OTP creates a server-recognised session. Delivery is local and no real email is sent.\nUnauthenticated users must not receive protected home data.\nOn home, show a welcome message with the email and a tiny checklist. Toggling a task must survive refresh.\nLogout invalidates the server session. Propose up to three focused cases supported by the current action schema.\n",
+        "reviewNotes": [
+          "Requirement 5 expects two tasks but demo tasks accessed via review-requirements checkbox only; verified one due to demo schema constraints.",
+          "No explicit negative tests covering incorrect OTP attempts as unsupported by current action schema.",
+          "No direct coverage of OTP expiry or session timeout due to lack of timing controls in demo."
+        ],
+        "usage": {
+          "inputTokens": 1179,
+          "outputTokens": 753,
+          "totalTokens": 1932
+        }
+      },
+      "target": "demo-web",
+      "requirements": [
+        {
+          "id": "req1",
+          "text": "Accept only valid email addresses ending exactly with @e.ntu.edu.sg for login."
+        },
+        {
+          "id": "req2",
+          "text": "Reject login attempts with other domains or spoofed suffixes."
+        },
+        {
+          "id": "req3",
+          "text": "Use correct 6-digit mock OTP to establish a valid server session."
+        },
+        {
+          "id": "req4",
+          "text": "Unauthenticated users must not access protected home data and receive 401 with error message."
+        },
+        {
+          "id": "req5",
+          "text": "Display welcome message with email and a checklist of two tasks on home page after login."
+        },
+        {
+          "id": "req6",
+          "text": "Toggling task checkboxes survives refresh of the home page."
+        },
+        {
+          "id": "req7",
+          "text": "Logout invalidates the server session and access to home requires authentication again."
+        }
+      ],
+      "cases": [
+        {
+          "id": "case1",
+          "title": "Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence",
+          "requirementIds": [
+            "req1",
+            "req3",
+            "req5",
+            "req6"
+          ],
+          "precondition": "fresh-demo-state",
+          "actions": [
+            {
+              "type": "navigate",
+              "path": "/login"
+            },
+            {
+              "type": "fill",
+              "input": "email",
+              "value": "synthetic.student@e.ntu.edu.sg"
+            },
+            {
+              "type": "click",
+              "target": "request-otp"
+            },
+            {
+              "type": "read_mock_otp"
+            },
+            {
+              "type": "fill",
+              "input": "otp",
+              "value": {
+                "from": "mock-otp"
+              }
+            },
+            {
+              "type": "click",
+              "target": "verify-otp"
+            },
+            {
+              "type": "click",
+              "target": "review-requirements"
+            },
+            {
+              "type": "navigate",
+              "path": "/home"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "url",
+              "path": "/home"
+            },
+            {
+              "type": "visible",
+              "target": "welcome-heading",
+              "expected": true
+            },
+            {
+              "type": "text",
+              "target": "welcome-heading",
+              "expected": "Welcome, synthetic.student@e.ntu.edu.sg"
+            },
+            {
+              "type": "checked",
+              "target": "review-requirements",
+              "expected": true
+            }
+          ]
+        },
+        {
+          "id": "case2",
+          "title": "Reject login with invalid non-@e.ntu.edu.sg emails",
+          "requirementIds": [
+            "req2"
+          ],
+          "precondition": "fresh-demo-state",
+          "actions": [
+            {
+              "type": "navigate",
+              "path": "/login"
+            },
+            {
+              "type": "fill",
+              "input": "email",
+              "value": "synthetic.student@gmail.com"
+            },
+            {
+              "type": "click",
+              "target": "request-otp"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "visible",
+              "target": "error-message",
+              "expected": true
+            },
+            {
+              "type": "text",
+              "target": "error-message",
+              "expected": "Use a valid email ending exactly with @e.ntu.edu.sg."
+            }
+          ]
+        },
+        {
+          "id": "case3",
+          "title": "Logout clears session and blocks access to protected home",
+          "requirementIds": [
+            "req4",
+            "req7"
+          ],
+          "precondition": "fresh-demo-state",
+          "actions": [
+            {
+              "type": "navigate",
+              "path": "/login"
+            },
+            {
+              "type": "fill",
+              "input": "email",
+              "value": "synthetic.student@e.ntu.edu.sg"
+            },
+            {
+              "type": "click",
+              "target": "request-otp"
+            },
+            {
+              "type": "read_mock_otp"
+            },
+            {
+              "type": "fill",
+              "input": "otp",
+              "value": {
+                "from": "mock-otp"
+              }
+            },
+            {
+              "type": "click",
+              "target": "verify-otp"
+            },
+            {
+              "type": "click",
+              "target": "logout"
+            },
+            {
+              "type": "navigate",
+              "path": "/home"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "url",
+              "path": "/login"
+            },
+            {
+              "type": "api",
+              "operation": "home",
+              "expected": {
+                "status": 401,
+                "error": "Authentication required."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "approval": {
+    "schemaVersion": 1,
+    "approvalId": "0d20cfb2-7e27-4693-adef-27287f2b8362",
+    "planId": "vp1",
+    "revision": "d61ba281-a45b-47da-9ae2-5bf3f5747695",
+    "contentHash": "01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f",
+    "approvedBy": "See Wijie",
+    "approvedAt": "2026-11-02T08:34:02.309Z",
+    "decision": "approved"
+  }
+}

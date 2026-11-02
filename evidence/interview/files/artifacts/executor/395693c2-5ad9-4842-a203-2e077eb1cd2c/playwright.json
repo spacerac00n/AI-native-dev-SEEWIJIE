@@ -1,0 +1,424 @@
+{
+  "config": {
+    "argv": [
+      "/Users/grassjelly/.hermes/node/bin/node",
+      "/Users/grassjelly/Desktop/Bytedance-AI-Native/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "playwright.executor.config.ts"
+    ],
+    "configFile": "/Users/grassjelly/Desktop/Bytedance-AI-Native/playwright.executor.config.ts",
+    "rootDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor",
+        "testIgnore": [],
+        "testMatch": [
+          "plan.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor",
+        "snapshotDir": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor",
+        "testIgnore": [],
+        "testMatch": "plan.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "screenshot": "on",
+          "trace": "retain-on-failure",
+          "actionTimeout": 5000,
+          "navigationTimeout": 5000,
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/playwright.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "plan.spec.ts",
+      "file": "plan.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "case1: Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence",
+          "ok": false,
+          "tags": [
+            "e.ntu.edu.sg"
+          ],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3712,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n\n    at verifyAssertion (/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts:129:26)\n    at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:43:9",
+                    "location": {
+                      "file": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts",
+                      "column": 26,
+                      "line": 129
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39madapters.ts:129\n\n  127 |     observations.push({ index, definition, expected, actual: await readActual().catch(() => null),\n  128 |       status: assertion ? \"failed\" : \"execution-error\" });\n> 129 |     if (assertion) throw new AssertionFailure(error.message);\n      |                          ^\n  130 |     throw error;\n  131 |   }\n  132 | }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts",
+                        "column": 26,
+                        "line": 129
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n\n\n   at adapters.ts:129\n\n  127 |     observations.push({ index, definition, expected, actual: await readActual().catch(() => null),\n  128 |       status: assertion ? \"failed\" : \"execution-error\" });\n> 129 |     if (assertion) throw new AssertionFailure(error.message);\n      |                          ^\n  130 |     throw error;\n  131 |   }\n  132 | }\n    at verifyAssertion (/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts:129:26)\n    at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:43:9"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Action 1: navigate",
+                      "duration": 215
+                    },
+                    {
+                      "title": "Action 2: fill",
+                      "duration": 13
+                    },
+                    {
+                      "title": "Action 3: click",
+                      "duration": 84
+                    },
+                    {
+                      "title": "Action 4: read_mock_otp",
+                      "duration": 5
+                    },
+                    {
+                      "title": "Action 5: fill",
+                      "duration": 5
+                    },
+                    {
+                      "title": "Action 6: click",
+                      "duration": 44
+                    },
+                    {
+                      "title": "Action 7: click",
+                      "duration": 50
+                    },
+                    {
+                      "title": "Action 8: navigate",
+                      "duration": 149
+                    },
+                    {
+                      "title": "Assertion 1: url",
+                      "duration": 3
+                    },
+                    {
+                      "title": "Assertion 2: visible",
+                      "duration": 4
+                    },
+                    {
+                      "title": "Assertion 3: text",
+                      "duration": 4
+                    },
+                    {
+                      "title": "Assertion 4: checked",
+                      "duration": 3017,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n\n    at verifyAssertion (/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts:129:26)\n    at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:43:9",
+                        "location": {
+                          "file": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts",
+                          "column": 26,
+                          "line": 129
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39madapters.ts:129\n\n  127 |     observations.push({ index, definition, expected, actual: await readActual().catch(() => null),\n  128 |       status: assertion ? \"failed\" : \"execution-error\" });\n> 129 |     if (assertion) throw new AssertionFailure(error.message);\n      |                          ^\n  130 |     throw error;\n  131 |   }\n  132 | }"
+                      }
+                    }
+                  ],
+                  "startTime": "2026-11-02T11:07:21.714Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "case-observation",
+                      "contentType": "application/json",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/attachments/case-observation-f26bdfea9c0712bebc9130cd2a7692afe62ee664.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts",
+                    "column": 26,
+                    "line": 129
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0bcf17a0c6512d46058b-c4cd3414d93ef64a37d1",
+          "file": "plan.spec.ts",
+          "line": 18,
+          "column": 3
+        },
+        {
+          "title": "case2: Reject login with invalid non-@e.ntu.edu.sg emails",
+          "ok": true,
+          "tags": [
+            "e.ntu.edu.sg"
+          ],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 412,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Action 1: navigate",
+                      "duration": 225
+                    },
+                    {
+                      "title": "Action 2: fill",
+                      "duration": 12
+                    },
+                    {
+                      "title": "Action 3: click",
+                      "duration": 69
+                    },
+                    {
+                      "title": "Assertion 1: visible",
+                      "duration": 4
+                    },
+                    {
+                      "title": "Assertion 2: text",
+                      "duration": 4
+                    }
+                  ],
+                  "startTime": "2026-11-02T11:07:25.833Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "case-observation",
+                      "contentType": "application/json",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/attachments/case-observation-459f0876f7cce962deafa311da2731a44d331eae.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0bcf17a0c6512d46058b-4b17006579964afef9cd",
+          "file": "plan.spec.ts",
+          "line": 18,
+          "column": 3
+        },
+        {
+          "title": "case3: Logout clears session and blocks access to protected home",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 619,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Action 1: navigate",
+                      "duration": 217
+                    },
+                    {
+                      "title": "Action 2: fill",
+                      "duration": 6
+                    },
+                    {
+                      "title": "Action 3: click",
+                      "duration": 79
+                    },
+                    {
+                      "title": "Action 4: read_mock_otp",
+                      "duration": 4
+                    },
+                    {
+                      "title": "Action 5: fill",
+                      "duration": 5
+                    },
+                    {
+                      "title": "Action 6: click",
+                      "duration": 50
+                    },
+                    {
+                      "title": "Action 7: click",
+                      "duration": 49
+                    },
+                    {
+                      "title": "Action 8: navigate",
+                      "duration": 147
+                    },
+                    {
+                      "title": "Assertion 1: url",
+                      "duration": 2
+                    },
+                    {
+                      "title": "Assertion 2: api",
+                      "duration": 3
+                    }
+                  ],
+                  "startTime": "2026-11-02T11:07:26.340Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "case-observation",
+                      "contentType": "application/json",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/attachments/case-observation-ac93a8061eae764e2551aac5e82dff30da22355a.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case3-Logout-clears-s-4f9cc-ks-access-to-protected-home-chromium/test-finished-1.png"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0bcf17a0c6512d46058b-9ec57349c931c0feb4ae",
+          "file": "plan.spec.ts",
+          "line": 18,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-02T11:07:21.397Z",
+    "duration": 5591.14,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

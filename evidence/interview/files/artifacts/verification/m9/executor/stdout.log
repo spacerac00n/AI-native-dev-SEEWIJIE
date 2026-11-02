@@ -1,0 +1,381 @@
+
+> veriqa@0.0.0 test:executor
+> npm run build --workspace @veriqa/contracts && node --import tsx --test tests/integration/executor.test.ts
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+TAP version 13
+# Retained runner checks: /Users/grassjelly/Desktop/Bytedance-AI-Native/artifacts/runner-checks/e738772d-8250-4563-b014-b8e44feab1fd
+# Executor artifacts: artifacts/executor/a81572de-1953-488f-b7f1-aedaef65e9a1
+# Executor artifacts: artifacts/executor/948396d8-5446-4e6f-9ea7-2bc29b99806b
+# Executor artifacts: artifacts/executor/a4f33f45-af10-4e06-bbd4-f92b03b7c7e9
+# Executor artifacts: artifacts/executor/dfe87524-4296-4f04-a8d6-a83a0a7de2e2
+# Subtest: deterministic executor verification (real Playwright, synthetic runner-check approvals)
+    # Subtest: unapproved saved plan is rejected before browser/server launch
+    ok 1 - unapproved saved plan is rejected before browser/server launch
+      ---
+      duration_ms: 26.538709
+      type: 'test'
+      ...
+    # Subtest: unsupported stored action is revalidated and rejected
+    ok 2 - unsupported stored action is revalidated and rejected
+      ---
+      duration_ms: 23.924834
+      type: 'test'
+      ...
+    # Subtest: a concurrent execution is rejected without stealing the existing run lock
+    ok 3 - a concurrent execution is rejected without stealing the existing run lock
+      ---
+      duration_ms: 23.367041
+      type: 'test'
+      ...
+# [WebServer] (node:59472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# [WebServer] (node:59473) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# [WebServer] (node:59499) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# Running 8 tests using 1 worker
+# (node:59500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✓  1 [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change (795ms)
+#   ✓  2 [chromium] › tests/executor/plan.spec.ts:18:3 › reject-other-domain: Reject an email outside the exact domain (371ms)
+#   ✓  3 [chromium] › tests/executor/plan.spec.ts:18:3 › reject-unauthenticated-home: Require a session for home data (271ms)
+#   ✓  4 [chromium] › tests/executor/plan.spec.ts:18:3 › mock-and-different-email: Read delivery and return to email form (371ms)
+#   ✓  5 [chromium] › tests/executor/plan.spec.ts:18:3 › wrong-otp: Literal OTP rejection and displayed mock delivery (406ms)
+#   ✓  6 [chromium] › tests/executor/plan.spec.ts:18:3 › health: Root navigation and fixed health checks (321ms)
+#   ✓  7 [chromium] › tests/executor/plan.spec.ts:18:3 › logout: Logout performs real session invalidation (456ms)
+#   ✓  8 [chromium] › tests/executor/plan.spec.ts:18:3 › fresh-checklist: New case resets prior email checklist and session state (425ms)
+#   8 passed (4.6s)
+# Executor artifacts: artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9
+    # Subtest: approved fixture executes all adapters with fresh state and no OpenAI key
+    ok 4 - approved fixture executes all adapters with fresh state and no OpenAI key
+      ---
+      duration_ms: 4920.20575
+      type: 'test'
+      ...
+# [WebServer] (node:59567) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# [WebServer] (node:59568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# [WebServer] (node:59595) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# [WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+# Running 1 test using 1 worker
+# (node:59596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  1 [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change (3.4s)
+#   1) [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change › Assertion 1: text 
+#     Error: expect(locator).toHaveText(expected) failed
+#     Locator:  getByRole('status')
+#     Expected: "Deliberately wrong runner-check expectation"
+#     Received: "API health has not been checked."
+#     Timeout:  3000ms
+#     Call log:
+#       - Expect "toHaveText" getByRole('status') with timeout 3000ms
+#       - waiting for getByRole('status')
+#         10 × locator resolved to <p role="status">API health has not been checked.</p>
+#            - unexpected value "API health has not been checked."
+#        at adapters.ts:129
+#       127 |     observations.push({ index, definition, expected, actual: await readActual().catch(() => null),
+#       128 |       status: assertion ? "failed" : "execution-error" });
+#     > 129 |     if (assertion) throw new AssertionFailure(error.message);
+#           |                          ^
+#       130 |     throw error;
+#       131 |   }
+#       132 | }
+#         at verifyAssertion (/Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/adapters.ts:129:26)
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:43:9
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/attachments/case-observation-4c75ceca4440d52c797673c41ee6ffcd27acecb0.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/9ff4d5bc-d378-497a-b62c-ab9f187efab9/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   1 failed
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change 
+# Executor artifacts: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571
+    # Subtest: actual assertion failure preserves expected/actual, screenshot, trace and raw output
+    ok 5 - actual assertion failure preserves expected/actual, screenshot, trace and raw output
+      ---
+      duration_ms: 4848.433084
+      type: 'test'
+      ...
+# Running 8 tests using 1 worker
+# (node:59632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  1 [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change (121ms)
+# (node:59637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  2 [chromium] › tests/executor/plan.spec.ts:18:3 › reject-other-domain: Reject an email outside the exact domain (102ms)
+# (node:59644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  3 [chromium] › tests/executor/plan.spec.ts:18:3 › reject-unauthenticated-home: Require a session for home data (103ms)
+# (node:59649) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  4 [chromium] › tests/executor/plan.spec.ts:18:3 › mock-and-different-email: Read delivery and return to email form (104ms)
+# (node:59654) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  5 [chromium] › tests/executor/plan.spec.ts:18:3 › wrong-otp: Literal OTP rejection and displayed mock delivery (87ms)
+# (node:59659) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  6 [chromium] › tests/executor/plan.spec.ts:18:3 › health: Root navigation and fixed health checks (104ms)
+# (node:59664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  7 [chromium] › tests/executor/plan.spec.ts:18:3 › logout: Logout performs real session invalidation (102ms)
+# (node:59670) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+#   ✘  8 [chromium] › tests/executor/plan.spec.ts:18:3 › fresh-checklist: New case resets prior email checklist and session state (87ms)
+#   1) [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/attachments/case-observation-ae1813974c861582a691035c2f8fc36de94cd585.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   2) [chromium] › tests/executor/plan.spec.ts:18:3 › reject-other-domain: Reject an email outside the exact domain 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-other-domain-R-e5ea6-il-outside-the-exact-domain-chromium/attachments/case-observation-e41bce53147f79db80971e423556519ced7686c7.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-other-domain-R-e5ea6-il-outside-the-exact-domain-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-other-domain-R-e5ea6-il-outside-the-exact-domain-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-other-domain-R-e5ea6-il-outside-the-exact-domain-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-other-domain-R-e5ea6-il-outside-the-exact-domain-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   3) [chromium] › tests/executor/plan.spec.ts:18:3 › reject-unauthenticated-home: Require a session for home data 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-unauthenticate-ad31d-ire-a-session-for-home-data-chromium/attachments/case-observation-aa14aff2927c879dddd1f29a6d32304551287ec1.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-unauthenticate-ad31d-ire-a-session-for-home-data-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-unauthenticate-ad31d-ire-a-session-for-home-data-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-unauthenticate-ad31d-ire-a-session-for-home-data-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-reject-unauthenticate-ad31d-ire-a-session-for-home-data-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   4) [chromium] › tests/executor/plan.spec.ts:18:3 › mock-and-different-email: Read delivery and return to email form 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-mock-and-different-em-56948-ry-and-return-to-email-form-chromium/attachments/case-observation-54d15eba36faf654efb6456b907f1becdad4b953.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-mock-and-different-em-56948-ry-and-return-to-email-form-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-mock-and-different-em-56948-ry-and-return-to-email-form-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-mock-and-different-em-56948-ry-and-return-to-email-form-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-mock-and-different-em-56948-ry-and-return-to-email-form-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   5) [chromium] › tests/executor/plan.spec.ts:18:3 › wrong-otp: Literal OTP rejection and displayed mock delivery 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-wrong-otp-Literal-OTP-42d2f-and-displayed-mock-delivery-chromium/attachments/case-observation-1fbe402e6267b6d9dcc0e974d74773e32a1c6382.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-wrong-otp-Literal-OTP-42d2f-and-displayed-mock-delivery-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-wrong-otp-Literal-OTP-42d2f-and-displayed-mock-delivery-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-wrong-otp-Literal-OTP-42d2f-and-displayed-mock-delivery-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-wrong-otp-Literal-OTP-42d2f-and-displayed-mock-delivery-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   6) [chromium] › tests/executor/plan.spec.ts:18:3 › health: Root navigation and fixed health checks 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-health-Root-navigation-and-fixed-health-checks-chromium/attachments/case-observation-4281a23e84bcb8579e69c132261629c08790e7d1.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-health-Root-navigation-and-fixed-health-checks-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-health-Root-navigation-and-fixed-health-checks-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-health-Root-navigation-and-fixed-health-checks-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-health-Root-navigation-and-fixed-health-checks-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   7) [chromium] › tests/executor/plan.spec.ts:18:3 › logout: Logout performs real session invalidation 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-logout-Logout-performs-real-session-invalidation-chromium/attachments/case-observation-8075107ed3e28daef8d27a268e3c32d3dd11b586.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-logout-Logout-performs-real-session-invalidation-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-logout-Logout-performs-real-session-invalidation-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-logout-Logout-performs-real-session-invalidation-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-logout-Logout-performs-real-session-invalidation-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   8) [chromium] › tests/executor/plan.spec.ts:18:3 › fresh-checklist: New case resets prior email checklist and session state 
+#     Error: apiRequestContext.post: connect ECONNREFUSED 127.0.0.1:3000
+#     Call log:
+#       - → POST http://127.0.0.1:3000/api/demo/__test/reset
+#         - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+#         - accept: */*
+#         - accept-encoding: gzip,deflate,br
+#       31 |       logs.push({ kind: "http-error", url: response.url(), status: response.status() }); });
+#       32 |     try {
+#     > 33 |       const reset = await page.request.post(`${API}/api/demo/__test/reset`, { timeout: 5_000, maxRedirects: 0 });
+#          |                                        ^
+#       34 |       if (reset.status() !== 200) throw new Error(`Synthetic state reset unavailable (HTTP ${reset.status()}); enable test mode`);
+#       35 |       expect(await reset.json()).toEqual({ reset: true });
+#       36 |       result.phase = "actions";
+#         at /Users/grassjelly/Desktop/Bytedance-AI-Native/tests/executor/plan.spec.ts:33:40
+#     attachment \#1: case-observation (application/json) ─────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-fresh-checklist-New-c-d4954-checklist-and-session-state-chromium/attachments/case-observation-a69df4faaee79809d28b5b5eae01ced6441339cf.json
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     attachment \#2: screenshot (image/png) ──────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-fresh-checklist-New-c-d4954-checklist-and-session-state-chromium/test-failed-1.png
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#     Error Context: artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-fresh-checklist-New-c-d4954-checklist-and-session-state-chromium/error-context.md
+#     attachment \#4: trace (application/zip) ─────────────────────────────────────────────────────────
+#     artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-fresh-checklist-New-c-d4954-checklist-and-session-state-chromium/trace.zip
+#     Usage:
+#         npx playwright show-trace artifacts/executor/c9b9c52f-63e7-4554-8052-1c504372e571/test-results/plan-fresh-checklist-New-c-d4954-checklist-and-session-state-chromium/trace.zip
+#     ────────────────────────────────────────────────────────────────────────────────────────────────
+#   8 failed
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › login-and-task: Log in and preserve a checklist change 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › reject-other-domain: Reject an email outside the exact domain 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › reject-unauthenticated-home: Require a session for home data 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › mock-and-different-email: Read delivery and return to email form 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › wrong-otp: Literal OTP rejection and displayed mock delivery 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › health: Root navigation and fixed health checks 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › logout: Logout performs real session invalidation 
+#     [chromium] › tests/executor/plan.spec.ts:18:3 › fresh-checklist: New case resets prior email checklist and session state 
+    # Subtest: unavailable local target is an execution error, never an assertion/product failure
+    ok 6 - unavailable local target is an execution error, never an assertion/product failure
+      ---
+      duration_ms: 3993.161792
+      type: 'test'
+      ...
+    1..6
+ok 1 - deterministic executor verification (real Playwright, synthetic runner-check approvals)
+  ---
+  duration_ms: 13844.176666
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13977.834541

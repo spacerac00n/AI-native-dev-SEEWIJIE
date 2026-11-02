@@ -1,0 +1,12 @@
+{
+  "command": "\"/Users/grassjelly/.hermes/node/bin/node\" \"/Users/grassjelly/Desktop/Bytedance-AI-Native/node_modules/@playwright/test/cli.js\" \"test\" \"--config\" \"playwright.executor.config.ts\"",
+  "argv": [
+    "/Users/grassjelly/.hermes/node/bin/node",
+    "/Users/grassjelly/Desktop/Bytedance-AI-Native/node_modules/@playwright/test/cli.js",
+    "test",
+    "--config",
+    "playwright.executor.config.ts"
+  ],
+  "exitCode": 1,
+  "signal": null
+}

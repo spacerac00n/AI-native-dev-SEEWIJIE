@@ -1,0 +1,42 @@
+{
+  "caseId": "case2",
+  "title": "Reject login with invalid non-@e.ntu.edu.sg emails",
+  "requirementIds": [
+    "req2"
+  ],
+  "status": "passed",
+  "durationMs": 412,
+  "phase": "complete",
+  "assertions": [
+    {
+      "index": 0,
+      "definition": {
+        "type": "visible",
+        "target": "error-message",
+        "expected": true
+      },
+      "expected": true,
+      "actual": true,
+      "status": "passed"
+    },
+    {
+      "index": 1,
+      "definition": {
+        "type": "text",
+        "target": "error-message",
+        "expected": "Use a valid email ending exactly with @e.ntu.edu.sg."
+      },
+      "expected": "Use a valid email ending exactly with @e.ntu.edu.sg.",
+      "actual": "Use a valid email ending exactly with @e.ntu.edu.sg.",
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "artifacts": [
+    "cases/case2/browser-api.log.json",
+    "cases/case2/observation.json",
+    "test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/attachments/case-observation-459f0876f7cce962deafa311da2731a44d331eae.json",
+    "test-results/plan-case2-Reject-login-wi-e3842-id-non--e-ntu-edu-sg-emails-chromium/test-finished-1.png",
+    "cases/case2/result.json"
+  ]
+}

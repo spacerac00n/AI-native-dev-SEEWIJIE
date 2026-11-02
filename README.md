@@ -8,7 +8,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 Milestones 1–7 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection, and a unified QA dashboard. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 63 unit/API/contract tests, 24 Playwright baseline tests, 7 executor checks and 2 dashboard browser checks. The approved live-AI plan has executed with all three cases passing. The dashboard connects generation, review, explicit approval, execution, history and evidence comparison. See [the milestone plan](docs/PLAN.md).
 
-Milestone 8's deliberately seeded persistence defect is preserved at `d2b776ba74431cbce08172d7f24a60195f03e646`: run `395693c2-5ad9-4842-a203-2e077eb1cd2c`, 2 passed / 1 failed, exit 1. Milestone 9 fixes stored checklist updates in separate commit `1965faeb53ae987c1f3943141ca1a0199b2a919b`. New clean dashboard run `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` passed 3/3, exit 0, using the exact same human-approved `vp1` revision. Case1 still expects true; actual false → true. Both complete evidence directories and the original baseline remain separate. See [the comparison walkthrough](docs/DEMO.md) and [actual verification outcomes](docs/AI_WORKFLOW.md#milestone-9--checklist-persistence-fix-and-preserved-retest-november-2-2026). Milestone 10 remains pending.
+Milestone 8's deliberately seeded persistence defect is preserved at `d2b776ba74431cbce08172d7f24a60195f03e646`: run `395693c2-5ad9-4842-a203-2e077eb1cd2c`, 2 passed / 1 failed, exit 1. Milestone 9 fixes stored checklist updates in separate commit `1965faeb53ae987c1f3943141ca1a0199b2a919b`. New clean dashboard run `2338b3bc-f5f7-43b1-ab2c-eaf7f7940c77` passed 3/3, exit 0, using the exact same human-approved `vp1` revision. Case1 still expects true; actual false → true. Both complete evidence directories and the original baseline remain separate. See [the comparison walkthrough](docs/DEMO.md) and [actual verification outcomes](docs/AI_WORKFLOW.md#milestone-9--checklist-persistence-fix-and-preserved-retest-november-2-2026). Milestone 10 packages the original evidence and safe restoration; see [fresh-clone verification](docs/M10_VERIFICATION.md).
 
 The intended demonstration is:
 
@@ -26,6 +26,10 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 The demo uses simple native forms, buttons, and checkboxes. The QA dashboard provides a complete review and execution workspace. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
 Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. The deliberate Milestone 8 application defect is labelled in code and Git history.
+
+## Fresh-clone interview
+
+Follow [the interview guide](docs/DEMO.md) to restore the reviewed [88-file evidence package](evidence/interview/README.md), inspect the original failure/fix comparison, replay without an API key, and reproduce the original seed in a separate checkout.
 
 ## Setup
 
@@ -83,7 +87,7 @@ Milestone 4 verification on November 2, 2026: 37/37 unit tests and 24/24 existin
 npm run dev:qa
 ```
 
-Open <http://127.0.0.1:5174>. The dashboard loads saved plans and existing history. On this machine it selects the current human-approved `vp1` revision by default. Inspect its actions, expected results and provenance, then choose **Execute approved plan**. A new run appears with real assertions, Git state, logs and optional screenshots for successful cases. No key or model call is needed for saved-plan replay.
+Open <http://127.0.0.1:5174>. The dashboard loads saved plans and existing history. After `npm run evidence:restore`, it loads the original human-approved `vp1` revision. Inspect its actions, expected results and provenance, then choose **Execute approved plan**. A new run appears with real assertions, Git state, logs and optional screenshots for successful cases. No key or model call is needed for saved-plan replay.
 
 To propose new tests, enter natural-language requirements and choose **Generate test plan**. The existing server-side planner loads the root `.env` only for that action. Each proposal receives a fresh plan ID and remains unapproved. Inspect all cases and review notes, enter your reviewer name, check the explicit review confirmation, then choose **Approve exact revision**. Approval binds both revision and content hash. New generation never changes the existing approved walkthrough plan.
 
@@ -115,7 +119,7 @@ A real, unapproved API-generated definition is committed for offline inspection/
 npm run plan -- import fixtures/live-ai-demo-plan.json
 ```
 
-This creates a new unapproved revision while preserving its original `live-ai` provenance. Offline import is not a new generation or an execution. Original live interaction records and revisions remain on the development machine. Importing again supersedes the current revision, so use the existing approved revision for replay on this machine.
+This creates a new unapproved revision while preserving its original `live-ai` provenance. Offline import is not a new generation or an execution. The original approved interaction/revision is packaged under `evidence/interview/`. Importing again supersedes the current revision, so use the existing approved revision for replay on this machine.
 
 ## Replay an approved saved plan
 
@@ -129,7 +133,7 @@ Execution does not load `.env` or call the planner/model. Playwright starts fres
 
 Each invocation prints its unique `artifacts/executor/<run-id>/` path. Completed executions also save `data/runs/<run-id>.json`. Exit 0 means every case passed; exit 1 indicates rejection, an assertion failure, or an execution error. Inspect the structured outcome to distinguish them. The optional `--external-target` flag uses the same fixed loopback addresses without starting servers; it requires an already running API with `VERIQA_TEST_MODE=1` and resets its synthetic state.
 
-A fresh clone has the live definition but no local saved revisions or approvals. Import it, inspect the returned revision, have a human approve its expectations with the documented `approve` command, then execute that new revision. Never copy an old approval onto a new revision. See [execution records and human checks](docs/EXECUTION.md) for the dashboard contract and evidence layout.
+For the historical interview demonstration, run `npm run evidence:verify` and `npm run evidence:restore` first. This restores the exact original revision and its original approval, not a new import. Other imported/generated revisions still require human review. Never copy an old approval onto a new revision. See [execution records and human checks](docs/EXECUTION.md) for the dashboard contract and evidence layout.
 
 ## Create, inspect, and approve a manual plan
 

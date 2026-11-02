@@ -1,0 +1,39 @@
+
+> veriqa@0.0.0 test
+> npm run build --workspace @veriqa/contracts && playwright test
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+Playwright artifacts: artifacts/playwright/2026-11-02T13-23-52.193Z-382c11eb-d2ce-4a13-9186-52349c7a3eda
+
+Running 24 tests using 1 worker
+
+Playwright artifacts: artifacts/playwright/2026-11-02T13-23-52.193Z-382c11eb-d2ce-4a13-9186-52349c7a3eda
+  ✓   1 [chromium] › tests/demo/auth.spec.ts:51:1 › valid email and mock OTP create a server-recognised session (544ms)
+  ✓   2 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@example.com" (10ms)
+  ✓   3 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@ntu.edu.sg" (6ms)
+  ✓   4 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@e.ntu.edu.sg.evil.example" (6ms)
+  ✓   5 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@fakee.ntu.edu.sg" (5ms)
+  ✓   6 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@sub.e.ntu.edu.sg" (4ms)
+  ✓   7 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@e.ntu.edu.sg@evil.example" (5ms)
+  ✓   8 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@E.NTU.EDU.SG" (5ms)
+  ✓   9 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@e.ntu.edu.sg " (5ms)
+  ✓  10 [chromium] › tests/demo/auth.spec.ts:72:3 › backend rejects email "synthetic.student@e.ntu.edu.sg\n" (4ms)
+  ✓  11 [chromium] › tests/demo/auth.spec.ts:80:1 › email domain rejection is displayed in the login UI (406ms)
+  ✓  12 [chromium] › tests/demo/auth.spec.ts:89:1 › incorrect OTP is rejected without consuming the valid challenge (528ms)
+  ✓  13 [chromium] › tests/demo/auth.spec.ts:102:1 › unknown challenge cannot authenticate with a real OTP (9ms)
+  ✓  14 [chromium] › tests/demo/auth.spec.ts:111:1 › OTP expires at the five-minute server boundary (479ms)
+  ✓  15 [chromium] › tests/demo/auth.spec.ts:121:1 › a consumed OTP cannot create another session after logout (10ms)
+  ✓  16 [chromium] › tests/demo/auth.spec.ts:132:1 › home and task writes reject unauthenticated and forged-session requests (259ms)
+  ✓  17 [chromium] › tests/demo/auth.spec.ts:144:1 › task changes reach the backend and survive a browser refresh (931ms)
+  ✓  18 [chromium] › tests/demo/auth.spec.ts:167:1 › logout invalidates the server session even when its old cookie is replayed (678ms)
+  ✓  19 [chromium] › tests/demo/auth.spec.ts:183:1 › tasks are isolated by email and persist through a new login (14ms)
+  ✓  20 [chromium] › tests/demo/auth.spec.ts:193:1 › server rejects a session at the one-hour expiry boundary (8ms)
+  ✓  21 [chromium] › tests/demo/auth.spec.ts:201:1 › malformed auth and task payloads do not mutate valid state (11ms)
+  ✓  22 [chromium] › tests/smoke/workspace.spec.ts:3:1 › Hono health endpoint returns the expected JSON (3ms)
+  ✓  23 [chromium] › tests/smoke/workspace.spec.ts:15:3 › VeriQA Demo renders and checks the real API (385ms)
+  ✓  24 [chromium] › tests/smoke/workspace.spec.ts:15:3 › VeriQA Dashboard renders and checks the real API (385ms)
+
+  24 passed (6.9s)

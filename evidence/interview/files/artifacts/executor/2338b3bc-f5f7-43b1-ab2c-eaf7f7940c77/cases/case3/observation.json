@@ -1,0 +1,45 @@
+{
+  "caseId": "case3",
+  "title": "Logout clears session and blocks access to protected home",
+  "requirementIds": [
+    "req4",
+    "req7"
+  ],
+  "status": "passed",
+  "durationMs": 576,
+  "phase": "complete",
+  "assertions": [
+    {
+      "index": 0,
+      "definition": {
+        "type": "url",
+        "path": "/login"
+      },
+      "expected": "http://127.0.0.1:5173/login",
+      "actual": "http://127.0.0.1:5173/login",
+      "status": "passed"
+    },
+    {
+      "index": 1,
+      "definition": {
+        "type": "api",
+        "operation": "home",
+        "expected": {
+          "status": 401,
+          "error": "Authentication required."
+        }
+      },
+      "expected": {
+        "status": 401,
+        "error": "Authentication required."
+      },
+      "actual": {
+        "status": 401,
+        "error": "Authentication required."
+      },
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "artifacts": []
+}

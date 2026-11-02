@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "exitCode": 0,
+  "startedAt": "2026-11-02T11:04:09.152418+00:00",
+  "finishedAt": "2026-11-02T11:04:10.156428+00:00",
+  "testedCommit": "28be54b63ecc57234e29f48b09d0b14c4210bf6a",
+  "worktreeDirty": true
+}

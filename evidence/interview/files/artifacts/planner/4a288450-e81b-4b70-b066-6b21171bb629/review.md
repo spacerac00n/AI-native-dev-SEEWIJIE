@@ -1,0 +1,1 @@
+Coding-agent review, not human approval: three supported cases now include logout. Model reviewNotes still incorrectly suggest wrong OTP and the second checkbox are unsupported; both are available in the schema. No explicit spoofed-suffix case is included. Human review must assess coverage and expectations before approval. Cases have not been executed.

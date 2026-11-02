@@ -1,0 +1,62 @@
+{
+  "caseId": "case1",
+  "title": "Successful login with valid @e.ntu.edu.sg email, OTP, then check task persistence",
+  "requirementIds": [
+    "req1",
+    "req3",
+    "req5",
+    "req6"
+  ],
+  "status": "assertion-failed",
+  "durationMs": 3609,
+  "phase": "assertions",
+  "assertions": [
+    {
+      "index": 0,
+      "definition": {
+        "type": "url",
+        "path": "/home"
+      },
+      "expected": "http://127.0.0.1:5173/home",
+      "actual": "http://127.0.0.1:5173/home",
+      "status": "passed"
+    },
+    {
+      "index": 1,
+      "definition": {
+        "type": "visible",
+        "target": "welcome-heading",
+        "expected": true
+      },
+      "expected": true,
+      "actual": true,
+      "status": "passed"
+    },
+    {
+      "index": 2,
+      "definition": {
+        "type": "text",
+        "target": "welcome-heading",
+        "expected": "Welcome, synthetic.student@e.ntu.edu.sg"
+      },
+      "expected": "Welcome, synthetic.student@e.ntu.edu.sg",
+      "actual": "Welcome, synthetic.student@e.ntu.edu.sg",
+      "status": "passed"
+    },
+    {
+      "index": 3,
+      "definition": {
+        "type": "checked",
+        "target": "review-requirements",
+        "expected": true
+      },
+      "expected": true,
+      "actual": false,
+      "status": "failed"
+    }
+  ],
+  "errors": [
+    "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeChecked\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('checkbox', { name: 'Review demo requirements', exact: true })\nExpected: checked\nReceived: unchecked\nTimeout:  3000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeChecked\" getByRole('checkbox', { name: 'Review demo requirements', exact: true }) with timeout 3000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('checkbox', { name: 'Review demo requirements', exact: true })\u001b[22m\n\u001b[2m    10 × locator resolved to <input type=\"checkbox\"/>\u001b[22m\n\u001b[2m       - unexpected value \"unchecked\"\u001b[22m\n"
+  ],
+  "artifacts": []
+}

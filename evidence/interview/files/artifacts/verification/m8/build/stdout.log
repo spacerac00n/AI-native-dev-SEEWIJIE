@@ -1,0 +1,39 @@
+
+> veriqa@0.0.0 build
+> npm run build --workspace @veriqa/contracts && npm run build --workspace @veriqa/api && npm run build --workspace @veriqa/demo-web && npm run build --workspace @veriqa/qa-dashboard
+
+
+> @veriqa/contracts@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/api@0.0.0 build
+> tsc -p tsconfig.json
+
+
+> @veriqa/demo-web@0.0.0 build
+> tsc -p tsconfig.json --noEmit && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 114 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                  0.32 kB │ gzip:  0.23 kB
+dist/assets/index-laQ4-05H.js  317.21 kB │ gzip: 96.63 kB
+
+✓ built in 76ms
+
+> @veriqa/qa-dashboard@0.0.0 build
+> tsc -p tsconfig.json --noEmit && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 117 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.40 kB │ gzip:   0.27 kB
+dist/assets/index-BEeeToGi.css   15.26 kB │ gzip:   4.36 kB
+dist/assets/index-B5ZE7NtM.js   340.66 kB │ gzip: 101.74 kB
+
+✓ built in 87ms

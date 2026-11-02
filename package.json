@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "engines": {
     "node": ">=22.23.2 <23",
     "npm": ">=10 <11"
@@ -19,7 +22,9 @@
     "plan": "npm run build --workspace @veriqa/contracts && npm run plan --workspace @veriqa/api --",
     "execute": "npm run build --workspace @veriqa/contracts && npm run execute --workspace @veriqa/api --",
     "test:executor": "npm run build --workspace @veriqa/contracts && node --import tsx --test tests/integration/executor.test.ts",
-    "test:dashboard": "npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts"
+    "test:dashboard": "npm run build --workspace @veriqa/contracts && playwright test --config playwright.dashboard.config.ts",
+    "evidence:verify": "npm run build --workspace @veriqa/contracts && node --import tsx scripts/interview-evidence.ts verify",
+    "evidence:restore": "npm run build --workspace @veriqa/contracts && node --import tsx scripts/interview-evidence.ts restore"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
