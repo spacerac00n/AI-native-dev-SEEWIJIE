@@ -2,12 +2,15 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PlanStore } from "./plans.js";
+import { generatePlan } from "./planner.js";
+import { loadEnvFile } from "node:process";
 
 const repositoryRoot = fileURLToPath(new URL("../../../", import.meta.url));
 const store = new PlanStore(resolve(repositoryRoot, process.env.VERIQA_DATA_DIR ?? "data"));
 const [command, ...args] = process.argv.slice(2);
 const usage = `Commands (run from the repository root):
   npm run plan -- import <fixture.json>
+  npm run plan -- generate <requirements.txt>
   npm run plan -- inspect <plan-id> [revision]
   npm run plan -- approve <plan-id> <revision> --by <your-name> --confirm
   npm run plan -- check <plan-id> <revision>
@@ -15,7 +18,15 @@ Import always creates an unapproved manual-fixture revision. Check validates app
 
 try {
   let result: unknown;
-  if (command === "import" && args.length === 1) {
+  if (command === "generate" && args.length === 1) {
+    try { loadEnvFile(resolve(repositoryRoot, ".env")); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw new Error("Cannot load root .env"); }
+    result = await generatePlan({
+      requirements: readFileSync(resolve(repositoryRoot, args[0]!), "utf8"),
+      apiKey: process.env.OPENAI_API_KEY ?? "", model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+      store, artifactRoot: resolve(repositoryRoot, "artifacts/planner"),
+    });
+  } else if (command === "import" && args.length === 1) {
     result = { ...store.save(JSON.parse(readFileSync(resolve(repositoryRoot, args[0]!), "utf8"))), status: "unapproved" };
   } else if (command === "inspect" && (args.length === 1 || args.length === 2)) {
     result = store.inspect(args[0]!, args[1]);

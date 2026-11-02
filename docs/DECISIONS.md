@@ -1,6 +1,6 @@
 # Initial architectural decisions
 
-Status: accepted direction for the MVP. Milestones 2–4 implement workspace tooling, demo authentication/home, and manual-plan contracts/storage/approval. AI generation and dynamic execution remain planned. Update this record when evidence changes a decision.
+Status: accepted direction for the MVP. Milestones 2–4 implement workspace tooling, demo authentication/home, and manual-plan contracts/storage/approval. Live AI generation is implemented in Milestone 5; dynamic execution remains planned. Update this record when evidence changes a decision.
 
 ## D01 — A small TypeScript workspace
 
@@ -89,3 +89,9 @@ Store approvals under plan ID/revision for direct lookup, refining the earlier p
 ## D15 — Unit contracts separate from real browser baseline
 
 Use the existing `tsx` dependency with Node's test runner for contract/store/CLI tests. Exclude `tests/unit/` from Playwright discovery. Preserve unit stdout/stderr/exit metadata and CLI rejection evidence separately from real Playwright reports. Synthetic run-metadata examples validate the schema only and never count as executed product cases. Future execution must use the approval gate; Milestone 4 deliberately supplies no runner.
+
+## D16 — Live structured planning through the existing CLI
+
+Use native Node fetch and Responses strict JSON Schema, generated from Zod, then validate every response locally including semantic reference constraints. No new dependency or endpoint is needed. Only the generate command loads root `.env`; keys never enter Vite code. Defaults: gpt-4.1-mini, 90-second timeout, 6000 output-token cap, store:false, no automatic retry.
+
+Preserve manual version-1 compatibility; extend source with live-ai and required actual provenance, which the model cannot author. Keep immutable unapproved plans and safe interaction artifacts on both success and failure. Copy the real live definition into a clearly unapproved offline fixture for reproduction. Human approval remains a separate operator action. Model notes can be wrong even with schema-valid cases, so preserve the original and iterate the prompt rather than silently rewriting generated provenance.

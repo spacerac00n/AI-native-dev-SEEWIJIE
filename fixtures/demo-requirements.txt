@@ -1,0 +1,6 @@
+Using synthetic accounts only, verify passwordless email login in the local VeriQA demo.
+Only valid email addresses ending exactly with @e.ntu.edu.sg are accepted; reject other domains and spoofed suffixes.
+A correct mock OTP creates a server-recognised session. Delivery is local and no real email is sent.
+Unauthenticated users must not receive protected home data.
+On home, show a welcome message with the email and a tiny checklist. Toggling a task must survive refresh.
+Logout invalidates the server session. Propose up to three focused cases supported by the current action schema.

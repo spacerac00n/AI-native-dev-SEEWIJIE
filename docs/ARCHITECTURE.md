@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Milestones 2–4 implement the workspace, demo flows, and structured manual plans with JSON storage and an approval CLI. AI generation, structured-plan execution, replay, and QA reporting remain the target design.
+Status: Milestones 2–5 implement the workspace, demo flows, and structured manual plans with JSON storage and an approval CLI. Live generation is implemented by the plan CLI; structured-plan execution, replay, and QA reporting remain the target design.
 
 ## Implemented foundation
 
@@ -10,9 +10,9 @@ Status: Milestones 2–4 implement the workspace, demo flows, and structured man
 - `packages/contracts/src/plans.ts` adds versioned plan/case/action/assertion, saved revision, approval, and future run-result metadata schemas. `apps/api/src/plans.ts` stores/revalidates JSON; `plan-cli.ts` provides the human review commands without a new API or dashboard.
 - Root npm scripts install/build/run the four workspaces. The dev command also watches shared contracts. Both web apps deliberately use plain browser styling.
 - Three tests in `tests/smoke/` check connectivity; 21 in `tests/demo/` check authentication, email-domain rejection, and home/tasks. Playwright owns fresh servers, uses one Chromium worker with no retries, and writes reports to unique ignored `artifacts/playwright/` directories. Reports include actual source SHA/dirty status. This is developer baseline tooling, not the future AI-plan executor or QA reporter.
-- Thirty-seven Node unit/contract tests in `tests/unit/` check contracts, storage, CLI rejection, and revision-bound approval. Playwright ignores that directory and continues to run only its 24 real browser/API baseline checks.
+- Forty-nine Node unit/contract/planner tests in `tests/unit/` check contracts, storage, CLI rejection, and revision-bound approval. Playwright ignores that directory and continues to run only its 24 real browser/API baseline checks.
 
-Exact setup commands and local URLs are in [README.md](../README.md). No OpenAI key or environment file is needed. Demo auth/task state lives only in process memory.
+Exact setup commands and local URLs are in [README.md](../README.md). Only live generation needs a server-side key from the root `.env`. Demo auth/task state lives only in process memory.
 
 ## Components and responsibilities
 
@@ -98,10 +98,10 @@ Playwright alone opts into `VERIQA_TEST_MODE=1`. Then `POST /__test/reset` clear
 
 ## Persistence and evidence
 
-- `data/plans/<plan-id>/<revision>.json`: implemented immutable saved definition with revision UUID, canonical digest, and creation timestamp. Version 1 supports only `manual-fixture`; live AI provenance comes later.
+- `data/plans/<plan-id>/<revision>.json`: implemented immutable saved definition with revision UUID, canonical digest, and creation timestamp. Version 1 supports `manual-fixture` and `live-ai`; only live origin requires provenance.
 - `data/plans/<plan-id>/current.json`: implemented pointer to the latest revision UUID.
 - `data/approvals/<plan-id>/<revision>.json`: implemented immutable approval ID, exact revision/hash, reviewer label, decision, and timestamp. Historical approvals remain inspectable but cannot approve a newer/current definition.
-- `data/runs/<run-id>.json`: planned persistence only. The current run-result metadata schema supports manual-fixture replay, exact plan/approval references, real-Playwright label, commit/dirty status, times, command/exit code, consistent counts/outcome, and relative artifact paths. Zero-execution/unapproved passes and inconsistent results are rejected. These schemas do not produce execution evidence.
+- `data/runs/<run-id>.json`: planned persistence only. The current run-result metadata schema supports manual-fixture or live-ai-origin replay, exact plan/approval references, real-Playwright label, commit/dirty status, times, command/exit code, consistent counts/outcome, and relative artifact paths. Zero-execution/unapproved passes and inconsistent results are rejected. These schemas do not produce execution evidence.
 - `artifacts/<run-id>/`: actual Playwright output, logs, screenshots, and selected traces. Preserve assertion details even if a screenshot or trace cannot be captured.
 
 The default store root is repository `data/`, optionally overridden by `VERIQA_DATA_DIR` for isolated tests. Validate path IDs before filesystem access. Write JSON to a temporary sibling, publish immutable records using an exclusive hard link, and atomically rename only the current pointer. This assumes a local filesystem and one writer; it is not a multi-file database transaction. Local file ownership is trusted, and reviewer names are audit labels rather than authenticated identities.
@@ -125,3 +125,11 @@ Playwright assertion failures are product-failure candidates subject to review o
 ## Defect demonstration
 
 Prove the working baseline first. Seed deliberate defects in a `test(seed):` commit, execute that committed version, and preserve failed assertions plus its SHA. Only then make a separate `fix:` commit and execute a new run. Keep both evidence sets and link them in the eventual `docs/DEMO.md`.
+
+## Implemented live planner (Milestone 5)
+
+`npm run plan -- generate <requirements-file>` loads the root `.env` only in the CLI, then calls `planner.ts`. Native Node fetch sends a strict JSON-schema Responses request to the fixed OpenAI endpoint; no SDK/dependency or browser key is added. Zod exports the wire schema, while local validation also enforces cross-reference and OTP ordering refinements that JSON Schema cannot encode. Model output contains only ID/title, requirements, cases and review notes. The server stamps `source: live-ai` plus provider, API, prompt version, requested/returned model, response/request IDs, time, original requirements and usage. A live source without provenance, or a manual fixture claiming provenance, is rejected. Existing manual definitions/hashes remain compatible.
+
+After validation, the existing store saves an immutable unapproved revision. Safe interaction records use fresh artifact IDs and retain unsuccessful attempts. Authorization headers and raw transport errors are never logged; credential-like output is rejected/redacted. HTTP errors, network/timeout failures, refusal, incomplete and invalid output cannot grant approval. Requirements are untrusted input and must not contain secrets or confidential materials. No automatic retries or test verdicts. `store: false` requests no provider-side response storage.
+
+The CLI is the intentionally chosen entry point instead of an additional Hono endpoint. Import/inspect/check of an existing AI plan does not load `.env` or make an API call. Unit tests use explicitly labelled isolated offline transports; only real interactions are marked `live-openai`.

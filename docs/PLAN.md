@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–4 are implemented and verified; Milestones 5–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–4 are implemented and verified; Milestone 5 implementation/live verification is complete, with human review/approval pending; Milestones 6–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -63,9 +63,11 @@ Acceptance criteria:
 
 Convert requirements into a validated reviewable plan through the OpenAI API.
 
+Implemented CLI generation and executed two real API calls (HTTP 200). Saved unapproved live-origin revisions with actual provenance; 49 offline unit tests cover success/error paths. Human review/approval remains outstanding and must not be fabricated by the coding agent. The CLI substitutes for the originally planned endpoint, as explicitly permitted by the Milestone 5 request.
+
 Acceptance criteria:
 
-- A backend endpoint sends requirements and supported capabilities to a configured OpenAI model using structured output, then validates the response with Zod.
+- A server-side CLI sends requirements and supported capabilities to a configured OpenAI model using structured output, then validates the response with Zod.
 - Keys stay server-side and out of stored artifacts. Persist requirements, plan revision, and available generation provenance.
 - Planner errors, refusals, invalid output, and ambiguous expectations produce reviewable errors/drafts; none grants approval or a passing result.
 - Record one actual live generation using non-confidential requirements, followed by explicit developer review and approval.

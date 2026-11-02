@@ -6,7 +6,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–4 provide the workspace, a working demo, and validated manual test plans with revision-bound human approval. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 37 unit/contract tests and 24 Playwright baseline tests. AI generation, execution of structured plans, and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
+Milestones 1–5 provide the workspace, a working demo, and validated manual test plans with revision-bound human approval. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 49 unit/contract tests and 24 Playwright baseline tests. Live OpenAI planning is implemented; execution of structured plans and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
 
 The intended demonstration is:
 
@@ -23,7 +23,7 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 
 The demo uses simple native forms, buttons, and checkboxes. The QA dashboard remains a health-check shell. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
-Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Future live AI planning will require a server-side OpenAI key; future approved-plan replay will perform new Playwright execution without an AI call. No intentional defects have been introduced.
+Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; future approved-plan replay will perform new Playwright execution without an AI call. No intentional defects have been introduced.
 
 ## Setup
 
@@ -37,7 +37,7 @@ npx playwright install chromium
 npm run dev
 ```
 
-The cache flag keeps npm's cache inside the ignored `.cache/` directory; dependencies still come from the committed lockfile. No environment variables or API key are required. `.env.example` documents this, and there is no need to create a `.env` file at this milestone.
+The cache flag keeps npm's cache inside the ignored `.cache/` directory; dependencies still come from the committed lockfile. The demo, offline plan inspection/import, and tests require no API key. Live generation alone loads `OPENAI_API_KEY` and optional `OPENAI_MODEL` from the ignored root `.env`; `.env.example` shows safe configuration.
 
 | Service | Local URL |
 | --- | --- |
@@ -60,7 +60,7 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 | `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
 | `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
 | `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
-| `npm run test:unit` | Runs the 37 contract/storage/CLI tests using Node's test runner; no browser/server required. |
+| `npm run test:unit` | Runs the 49 contract/storage/CLI/planner tests using Node's test runner; no browser/server required. |
 | `npm run plan -- import fixtures/manual-demo-plan.json` | Validates and stores a new **unapproved**, manually authored revision. |
 | `npm run plan -- inspect manual-demo-baseline` | Prints the current plan, revision UUID, SHA-256 digest, and approval status. |
 | `npm run start --workspace @veriqa/api` | Starts only the compiled API after `npm run build`; stop other API processes first. |
@@ -70,6 +70,32 @@ The root commands build contracts before consumers, so they work after a clean i
 Milestone 3 verification on November 2, 2026: type checks and builds exited 0; Playwright discovered and executed 24 tests, all passed in 6.6 seconds, with 0 failed, 0 skipped, and no retries. A separate compiled-API check verified normal-clock login, task persistence, logout, and absent test-control routes. Earlier failures and their evidence remain in [the command and evidence record](docs/AI_WORKFLOW.md).
 
 Milestone 4 verification on November 2, 2026: 37/37 unit tests and 24/24 existing browser/API tests passed; type checks and builds exited 0. The CLI accepted the manual fixture, rejected an unsupported action, and blocked its unapproved revision. These checks do not execute the structured fixture.
+
+## Generate a live AI test plan
+
+Set `OPENAI_API_KEY` in the root `.env` (already configured on this development machine). Never use a `VITE_` key. The CLI runs server-side, uses the fixed OpenAI Responses endpoint and defaults to `gpt-4.1-mini`; `OPENAI_MODEL` can override it. Requests have a 90-second timeout, 6000-token output cap and no automatic retry.
+
+```sh
+npm run plan -- generate fixtures/demo-requirements.txt
+```
+
+**See:** a Zod-validated JSON plan with `source: live-ai`, actual model/request/response IDs, token usage, original requirements, review notes, revision/digest, and `status: unapproved`. No browser tests are executed by this command. Invalid output, refusal, incomplete responses or API errors produce an error and retain safe interaction evidence under `artifacts/planner/<id>/interaction.json`.
+
+The latest recorded live proposal is `vp1` (three cases). Review it with:
+
+```sh
+npm run plan -- inspect vp1
+```
+
+Human review focuses on actions and expected results; model review notes can themselves be inaccurate. These three proposed cases are a subset of the 24-test baseline, not proof of full coverage. Only after review, use the existing `approve` command with the exact revision and your reviewer name. Generation never approves a plan.
+
+A real, unapproved API-generated definition is committed for offline inspection/import without another paid request:
+
+```sh
+npm run plan -- import fixtures/live-ai-demo-plan.json
+```
+
+This creates a new unapproved revision while preserving its original `live-ai` provenance. Offline import is not a new generation or an execution. Original live interaction records and revisions remain on the development machine. Structured-plan execution comes in Milestone 6.
 
 ## Create, inspect, and approve a manual plan
 
@@ -93,7 +119,7 @@ To edit, change the source JSON and run `import` again. Every import creates a n
 
 Storage defaults to `data/plans/<plan-id>/<revision>.json`, a `current.json` pointer, and `data/approvals/<plan-id>/<revision>.json`. Plans and approvals are immutable through the tool; reads revalidate schemas and digests. `VERIQA_DATA_DIR` can select an isolated local storage root (used by unit tests); relative overrides resolve from the repository root. Local file ownership is trusted; the reviewer name is an audit label, not an identity service.
 
-The supported vocabulary uses known demo paths, inputs, buttons/checkboxes, mock OTP reads, and typed UI assertions or fixed read-only health/home API checks. No URLs, raw selectors, arbitrary methods, scripts, or generated code are accepted. Schema validity does not prove that an expected result is correct; human review is still needed. Live AI origins and dynamic execution are deferred.
+The supported vocabulary uses known demo paths, inputs, buttons/checkboxes, mock OTP reads, and typed UI assertions or fixed read-only health/home API checks. No URLs, raw selectors, arbitrary methods, scripts, or generated code are accepted. Schema validity does not prove that an expected result is correct; human review is still needed. Live AI origin requires server-supplied provenance; dynamic execution is deferred.
 
 ## Try the demo
 

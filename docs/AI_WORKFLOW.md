@@ -175,3 +175,47 @@ Human action: inspect the fixture and its exact revision, then use the README ap
 Worth retaining for the interview: the manual fixture, immutable saved revision/digest, eventual actual human approval, CLI rejection evidence, contract-test logs, real baseline JSON/HTML, and the earlier development-failure evidence. Generated outputs remain ignored pending sanitization/review. A later approved AI-generated plan and real replay evidence are still needed for the final AI-native journey; the manual fixture does not replace them.
 
 Static/documentation review: `git diff --check` exited 0; an inline Python audit exited 0 for seven Markdown files, fourteen local links, ten milestone/acceptance sections, and unchanged lockfile dependencies across all five package manifests. The README retains the preexisting `Map` clarification and adds all new operator/verification commands.
+
+## Milestone 5 — Real OpenAI test planning (November 2, 2026)
+
+Read project instructions/product/architecture/decisions/plan before implementation. Applied OpenAI Docs skill and consulted official structured-output and GPT-4.1-mini documentation: https://developers.openai.com/api/docs/guides/structured-outputs and https://developers.openai.com/api/docs/models/gpt-4.1-mini. Implemented a server-side CLI using native fetch rather than adding an SDK or endpoint. Only generate loads the ignored root .env with Node loadEnvFile. Preserved configuration intent from the preexisting .env.example placeholder while replacing it with a safe blank key example. No secret was printed or committed.
+
+Version-1 manual definitions remain compatible. Live origin requires server-stamped provenance; manual origin cannot claim it. The model emits a strict-schema definition only; local Zod adds reference/ordering validation before PlanStore saves an immutable unapproved revision. New provenance covers original requirements, model, response/request IDs, prompt version, time and token counts. The same approval gate applies; no generated plan was approved or executed. Saved JSON is reusable offline. Exported the real second proposal as fixtures/live-ai-demo-plan.json, retaining its actual provenance and unapproved status.
+
+Actual live calls via `npm run plan -- generate fixtures/demo-requirements.txt` (both exit 0, HTTP 200):
+
+| Prompt | Response ID | Request ID | Returned model | Input/output/total tokens | Saved revision |
+| --- | --- | --- | --- | --- | --- |
+| v1 | resp_031abb3e03b0169c016ae84039123887d297e8afb40616a1de | req_71f6eae297a94d3e87c351e81b3ff33e | gpt-4.1-mini-2025-04-14 | 1084 / 727 / 1811 | 23b7d0c4-5fd9-4656-bf73-3e3242ff06af |
+| v2 | resp_05c98ef2c0c46630016ae840d68db487d2966ec16261b0b2e7 | req_79887de0ec074210811e35ba33a82fae | gpt-4.1-mini-2025-04-14 | 1179 / 753 / 1932 | d61ba281-a45b-47da-9ae2-5bf3f5747695 |
+
+Both returned plan ID vp1 with three case definitions. Requested model was gpt-4.1-mini. First digest: 1a0f18153f293b631e4d3860d62b726dfd52b60bf4431a19ea868d6940aba23a. Latest digest: 01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f. Latest source remains live-ai, current and unapproved. Old revision and interaction are retained independently.
+
+Meaningful AI correction: first response passed structure validation but incorrectly claimed logout was unsupported, repeated an assertion, and overstated a case title's coverage. The coding agent inspected the output, preserved it unchanged, clarified the allowed controls/case allocation in prompt v2, and made a second real request. V2 includes logout and task-refresh cases but its reviewNotes still make inaccurate claims about wrong-OTP and second-checkbox support, and no explicit spoofed-suffix case is proposed. These are model quality/coverage issues, not product test verdicts. Recorded coding-agent observations in separate review.md files, not as human approval or edits to model provenance. Human review must assess the actual cases; model notes are not authoritative. No requirement to manually manufacture invalid fixtures was passed to the user.
+
+Actual verification commands and outcomes:
+
+| Command | Exit | Actual result |
+| --- | --- | --- |
+| npm run typecheck && npm run build | 0 | Passed initially and after final prompt/provenance updates; final logs typecheck.log and build.log retained. |
+| npm run test:unit (first offline run) | 0 | 49 discovered/executed/passed, 0 failed/skipped; first-unit.log. |
+| npm run test:unit (restricted sandbox launch) | 1 | tsx IPC socket listen EPERM before any tests executed; final-unit.log preserved. Environment failure, not product assertion. |
+| npm run test:unit (network/IPC-enabled rerun) | 0 | 49/49 passed, 0 failed/skipped, 1.098 seconds; unit-v2.log. |
+| npm test | 0 | 24 static Playwright baseline tests executed/passed, 0 failed/skipped, 6.7 seconds. Not execution of the generated three-case plan. |
+| git check-ignore .env / git ls-files .env | 0 / 0 | Root .env is ignored and not tracked (second command produced no file). |
+
+Offline tests explicitly use a fake transport and synthetic credentials. They cover valid output/provenance/unapproved storage, unsupported actions, broken references, injected approval, refusal, incomplete response, malformed response, HTTP 401/429, network failures and secret redaction, plus local missing-key/empty-requirements rejection. No live key or paid call is needed for unit or browser tests. Future result metadata accepts both manual and live-AI plan origins without adding an executor.
+
+Artifacts already on disk:
+
+- artifacts/planner/1b325382-9409-4daa-920d-9b018c64b304/interaction.json and review.md: original live attempt and separate coding-agent observations.
+- artifacts/planner/4a288450-e81b-4b70-b066-6b21171bb629/interaction.json and review.md: revised live attempt, actual usage/IDs/output and review observations.
+- data/plans/vp1/<revision>.json: both immutable revisions; current.json points to v2. No human approval record was created.
+- artifacts/verification/m5/: actual CLI logs, first successful unit log, failed sandbox launch log, final unit/typecheck/build logs, Playwright console log, source.json. Source during these interactions was parent commit 515dc040d46659981a6f3962c7e5921fdb3c188f plus uncommitted Milestone 5 changes; it is not claimed as a clean execution of the older source.
+- artifacts/playwright/2026-11-02T07-48-49.098Z-7bcf7748-5faf-4da0-81fc-095be2893e17/: real baseline JSON/HTML, source metadata. Cleanup printed npm SIGTERM code 143 messages; Playwright itself exited 0 with 24 passed.
+
+Requests use a fixed official endpoint, store:false, strict JSON schema, 90-second timeout and 6000-token output cap, with no automatic retries. Interaction records omit authorization/raw error bodies and redact credential-like output. API errors never grant approval. Local storage/reviewer labels retain the documented single-operator trust assumptions. Model-generated content has not been verified against the app until Milestone 6 execution.
+
+Human action outstanding: `npm run plan -- inspect vp1`, review cases/expectations/coverage, then explicitly approve the exact current revision with reviewer name and --confirm if appropriate. Human approval is an acceptance step still pending; the coding agent does not substitute its own review for it. No key setup is needed on this machine. CLI import of fixtures/live-ai-demo-plan.json works offline but creates a fresh unapproved revision. All mechanical verification is automated.
+
+Pre-publication checks: git diff --cached --check exited 0. A server-side exact-key scan exited 0 over all 14 staged files and both built frontend asset directories; no key values were printed. Root .env remained ignored/untracked. The safe blank .env.example is committed.

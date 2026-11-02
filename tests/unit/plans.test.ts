@@ -46,7 +46,7 @@ const invalidPlans: [string, unknown][] = [
   ["blank expected text", withAssertions([{ type: "text", target: "error-message", expected: " " }])],
   ["no expected assertions", withAssertions([])],
   ["forged approval inside plan", { ...fixture, approved: true }],
-  ["unimplemented AI origin", { ...fixture, source: "live-ai" }],
+  ["live AI origin without provenance", { ...fixture, source: "live-ai" }],
   ["duplicate cases", { ...fixture, cases: [fixture.cases[0], fixture.cases[0]] }],
   ["duplicate requirements", { ...fixture, requirements: [fixture.requirements[0], fixture.requirements[0]] }],
   ["unknown requirement reference", { ...fixture, cases: [{ ...fixture.cases[0], requirementIds: ["missing"] }] }],

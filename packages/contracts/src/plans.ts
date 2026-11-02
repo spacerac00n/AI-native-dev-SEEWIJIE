@@ -72,15 +72,34 @@ export const testCaseSchema = z.object({
   }
 });
 
-export const testPlanSchema = z.object({
+export const liveProvenanceSchema = z.object({
+  provider: z.literal("openai"), api: z.literal("responses"), promptVersion: z.enum(["veriqa-planner-v1", "veriqa-planner-v2"]),
+  requestedModel: z.string().min(1), model: z.string().min(1), responseId: z.string().min(1),
+  requestId: z.string().nullable(), generatedAt: z.string().datetime(),
+  requirementsText: z.string().min(1).max(20000), reviewNotes: z.array(z.string().max(2000)).max(20),
+  usage: z.object({ inputTokens: z.number().int().nonnegative(), outputTokens: z.number().int().nonnegative(),
+    totalTokens: z.number().int().nonnegative() }).strict().nullable(),
+}).strict();
+
+const planBaseSchema = z.object({
   schemaVersion: z.literal(1),
   id: planIdSchema,
   title: text,
-  source: z.literal("manual-fixture"),
+  source: z.enum(["manual-fixture", "live-ai"]),
+  provenance: liveProvenanceSchema.optional(),
   target: z.literal("demo-web"),
   requirements: z.array(z.object({ id: planIdSchema, text }).strict()).min(1).max(20),
   cases: z.array(testCaseSchema).min(1).max(20),
-}).strict().superRefine((plan, context) => {
+}).strict();
+
+// Only the definition is model-authored. Source and provenance are stamped by the server.
+export const generatedPlanSchema = planBaseSchema.pick({ id: true, title: true, requirements: true, cases: true })
+  .extend({ reviewNotes: z.array(z.string().max(2000)).max(20) }).strict();
+
+export const testPlanSchema = planBaseSchema.superRefine((plan, context) => {
+  if ((plan.source === "live-ai") !== (plan.provenance !== undefined)) {
+    context.addIssue({ code: "custom", path: ["provenance"], message: "Live AI requires provenance; manual fixtures cannot claim it" });
+  }
   const requirements = new Set(plan.requirements.map((item) => item.id));
   if (requirements.size !== plan.requirements.length) {
     context.addIssue({ code: "custom", path: ["requirements"], message: "Duplicate requirement ID" });
@@ -127,7 +146,7 @@ export const runResultMetadataSchema = z.object({
   revision: revisionSchema,
   contentHash: contentHashSchema,
   approvalId: z.string().uuid().nullable(),
-  planSource: z.literal("manual-fixture"),
+  planSource: z.enum(["manual-fixture", "live-ai"]),
   mode: z.literal("replay"),
   execution: z.literal("real-playwright"),
   testedCommit: z.string().regex(/^[a-f0-9]{40}$/),

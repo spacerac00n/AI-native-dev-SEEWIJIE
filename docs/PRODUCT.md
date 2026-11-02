@@ -1,6 +1,6 @@
 # Product definition
 
-Status: Milestones 1–4 implement the workspace, demo baseline, and manual-plan contract/storage/approval CLI. Live AI generation, structured-plan execution, and the QA dashboard workflow remain planned.
+Status: Milestones 1–4 implement the workspace, demo baseline, and manual-plan contract/storage/approval CLI. Live AI generation is implemented in Milestone 5; structured-plan execution and the QA dashboard workflow remain planned.
 
 ## Target developer and problem
 
@@ -66,3 +66,5 @@ Excluded: arbitrary website crawling, generated JavaScript execution, real OTP d
 ## Completion evidence
 
 The MVP is complete when a fresh clone can reproduce a passing baseline, detect explicitly seeded defects through real failed assertions, and show successful retests after separate fixes. The final walkthrough must identify plan provenance, approvals, tested commits, commands, exit codes, test counts, and retained artifacts. No confidential assessment PDF or copied assessment prompts belong in the repository.
+
+Milestone 5 accepts natural-language requirements through the server-side CLI. The model proposes only supported definitions, which Zod validates before JSON persistence. Original requirements, model provenance and review notes are preserved; generated cases remain unapproved. Both manual and live-origin saved plans can be loaded offline. Model commentary and coverage claims still require developer review; no generated test has been executed at this milestone.
