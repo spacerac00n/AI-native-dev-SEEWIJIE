@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–7 are implemented and verified, including human-approved live-plan replay through the unified dashboard; Milestones 8–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–8 are implemented and verified, including a clean seeded application regression detected by the unchanged approved plan through the dashboard. The defect remains in place; Milestones 9–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -104,6 +104,8 @@ Acceptance criteria:
 ## 8. Seeded defects and detection evidence
 
 Demonstrate detection against deliberately defective committed code.
+
+Verified: commit `d2b776ba74431cbce08172d7f24a60195f03e646` updates a checklist response copy without saving the change. Dashboard replay `395693c2-5ad9-4842-a203-2e077eb1cd2c` of the unchanged approved `vp1` revision executed all three cases: two passed, case1 failed its persistence assertion, exit 1, dirty false. Original baseline `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d` remains unchanged and selectable alongside this failure in comparison. Screenshot, trace, HTTP evidence and limitations are recorded in AI_WORKFLOW.md. No fix has been made.
 
 Acceptance criteria:
 

@@ -1,6 +1,6 @@
 # Baseline technical walkthrough
 
-Milestone 7 baseline: real planning, human review boundary, deterministic execution and inspectable evidence work in one dashboard. Actual deliberate defect/fix demonstration is still Milestones 8–9.
+Milestone 7 baseline: real planning, human review boundary, deterministic execution and inspectable evidence work in one dashboard. Milestone 8 has now detected a deliberately seeded checklist persistence regression using the unchanged approved plan. The defect remains present; its fix/retest is Milestone 9.
 
 1. From a configured clone, run `npm run dev:qa` and open `http://127.0.0.1:5174`.
 2. Load the saved `vp1` revision `d61ba281-a45b-47da-9ae2-5bf3f5747695` on this machine. Show its live OpenAI provenance, reviewed expectations, content hash and existing actual human approval. Fresh clones must import the committed live definition and obtain a new human approval of their new local revision.
@@ -11,3 +11,5 @@ Milestone 7 baseline: real planning, human review boundary, deterministic execut
 7. Enter new requirements and generate a new plan. Actual Milestone 7 live proposal: `plan-9ccc54db-aa21-443e-9e79-50a7ade756a1`, revision `fe049ac7-ce24-48f8-bc28-de1131ba9451`. It is intentionally unapproved and unexecuted. A human must review the new cases/notes, enter their name and explicitly approve before running it. The original `vp1` remains approved.
 
 Current evidence and command records are in AI_WORKFLOW.md. Keep `data/plans`, actual `data/approvals` and complete selected `artifacts/executor/<run-id>` directories. No old failure was removed. Later seed/fix runs must use separate clean commits and separate immutable runs of the same approved revision, preserving both records.
+
+For the Milestone 8 demonstration, open **Run history** and select `395693c2` (full UUID `395693c2-5ad9-4842-a203-2e077eb1cd2c`). Expand case1: its final checkbox assertion expected true and received false after navigating to `/home`. Inspect its screenshot, trace and raw output. In **Compare runs**, choose baseline `86b3c3f5` as Before and `395693c2` as After. Confirm matching plan/revision/hash, both clean SHAs, and case1 passed → assertion-failed with unchanged expected true. This compares a baseline with a regression; no fixed run exists yet. Exact trace command and remaining limitations are in [AI_WORKFLOW.md](AI_WORKFLOW.md#milestone-8--seeded-checklist-persistence-defect-november-2-2026).

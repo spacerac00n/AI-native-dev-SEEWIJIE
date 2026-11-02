@@ -391,3 +391,68 @@ Actual worktree verification used parent `d8e7ee57857ba29eedb1b313d19d3825787fa1
 - `npm run typecheck` and `npm run build`: both exit 0 initially and after the final layout change. Final captures: `artifacts/verification/m7/compact-release-typecheck-40d591aa-08ce-4d39-b8b2-221aa7d99eb1/` and `compact-release-build-de76f41c-f6e6-4e58-95a7-257bb43a08b1/`.
 
 Inspected the actual compact workflow screenshot. Retained earlier reports and all new unique directories. Fixed trailing whitespace found by final diff review. This is a presentation refinement; existing failed evidence, plan hashes and approvals remain unchanged.
+
+## Milestone 8 — Seeded checklist persistence defect (November 2, 2026)
+
+Developer direction: introduce one application persistence defect, commit it separately, execute the existing human-approved live-AI `vp1` revision through the dashboard, retain the clean baseline and actual failure, and leave the defect for Milestone 9. Read AGENTS.md, PLAN, EXECUTION, DASHBOARD, this history, relevant architecture/demo documentation, and the demo, approval, executor and adapter code before changing behavior. No tests, expectations, approvals, dependencies or UI code were changed.
+
+Plan inspection confirmed case1 actions 7–8 click `review-requirements` and navigate to `/home`. The trusted navigate adapter performs a real `page.goto` and waits for session lookup. Final assertion 4 expects the checkbox to remain checked. This directly covers requirement `req6`, persistence across a fresh page load; it is not merely checking optimistic UI state. Original requirements explicitly require survival across refresh.
+
+Seed commit: **`d2b776ba74431cbce08172d7f24a60195f03e646`**, `test(seed): introduce checklist persistence regression`. The only application change is in `apps/api/src/demo.ts`: the task PATCH handler clones `homeFor(email)` before mutating it. Its HTTP 200 response reports the checked task, but the stored map retains false, so the next home read loses the change. A comment explicitly labels the deliberate regression. This small response-copy mistake exercises the existing persistence expectation without changing the runner. No fix has been made.
+
+### Actual clean dashboard execution
+
+The existing local launcher was already serving the demo on 5173 and dashboard on **5174**, with test mode enabled. A sandbox-local `curl` connectivity attempt exited 7; the permitted host-local status request then exited 0 with `executionEnabled: true`, no active run. This diagnostic restriction did not affect the dashboard execution. Used CUA on the actual dashboard, selected the existing approved vp1, kept successful-case screenshots enabled, and clicked **Execute approved plan**. Observed Running/Not finalized, then finalized Assertion Failed. No generation or approval action occurred.
+
+| Field | Actual value |
+| --- | --- |
+| Run ID | `395693c2-5ad9-4842-a203-2e077eb1cd2c` |
+| Tested commit / dirty | `d2b776ba74431cbce08172d7f24a60195f03e646` / **false** |
+| Plan / revision | `vp1` / `d61ba281-a45b-47da-9ae2-5bf3f5747695` |
+| Content hash | `01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f` |
+| Existing human approval | `0d20cfb2-7e27-4693-adef-27287f2b8362`, See Wijie, unchanged |
+| Source / mode / execution | `live-ai` / `replay` / `real-playwright` |
+| Started / finished UTC | `2026-11-02T11:07:21.062Z` / `2026-11-02T11:07:27.000Z` |
+| Discovered / executed / passed / failed / skipped | **3 / 3 / 2 / 1 / 0** |
+| Playwright exit / outcome / retries | **1** / `assertion-failed` / 0 |
+| Playwright / total duration | 5.6 seconds / 5938 ms |
+
+Actual child command (also retained as argv in `command.json`):
+
+```sh
+"/Users/grassjelly/.hermes/node/bin/node" "/Users/grassjelly/Desktop/Bytedance-AI-Native/node_modules/@playwright/test/cli.js" "test" "--config" "playwright.executor.config.ts"
+```
+
+Case1 reached the assertion phase: URL `/home`, visible welcome heading, and exact synthetic email text all passed. Its checkbox assertion expected **true**, received **false**, and failed after the configured 3000 ms assertion wait. Case2 (domain rejection) and case3 (logout/protected home rejection) passed. Eight assertions were attempted: seven passed, one failed. No invalid definition, skipped case, setup/runner error, page crash or unavailable target was reported. Initial unauthenticated 401s and case2's rejected request are expected; stderr contains only the existing NO_COLOR/FORCE_COLOR warnings.
+
+Inspected the original PNG and trace ZIP, including its recorded HTTP response bodies. In case1, reset succeeded before login; OTP verification returned 200; PATCH at `11:07:22.289Z` sent `{ completed: true }` and returned 200 with the task true; subsequent GET home at `11:07:22.425Z` returned 200 with the task false. There was no reset between the PATCH and these reads. The screenshot shows the authenticated welcome and unchecked task. This corroborates the application storage regression rather than an invalid expected value or environment failure. Duplicate home GETs come from the existing React StrictMode effect. The derived trace review omits OTP values/session headers; original evidence is untouched.
+
+### Preservation and evidence
+
+The complete failure directory is `artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/`. Its `run.json` is byte-identical to `data/runs/395693c2-5ad9-4842-a203-2e077eb1cd2c.json`. Retain the whole directory, including `attempt.json`, `input.json`, `command.json`, `playwright.json`, `stdout.log`, `stderr.log`, and all three cases' `observation.json`, `result.json`, and `browser-api.log.json`.
+
+Case1 native evidence is under `test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/` within that directory: `test-failed-1.png`, `trace.zip`, and `error-context.md`. Case2 and case3 have genuine successful screenshots. All indexed artifacts exist, the ZIP integrity check passed, and the execution lock was released.
+
+Original clean Milestone 7 baseline: `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d`, SHA `b82a8caafce3fb75d921d8a4f33ecfae80a014f0`, dirty false, 3/3 passed, exit 0. Its record, full artifact directory, original plan and approval remain separate and unchanged. Before editing, SHA-256 fingerprinted **all 1,326 existing files** under data/artifacts (Milestones 1–7 outputs, including earlier failures); a post-run comparison found no missing or changed file. Reference: `artifacts/verification/m8/pre-seed-sha256.json`. No run was overwritten, relabelled or re-created.
+
+CUA verified the new failure in **Run history**, selected it alongside the original baseline, and opened **Compare runs**. Set baseline as Before and seed as After. The UI confirmed the same plan/revision/hash, both clean SHAs, case1 passed → assertion-failed, and unchanged expected true with actual true → false. Case2/3 remained passed. UI captures and read-only audit: `artifacts/verification/m8/dashboard-failure.png`, `dashboard-comparison.png`, `dashboard-comparison.txt`, `trace-network-review.json`, and `audit.json`.
+
+Final Python audit exited 0: all 1,326 earlier fingerprints match; saved plan/approval and baseline snapshots are identical; both new run JSON copies match; all 25 indexed files exist; three PNGs and one intact failure trace remain; no execution lock remains; current application source exactly matches the seed commit. Checked 24 local Markdown links, intended documentation-only follow-up changes, whitespace, and limited credential patterns (no matches). `artifacts/verification/m8/seed-run-sha256.json` fingerprints the new failure directory and its separate data record for later preservation checks.
+
+`npm run typecheck` and `npm run build` both exited **0** on the seeded working tree before its commit (parent `28be54b63ecc57234e29f48b09d0b14c4210bf6a`, dirty true). Actual command/time/exit/stdout/stderr captures are under `artifacts/verification/m8/typecheck/` and `build/`. The subsequent approved-plan run above tested the clean seed SHA. Broader baseline/executor/dashboard fixture suites were not rerun in this milestone; their historical passing results are preserved, and persistence checks are expected to fail on this deliberately defective version. `git diff --check` passed before the seed commit.
+
+Limitations: one real Chromium execution of three approved cases establishes this observed failure, not complete coverage or long-term stability. No same-source rerun or flakiness claim is made. Demo state is in memory, OTP delivery is explicitly mocked, and dashboard external-target mode uses the running local development services; the Git metadata records this repository, not an independent target-build attestation. Generated records, raw traces and screenshots remain ignored local evidence and are not included in the source push. Documentation follows the clean seed in a separate commit. Milestone 9 must make a separate fix commit and new execution while preserving both runs.
+
+### Exact human verification steps
+
+1. Open `http://127.0.0.1:5174` (5173 is the demo). If services have stopped, run `npm run dev:qa`. Load existing `vp1` revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`; expand Revision & content hash and Approval reference to confirm the hash and approval above. Do not generate, import or reapprove it.
+2. Open **Run history**, select `395693c2`, and confirm Assertion Failed, seed SHA `d2b776ba`, clean, 2 passed / 1 failed / 0 skipped. Hover Git SHA for its full value; expand **Approval, provenance & command** for approval/hash and exit code 1. The local `data/runs/395693c2-5ad9-4842-a203-2e077eb1cd2c.json` preserves full SHA, dirty false and discovered/executed counts. Expand case1: its first three assertions passed, checkbox expected true / actual false failed.
+3. Open case1 **Screenshot**, download **Playwright trace**, and inspect `browser-api.log.json`, `result.json`, and **Raw execution output**. Open the original retained trace with:
+
+   ```sh
+   npx playwright show-trace artifacts/executor/395693c2-5ad9-4842-a203-2e077eb1cd2c/test-results/plan-case1-Successful-logi-77ae4-then-check-task-persistence-chromium/trace.zip
+   ```
+
+   Inspect Action 7's successful PATCH with completed true, Action 8's fresh GET home with completed false, and Assertion 4's unchecked failure.
+4. In **Compare runs**, choose Before `86b3c3f5` and After `395693c2`. Confirm the same-plan/revision/hash message and both clean commits. Expand case1 and compare the actual PNGs and expected/actual values. This is baseline → regression, with no fixed run yet.
+5. Inspect `git show d2b776ba74431cbce08172d7f24a60195f03e646 -- apps/api/src/demo.ts`: only the labelled response-copy regression was seeded. For another execution, keep the same approved revision and use **Execute approved plan**; it creates a new UUID and must retain this original failure. Record the then-current SHA rather than calling a later documentation commit the seed SHA.

@@ -13,7 +13,7 @@ The compact overview keeps detailed requirements, cases, provenance, logs and co
 5. Inspect the finalized run: UUID, SHA/dirty state, plan revision/hash, approval/provenance, exit code, counts, individual cases, attempted expected/actual assertions, browser/API logs, raw output, screenshots and trace downloads. Nonexecuted assertions are labelled. Color codes are removed only from display previews; originals are untouched.
 6. Select two runs in history or in **Compare runs**. Matching case IDs appear side by side, with screenshots and expected/actual/definition/status differences. Equal plan ID/revision/hash establishes unchanged test definitions. Different or incomplete records are explicitly flagged. Missing old screenshots remain missing; no substitutes are generated.
 
-A new live proposal still needs human review even if the previous plan was approved. A passing replay proves only the executed reviewed cases, not complete requirement coverage. Actual seeded defect/fix comparisons remain Milestones 8–9; existing passing and labelled runner-check failure records already work in this view.
+A new live proposal still needs human review even if the previous plan was approved. A passing replay proves only the executed reviewed cases, not complete requirement coverage. Milestone 8 verified comparison of the original clean passing baseline `86b3c3f5-5ffd-4a9e-9001-bc6d0437927d` and actual seeded application failure `395693c2-5ad9-4842-a203-2e077eb1cd2c`: unchanged plan/revision/hash, case1 passed → assertion-failed. A separate fix/retest remains Milestone 9.
 
 ## Minimal HTTP interface
 

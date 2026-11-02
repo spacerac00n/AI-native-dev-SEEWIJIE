@@ -8,6 +8,8 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 Milestones 1–7 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection, and a unified QA dashboard. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 63 unit/API/contract tests, 24 Playwright baseline tests, 7 executor checks and 2 dashboard browser checks. The approved live-AI plan has executed with all three cases passing. The dashboard connects generation, review, explicit approval, execution, history and evidence comparison. See [the milestone plan](docs/PLAN.md).
 
+Milestone 8 deliberately regresses checklist persistence: updates now affect only a response copy. The unchanged human-approved `vp1` detected this on clean seed commit `d2b776ba74431cbce08172d7f24a60195f03e646`: run `395693c2-5ad9-4842-a203-2e077eb1cd2c`, 2 passed / 1 failed, exit 1. The original clean Milestone 7 baseline remains separate. The defect is still present, so persistence checks are expected to fail until Milestone 9. See [the evidence and human verification steps](docs/AI_WORKFLOW.md#milestone-8--seeded-checklist-persistence-defect-november-2-2026).
+
 The intended demonstration is:
 
 Requirement → AI-generated test plan → Review → Real execution → Failed assertion → Evidence → Code fix → Successful retest.
@@ -23,7 +25,7 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 
 The demo uses simple native forms, buttons, and checkboxes. The QA dashboard provides a complete review and execution workspace. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
-Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. No intentional application defects have been introduced.
+Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. The deliberate Milestone 8 application defect is labelled in code and Git history.
 
 ## Setup
 
