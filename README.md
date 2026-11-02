@@ -19,7 +19,7 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 Use Node **22.23.2** and npm **10.9.8**. Keep ports 3000, 5173 and 5174 free and run server/test commands sequentially.
 
 ```sh
-git clone --branch codex/m10-reproduction https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
+git clone --branch main https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
 cd veriqa
 npm ci --cache .cache/npm
 npx playwright install chromium

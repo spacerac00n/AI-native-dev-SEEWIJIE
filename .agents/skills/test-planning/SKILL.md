@@ -1,0 +1,17 @@
+---
+name: test-planning
+description: Translate VeriQA product requirements into supported test scenarios and review coverage and expected results before human approval. Use when drafting or reviewing plans during development, not as a runtime testing feature.
+---
+
+# Test planning
+
+Guide the coding agent during development. AI proposes definitions; Zod validates structure; humans review meaning; Playwright determines execution outcomes.
+
+1. Read [PRODUCT.md](../../../docs/PRODUCT.md), [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md), and the supplied requirements. Identify observable outcomes and unresolved policy questions. Ask the developer to resolve ambiguity before approval; do not invent product policy.
+2. Enumerate positive, negative, and boundary scenarios for each requirement. Consider valid login, invalid/spoofed email domains, incorrect/expired/reused OTPs, unauthenticated access, logout, and checklist persistence where relevant. Distinguish mock OTP delivery from real backend authentication and session checks.
+3. Build a compact requirement-to-case mapping using requirement IDs and each case's `requirementIds`. State preconditions, ordered actions, and explicit expected results. Check for unmapped requirements, missing rejection/boundary cases, duplicate scenarios, and cases whose assertions do not actually verify their linked requirement.
+4. Check the current vocabulary in `packages/contracts/src/plans.ts` and its implementation in `tests/executor/adapters.ts`. Plans support fixed navigation, named fill/click actions, mock OTP reads, and URL/visibility/text/checkbox/fixed read-only API assertions. Respect `fresh-demo-state`, read OTP before referencing it, and remember that assertions run after all case actions. Never generate executable code or introduce arbitrary selectors, URLs, or API operations. Record unsupported coverage explicitly: for example, exact expiry boundaries use developer-authored tests in `tests/demo/auth.spec.ts`; the plan schema has no clock-advance action. Do not claim unsupported scenarios execute through replay.
+5. Review every expectation against the requirement, independently of AI output or current app behavior. Check exact text/status/boolean meanings and whether the final state proves the scenario. Schema validity, model confidence, and an existing passing result do not establish semantic correctness. Report coverage gaps and questionable expectations for human review.
+6. Use root commands `npm run plan -- generate <requirements.txt>` for live generation (requires configured OpenAI access), or `npm run plan -- import <fixture.json>` for a manual fixture. Import creates an unapproved manual revision; never relabel it as live AI output. Inspect with `npm run plan -- inspect <plan-id> <revision>` and present the exact revision/hash, mapping, expectations, and gaps to the developer. Require explicit human review before approval; never self-approve or invent a reviewer. The human approval command is `npm run plan -- approve <plan-id> <revision> --by <reviewer> --confirm`. Edits require a new validated revision and fresh review/approval. `npm run plan -- check <plan-id> <revision>` checks the approval gate only; it executes no tests.
+
+Deliver a reviewable plan and coverage/gap summary. Keep live generation, manual fixtures, approved replay, and actual execution distinct. Record development decisions and actual checks in `docs/AI_WORKFLOW.md`; these instructions add no runtime capability.

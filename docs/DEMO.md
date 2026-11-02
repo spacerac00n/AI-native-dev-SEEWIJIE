@@ -7,7 +7,7 @@ The packaged historical demonstration is requirement → live AI proposal → ac
 Use Node **22.23.2**, npm **10.9.8**, and free loopback ports 3000, 5173 and 5174. Run commands sequentially; stop dev servers before executing suites or the managed executor.
 
 ```sh
-git clone --branch codex/m10-reproduction https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
+git clone --branch main https://github.com/spacerac00n/AI-native-dev-SEEWIJIE.git veriqa
 cd veriqa
 npm ci --cache .cache/npm
 npx playwright install chromium
