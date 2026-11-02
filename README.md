@@ -6,7 +6,7 @@ VeriQA is an AI-native automated QA testing MVP for a small web application. A d
 
 ## Current status
 
-Milestones 1–5 provide the workspace, a working demo, and validated manual test plans with revision-bound human approval. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 49 unit/contract tests and 24 Playwright baseline tests. Live OpenAI planning is implemented; execution of structured plans and the QA dashboard workflow remain planned. See [the milestone plan](docs/PLAN.md).
+Milestones 1–6 provide the workspace, a working demo, live AI planning, revision-bound human approval, and deterministic Playwright replay with evidence collection. The demo includes email login, local mock OTP delivery, server-recognised sessions, a protected home page, a checklist saved in backend memory (using `Map`), and logout. Verification includes 57 unit/contract tests, 24 Playwright baseline tests, and separate executor integration checks. The approved live-AI plan has executed with all three cases passing. The QA dashboard workflow remains planned. See [the milestone plan](docs/PLAN.md).
 
 The intended demonstration is:
 
@@ -23,7 +23,7 @@ Requirement → AI-generated test plan → Review → Real execution → Failed 
 
 The demo uses simple native forms, buttons, and checkboxes. The QA dashboard remains a health-check shell. Both apps can call the real Hono health API through Vite's development proxy and validate its response with Zod. The tests do not mock HTTP responses.
 
-Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; future approved-plan replay will perform new Playwright execution without an AI call. No intentional defects have been introduced.
+Only OTP delivery is mocked; email validation, OTP verification, session enforcement, task updates, and logout execute on the backend. Live AI planning requires a server-side OpenAI key; approved-plan replay performs new Playwright execution without an AI call or key. No intentional application defects have been introduced.
 
 ## Setup
 
@@ -60,7 +60,9 @@ The dev command builds shared contracts, watches them for edits, and starts all 
 | `npm test` | Starts fresh services, runs all 24 real Chromium/API tests, then stops the services. |
 | `npm test -- tests/demo` | Runs the 21 demo authentication/home tests. |
 | `npm test -- tests/smoke` | Runs the 3 workspace connectivity tests. |
-| `npm run test:unit` | Runs the 49 contract/storage/CLI/planner tests using Node's test runner; no browser/server required. |
+| `npm run test:unit` | Runs the 57 contract/storage/CLI/planner/result tests using Node's test runner; no browser/server required. |
+| `npm run test:executor` | Checks approval/validation/locking, all adapters, real assertion failure evidence, and unavailable-target handling using explicitly synthetic runner-check approvals. |
+| `npm run execute -- <plan-id> <revision>` | Replays an exact saved human-approved revision through real Chromium/API actions; starts/stops fresh API/demo servers. |
 | `npm run plan -- import fixtures/manual-demo-plan.json` | Validates and stores a new **unapproved**, manually authored revision. |
 | `npm run plan -- inspect manual-demo-baseline` | Prints the current plan, revision UUID, SHA-256 digest, and approval status. |
 | `npm run start --workspace @veriqa/api` | Starts only the compiled API after `npm run build`; stop other API processes first. |
@@ -95,7 +97,21 @@ A real, unapproved API-generated definition is committed for offline inspection/
 npm run plan -- import fixtures/live-ai-demo-plan.json
 ```
 
-This creates a new unapproved revision while preserving its original `live-ai` provenance. Offline import is not a new generation or an execution. Original live interaction records and revisions remain on the development machine. Structured-plan execution comes in Milestone 6.
+This creates a new unapproved revision while preserving its original `live-ai` provenance. Offline import is not a new generation or an execution. Original live interaction records and revisions remain on the development machine. Importing again supersedes the current revision, so use the existing approved revision for replay on this machine.
+
+## Replay an approved saved plan
+
+Stop existing dev servers. On this development machine, the developer already approved this exact live-AI revision:
+
+```sh
+env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695
+```
+
+No `.env` is loaded, no planner is imported, and no model call is made. Playwright starts fresh local API/demo servers in test mode, resets synthetic backend state before each case, and uses a new browser context per case. No dashboard server is needed. An unapproved, superseded, tampered, or unsupported plan is rejected before a server/browser starts. A concurrent executor is rejected. Retries are disabled.
+
+Each invocation prints its unique `artifacts/executor/<run-id>/` path. Completed executions also save `data/runs/<run-id>.json`. Exit 0 means every case passed; exit 1 indicates rejection, an assertion failure, or an execution error. Inspect the structured outcome to distinguish them. The optional `--external-target` flag uses the same fixed loopback addresses without starting servers; it requires an already running API with `VERIQA_TEST_MODE=1` and resets its synthetic state.
+
+A fresh clone has the live definition but no local saved revisions or approvals. Import it, inspect the returned revision, have a human approve its expectations with the documented `approve` command, then execute that new revision. Never copy an old approval onto a new revision. See [execution records and human checks](docs/EXECUTION.md) for the dashboard contract and evidence layout.
 
 ## Create, inspect, and approve a manual plan
 
@@ -119,7 +135,7 @@ To edit, change the source JSON and run `import` again. Every import creates a n
 
 Storage defaults to `data/plans/<plan-id>/<revision>.json`, a `current.json` pointer, and `data/approvals/<plan-id>/<revision>.json`. Plans and approvals are immutable through the tool; reads revalidate schemas and digests. `VERIQA_DATA_DIR` can select an isolated local storage root (used by unit tests); relative overrides resolve from the repository root. Local file ownership is trusted; the reviewer name is an audit label, not an identity service.
 
-The supported vocabulary uses known demo paths, inputs, buttons/checkboxes, mock OTP reads, and typed UI assertions or fixed read-only health/home API checks. No URLs, raw selectors, arbitrary methods, scripts, or generated code are accepted. Schema validity does not prove that an expected result is correct; human review is still needed. Live AI origin requires server-supplied provenance; dynamic execution is deferred.
+The supported vocabulary uses known demo paths, inputs, buttons/checkboxes, mock OTP reads, and typed UI assertions or fixed read-only health/home API checks. No supplied origins, raw selectors, arbitrary methods, scripts, or generated code are accepted. Schema validity does not prove that an expected result is correct; human review is still needed. Live AI origin requires server-supplied provenance.
 
 ## Try the demo
 
@@ -157,7 +173,7 @@ For a retained failure trace, use `npx playwright show-trace <path-to-trace.zip>
 
 Unit-test evidence is retained under `artifacts/unit/<run-id>/` (stdout, stderr, command/exit-code metadata); CLI validation evidence is under `artifacts/cli/<run-id>/`. See [AI_WORKFLOW.md](docs/AI_WORKFLOW.md) for the actual paths and counts.
 
-Plans and approvals now use local JSON under `data/`. Run-result metadata has a contract but no structured-plan executor or QA run writer exists yet. For the interview, retain the manual source, its saved revision/digest and eventual real human approval, unit/CLI evidence, baseline Playwright reports, and earlier meaningful failure evidence. A later approved AI-generated replay fixture is still required for the final AI demonstration. Never commit keys, real credentials, confidential material, or unreviewed generated artifacts.
+Approved-plan executions use a separate `artifacts/executor/<run-id>/` directory with `run.json`, `input.json`, `command.json`, raw stdout/stderr, native Playwright JSON, per-case result and browser/API logs, and real failure screenshots/traces when available. `data/runs/<run-id>.json` contains the same finalized record. All listed evidence paths are relative to that run's artifact directory. Rejections retain `attempt.json` and `rejection.json`; they are not executed tests. Preserve whole directories and their saved plans/approvals, including earlier failures. See [the record specification](docs/EXECUTION.md). Never commit keys, real credentials, confidential material, or unreviewed generated artifacts.
 
 ## Project documentation
 

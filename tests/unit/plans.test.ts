@@ -72,6 +72,7 @@ test("save/load survives a new store instance and starts unapproved", (context) 
   assert.deepEqual(reopened.load(fixture.id), saved);
   assert.equal(reopened.inspect(fixture.id).status, "unapproved");
   assert.throws(() => reopened.requireApproved(fixture.id, saved.revision), /human approval/);
+  assert.throws(() => reopened.requireApproved(fixture.id, undefined as unknown as string));
 });
 
 test("invalid input is rejected before any plan is persisted", (context) => {

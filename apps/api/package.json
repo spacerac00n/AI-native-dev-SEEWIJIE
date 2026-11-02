@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "test:unit": "tsx --test ../../tests/unit/*.test.ts",
-    "plan": "tsx src/plan-cli.ts"
+    "plan": "tsx src/plan-cli.ts",
+    "execute": "tsx src/execute-cli.ts"
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",

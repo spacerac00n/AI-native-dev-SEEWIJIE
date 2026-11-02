@@ -1,6 +1,6 @@
 # Implementation plan
 
-Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–4 are implemented and verified; Milestone 5 implementation/live verification is complete, with human review/approval pending; Milestones 6–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
+Milestones are sequential acceptance gates, not claims of completed implementation. Keep changes small, document actual verification, and commit incrementally. Milestones 1–6 are implemented and verified, including human-approved live-plan replay; Milestones 7–10 remain pending. See [AI_WORKFLOW.md](AI_WORKFLOW.md) for actual results and retained development failures. Root README commands must stay current as each milestone ships.
 
 ## 1. Context engineering
 
@@ -63,7 +63,7 @@ Acceptance criteria:
 
 Convert requirements into a validated reviewable plan through the OpenAI API.
 
-Implemented CLI generation and executed two real API calls (HTTP 200). Saved unapproved live-origin revisions with actual provenance; 49 offline unit tests cover success/error paths. Human review/approval remains outstanding and must not be fabricated by the coding agent. The CLI substitutes for the originally planned endpoint, as explicitly permitted by the Milestone 5 request.
+Implemented CLI generation and executed two real API calls (HTTP 200). Saved unapproved live-origin revisions with actual provenance; 49 offline unit tests cover success/error paths. The developer has verified the expectations and run the named approval command for live plan vp1, revision d61ba281-a45b-47da-9ae2-5bf3f5747695; the existing approval record was independently verified. See AI_WORKFLOW.md for the confirmation. The CLI substitutes for the originally planned endpoint, as explicitly permitted by the Milestone 5 request.
 
 Acceptance criteria:
 
@@ -76,6 +76,8 @@ Acceptance criteria:
 ## 6. Deterministic executor and approved-plan replay
 
 Execute reviewed plans against the real demo through trusted Playwright adapters.
+
+Implemented through `npm run execute -- <plan-id> <revision>`: exact approval/hash checks, fixed adapters, per-case reset/context isolation, one-run lock, and immutable dashboard-ready JSON/evidence. The existing approved live plan replayed without an OpenAI key: 3/3 passed. Separate synthetic runner checks cover all adapters, rejection paths, a real failed assertion, and a refused target connection. No dashboard change or application defect was introduced. Evidence contract and comparison fields are documented in [EXECUTION.md](EXECUTION.md).
 
 Acceptance criteria:
 

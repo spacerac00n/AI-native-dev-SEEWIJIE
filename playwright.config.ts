@@ -12,7 +12,7 @@ console.log(`Playwright artifacts: ${runDirectory}`);
 
 export default defineConfig({
   testDir: "./tests",
-  testIgnore: "**/unit/**",
+  testIgnore: ["**/unit/**", "**/executor/**", "**/integration/**"],
   fullyParallel: false,
   workers: 1,
   retries: 0,

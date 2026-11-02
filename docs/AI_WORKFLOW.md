@@ -216,6 +216,80 @@ Artifacts already on disk:
 
 Requests use a fixed official endpoint, store:false, strict JSON schema, 90-second timeout and 6000-token output cap, with no automatic retries. Interaction records omit authorization/raw error bodies and redact credential-like output. API errors never grant approval. Local storage/reviewer labels retain the documented single-operator trust assumptions. Model-generated content has not been verified against the app until Milestone 6 execution.
 
-Human action outstanding: `npm run plan -- inspect vp1`, review cases/expectations/coverage, then explicitly approve the exact current revision with reviewer name and --confirm if appropriate. Human approval is an acceptance step still pending; the coding agent does not substitute its own review for it. No key setup is needed on this machine. CLI import of fixtures/live-ai-demo-plan.json works offline but creates a fresh unapproved revision. All mechanical verification is automated.
+At initial publication, human action was outstanding: `npm run plan -- inspect vp1`, review cases/expectations/coverage, then explicitly approve the exact current revision with reviewer name and --confirm if appropriate. Human approval is an acceptance step still pending; the coding agent does not substitute its own review for it. No key setup is needed on this machine. CLI import of fixtures/live-ai-demo-plan.json works offline but creates a fresh unapproved revision. All mechanical verification is automated.
 
 Pre-publication checks: git diff --cached --check exited 0. A server-side exact-key scan exited 0 over all 14 staged files and both built frontend asset directories; no key values were printed. Root .env remained ignored/untracked. The safe blank .env.example is committed.
+
+### Human review and approval confirmed — November 2, 2026
+
+The developer confirmed that they verified and agreed with the generated test expectations and ran the approval command after replacing the reviewer-name placeholder with their own name:
+
+```sh
+npm run plan -- approve vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695 --by "<developer name>" --confirm
+```
+
+The coding agent independently checked the existing local record through `PlanStore.requireApproved` without creating or changing an approval. The gate returned `approved` for revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`, approval ID `0d20cfb2-7e27-4693-adef-27287f2b8362`, recorded at `2026-11-02T08:34:02.309Z` (16:34:02 Singapore time). The record is saved at `data/approvals/vp1/d61ba281-a45b-47da-9ae2-5bf3f5747695.json`.
+
+Milestone 5 human review/approval is complete for this exact revision. This approves the proposed expectations; it does not claim that the generated cases have executed or passed. Dynamic execution remains Milestone 6. Documentation updated at the developer's request; no commit or push was made for this update.
+
+## Milestone 6 — Deterministic Playwright executor and evidence (November 2, 2026)
+
+Read AGENTS, PLAN, ARCHITECTURE, AI_WORKFLOW, README, DECISIONS, contracts, plan store/CLI, demo UI/backend and existing tests first. Preserved the developer's uncommitted Milestone 5 approval-confirmation documentation and included it with this milestone. Independently called `PlanStore.requireApproved` for live plan `vp1`, revision `d61ba281-a45b-47da-9ae2-5bf3f5747695`: existing approval `0d20cfb2-7e27-4693-adef-27287f2b8362` and content hash `01d6a402710ee33142f5adbeb7e9c05e13318e314a77c464da81d8846d89e90f` matched. No real approval was created or changed by the coding agent.
+
+AI assistance implemented a small CLI coordinator, a separate Playwright config, maintained adapters for the complete existing Zod vocabulary, case observations, immutable result publication and shared result validation. Consulted official [Playwright reporters](https://playwright.dev/docs/test-reporters), [reporter lifecycle](https://playwright.dev/docs/api/class-reporter), and [failure trace options](https://playwright.dev/docs/test-use-options). No new dependencies, dashboard changes, application defects, database, execution API or model calls. Human direction kept the next dashboard out of scope while requiring its stable evidence contract; this is documented in EXECUTION.md and decision D17.
+
+The coordinator requires exact ID/revision/current approval and hash before server/browser startup, stores the approved snapshot, and launches a fixed argv without a shell. Workers revalidate the snapshot. Plans never provide JavaScript, selectors, origins or HTTP methods. Browser contexts and case-local OTP values are fresh; backend synthetic state/clock is reset before each case. A directory lock and one Chromium worker serialize execution; no retries. Clicks wait for actual endpoint responses and settled controls. API home assertions use the real browser cookie session. Replay does not load `.env` or import the planner, and strips OpenAI environment settings from child processes.
+
+Result files embed plan/provenance/approval, exact Git state, timing, command/exit status, counts, case identities/statuses, actual expected/observed assertions, raw output and relative artifact indexes. Native Playwright status is authoritative; setup failures, missing observations and incomplete runs cannot pass. Comparison identity is `(planId, revision, contentHash, caseId)` across distinct run IDs/SHAs. Files are published without overwrite. Raw logs append during execution; abruptly terminated coordinators can leave an incomplete attempt and stale lock, which a future dashboard must not show as passed. Local recovery is documented rather than adding a worker framework.
+
+### Actual verification commands and outcomes
+
+All worktree runs below record actual parent SHA `8dd1056a2276297cdfef00f8afc8c198db6e0b22` and `worktreeDirty: true`. This identifies the parent plus uncommitted Milestone 6 implementation, not a clean test of the older commit. Successful clean-commit confirmation is recorded after the implementation commit exists.
+
+| Command | Exit | Actual outcome |
+| --- | --- | --- |
+| Initial `npm run typecheck` | 1 | API compiler identified a possibly-null approval after the gate. Corrected the return type through explicit narrowing; no product tests ran. |
+| Subsequent `npm run typecheck` | 0 | All workspaces/configs/tests passed. Final captured run also exited 0. |
+| First `npm run test:executor`, sandbox restricted | 1 | Node reported 6 tests including parent: 3 passed, 3 failed. Approval/unsupported checks passed; managed servers failed at tsx IPC `EPERM` before product cases; external Chromium setup failed under sandbox. No successful product execution claimed. |
+| Second `npm run test:executor`, local-process permissions | 1 | 6 Node tests: 3 passed, 3 failed. Existing repository dev launcher occupied ports; managed tests executed 0 product cases. External server lacked reset controls (HTTP 404), correctly recorded as execution errors. |
+| `ps`/`lsof` inspection, then `kill -TERM 24579` | 0 | Confirmed existing repository `npm run dev`/concurrently launcher and stopped it so tests could own fresh servers. No source/evidence removed. |
+| Third `npm run test:executor` | 0 | 6/6 Node tests passed (parent + 5 checks). Inner Playwright: 8 adapter cases passed; 1 deliberately wrong expectation failed; 8 unavailable-target cases failed during reset with actual `ECONNREFUSED`. |
+| `env -u OPENAI_API_KEY npm run execute -- vp1 d61ba281-a45b-47da-9ae2-5bf3f5747695` | 0 | Real replay of existing human-approved live-AI plan: 3 discovered/executed/passed, 0 failed/skipped, Playwright 2.9 seconds. Run `e762bf06-8de9-4fc1-a7fc-b9aca414d917`; total recorded duration 3260 ms. No key/model call. |
+| `npm run test:unit` | 0 | 57 discovered/executed/passed, 0 failed/cancelled/skipped, 1.107 seconds. Includes 8 new result-contract checks. |
+| `npm test` | 0 | All 24 existing Playwright browser/API tests discovered/executed/passed, 0 failed/skipped, no retries, 6.6 seconds. Dynamic/integration tests excluded from baseline discovery. |
+| Final `npm run typecheck` / `npm run build` | 0 / 0 | All four workspaces, runner/config/unit/integration types and both frontend builds passed. |
+| Final `npm run test:executor` | 0 | 7/7 Node tests passed (parent + 6 checks), 15.392 seconds. Added lock rejection; repeated real 8-case pass, 1 assertion failure with evidence, and 8 reset-phase connection refusals. |
+| Screenshot inspection and Python ZIP integrity check | 0 | Real failed-run screenshot shows the unchanged login page and actual health text. Trace archive integrity passed, with 20 entries. |
+
+Each captured command has its own `stdout.log`, `stderr.log`, and `command.json` with actual argv, exit code, timestamps and source state under `artifacts/verification/m6/`. The capture wrapper is local verification tooling, not product logic. Captured directories:
+
+- Initial sandbox failure: `runner-checks-4f0467b1-36cc-45f3-beb0-10ebdcde2706/`.
+- Occupied-port/reset-unavailable failure: `runner-checks-0791e5a2-a4ef-458f-9b8d-cbe7b1c12657/`.
+- First successful runner verification: `runner-checks-e6530700-a5ef-4878-b81a-5d94b4599a80/`.
+- Approved live replay: `live-replay-c0aa76ac-b262-4b7c-8d7f-336d16e1ac80/`.
+- Unit: `unit-7794496e-ee2b-4d90-a7e5-00882f066f96/`.
+- Existing baseline: `static-playwright-6fd61b8c-1409-4189-8748-39e7b2f7074c/`.
+- Typecheck/build: `typecheck-8331c7ed-e5a6-4664-bcf3-74e44905a3f3/`, `build-a7a3d85a-79f5-4bf3-855c-c5879ad170e9/`.
+- Final runner verification: `runner-checks-final-bc30e0ed-3196-4a9a-9ef3-0500e315dd75/`.
+
+Coding-agent corrections: narrowed the approval return type after a real compiler error; strengthened the unavailable-target check to require actual connection refusal rather than accepting any reset failure; made final JSON publication atomic/exclusive and raw output incremental; increased bounded artifact capacity to cover the full 20-case vocabulary limit. The HTTP-404 external attempt remains retained and is not relabelled as a refused connection. No additional human correction was needed. No unexplained unchanged-source flakiness was observed; the deliberate assertion mismatch is a labelled runner check, not a seeded product defect.
+
+### Preserved evidence and human checks
+
+All prior milestone artifacts remain untouched. Keep entire run directories (including `input.json`, `run.json`, native JSON, stdout/stderr, case logs and failure attachments), plus original plan/approval files. New generated outputs remain local and ignored by Git; they are not included in the source push.
+
+| Evidence | Location |
+| --- | --- |
+| Actual human-approved live replay | `data/runs/e762bf06-8de9-4fc1-a7fc-b9aca414d917.json` and `artifacts/executor/e762bf06-8de9-4fc1-a7fc-b9aca414d917/` |
+| Final synthetic all-adapter pass | `artifacts/executor/95b7f9f8-7ff8-4342-af8f-5813aa80f50a/` (8/8 passed) |
+| Final real assertion failure | `artifacts/executor/cfae1a84-cbaa-4623-b143-64bd6d5e6ac1/` (0 passed, 1 failed, exit 1) |
+| Final refused-target run | `artifacts/executor/8eb28ea3-32ea-48df-a0cc-5ef275aa71da/` (0 passed, 8 execution errors, exit 1) |
+| Rejected unapproved / unsupported / concurrent attempts | `artifacts/executor/98b59b15-2a6b-4858-8be0-0d1529955c6a/`, `bf023962-d85b-4bc4-be31-b558d9feba24/`, `96aaec85-9050-4dbc-9822-17cf2f432b5d/` respectively; attempt/rejection only, no runner command |
+| Synthetic fixture records and summary | `artifacts/runner-checks/73eabf41-faf1-4222-adaf-7f5b818d7ea0/` |
+| Existing baseline JSON/HTML | `artifacts/playwright/2026-11-02T09-46-52.523Z-29c36443-ff07-4d97-888d-9779c971ecb5/` |
+
+The final assertion-failure directory has `cases/login-and-task/result.json` with expected `Deliberately wrong runner-check expectation` versus actual `API health has not been checked.` Its real screenshot and trace are at `test-results/plan-login-and-task-Log-in-and-preserve-a-checklist-change-chromium/test-failed-1.png` and `trace.zip` within that directory. Synthetic approvals are explicitly labelled and stored under the separate runner-check data root; they never authorize the live plan.
+
+Human verification: follow [EXECUTION.md](EXECUTION.md)'s checklist to inspect plan/approval/provenance, replay without a key, inspect individual assertions/logs, open the real failure screenshot/trace, inspect unavailable-target classification and preserve the full evidence sets. Before/fix comparisons will require the same approved revision and clean seed/fix SHAs in Milestones 8–9. No deliberate defects or fabricated evidence were introduced here.
+
+Final review additionally made `requireApproved` reject an omitted revision instead of inheriting the storage reader's current-revision default, strengthened its existing unit check, and corrected CLI record paths for `VERIQA_DATA_DIR` overrides. Rechecked all 57 unit tests (57 passed, exit 0, 1.212 seconds), types and builds (both exit 0). Captures: `unit-final-08bdb313-cc81-4a6b-a39d-102cb06a2070/`, `typecheck-final-6ba7f7be-52d3-4e5b-9d4c-9883d1d169d0/`, and `build-final-47e31584-460c-482e-acad-b08646964048/` under `artifacts/verification/m6/`. A Python audit checked seven Markdown documents, nineteen local links and all indexed artifact paths in four retained records; exits/case artifacts matched the actual command records and no active execution lock remained. `git diff --check` exited 0.

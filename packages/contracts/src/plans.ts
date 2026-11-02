@@ -8,7 +8,7 @@ const taskTarget = z.enum(["review-requirements", "run-baseline"]);
 const pagePath = z.enum(["/", "/login", "/home"]);
 const mockOtpValue = z.object({ from: z.literal("mock-otp") }).strict();
 
-// Names map to maintained demo adapters in a later milestone, never arbitrary selectors/code.
+// Names map to maintained demo adapters, never arbitrary selectors/code.
 export const testActionSchema = z.union([
   z.object({ type: z.literal("navigate"), path: pagePath }).strict(),
   z.object({ type: z.literal("fill"), input: z.literal("email"), value: z.string().max(254) }).strict(),
@@ -134,11 +134,11 @@ export const planApprovalSchema = z.object({
 }).strict();
 
 const count = z.number().int().min(0);
-const artifactPath = z.string().min(1).max(500).refine((value) =>
+export const artifactPathSchema = z.string().min(1).max(500).refine((value) =>
   !value.startsWith("/") && !value.includes("\\") && !value.split("/").some((part) => part === "..")
   && !value.includes(":"), "Use a relative artifact path without traversal");
 
-// A future executor may emit these records. Milestone 4 does not create execution results.
+// Summary metadata is shared by persisted execution records and dashboard readers.
 export const runResultMetadataSchema = z.object({
   schemaVersion: z.literal(1),
   runId: z.string().uuid(),
@@ -157,7 +157,7 @@ export const runResultMetadataSchema = z.object({
   exitCode: z.number().int(),
   outcome: z.enum(["passed", "assertion-failed", "invalid-definition", "execution-error"]),
   counts: z.object({ discovered: count, executed: count, passed: count, failed: count, skipped: count }).strict(),
-  artifacts: z.array(artifactPath).max(100),
+  artifacts: z.array(artifactPathSchema).max(500),
 }).strict().superRefine((run, context) => {
   const counts = run.counts;
   const invalidCounts = counts.executed !== counts.passed + counts.failed

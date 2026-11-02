@@ -1,6 +1,6 @@
 # Initial architectural decisions
 
-Status: accepted direction for the MVP. Milestones 2–4 implement workspace tooling, demo authentication/home, and manual-plan contracts/storage/approval. Live AI generation is implemented in Milestone 5; dynamic execution remains planned. Update this record when evidence changes a decision.
+Status: accepted direction for the MVP. Milestones 2–4 implement workspace tooling, demo authentication/home, and manual-plan contracts/storage/approval. Live AI generation is implemented in Milestone 5; deterministic execution and evidence collection are implemented in Milestone 6. Update this record when evidence changes a decision.
 
 ## D01 — A small TypeScript workspace
 
@@ -95,3 +95,11 @@ Use the existing `tsx` dependency with Node's test runner for contract/store/CLI
 Use native Node fetch and Responses strict JSON Schema, generated from Zod, then validate every response locally including semantic reference constraints. No new dependency or endpoint is needed. Only the generate command loads root `.env`; keys never enter Vite code. Defaults: gpt-4.1-mini, 90-second timeout, 6000 output-token cap, store:false, no automatic retry.
 
 Preserve manual version-1 compatibility; extend source with live-ai and required actual provenance, which the model cannot author. Keep immutable unapproved plans and safe interaction artifacts on both success and failure. Copy the real live definition into a clearly unapproved offline fixture for reproduction. Human approval remains a separate operator action. Model notes can be wrong even with schema-valid cases, so preserve the original and iterate the prompt rather than silently rewriting generated provenance.
+
+## D17 — CLI coordinator and separate Playwright evidence contract
+
+Keep the next vertical slice in a CLI rather than adding dashboard routes ahead of Milestone 7. The coordinator loads an exact approved revision, saves a snapshot, starts a fixed Playwright config with managed local API/demo servers, and publishes immutable run JSON. A single-worker runner with backend reset plus new context per case prevents shared auth/checklist state. An exclusive directory lock rejects concurrent executor runs. No new dependency is needed.
+
+Use native Playwright JSON/statuses, maintained adapters and explicit expected/actual observations. Final run records embed full plan/provenance/approval and expose relative evidence paths independent of native reporter internals. Comparison identity is `(planId, revision, contentHash, caseId)` across distinct run IDs/SHAs. Run mode and plan origin remain separate. Partial/setup/runner failures cannot pass. Raw logs are appended during execution; interrupted coordinators can leave incomplete attempts and a stale lock, documented for a future dashboard. No automatic recovery worker or artifact server is added.
+
+Runner verification uses isolated, visibly synthetic approvals and one deliberately wrong expectation, separate from the existing genuine human approval of the live plan. This produces actual failure screenshots/traces without seeding an application defect or misrepresenting a human decision.

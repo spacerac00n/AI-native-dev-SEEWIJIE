@@ -98,12 +98,13 @@ export class PlanStore {
     return approval;
   }
 
-  // Future execution must use this gate, not trust an approval field supplied inside a plan.
+  // Execution uses this gate, not an approval field supplied inside a plan.
   requireApproved(id: string, revision: string) {
+    revisionSchema.parse(revision); // Never silently fall back to the current revision at execution time.
     const inspected = this.inspect(id, revision);
     if (inspected.status !== "approved" || !inspected.approval) {
       throw new Error("Current plan revision requires explicit human approval");
     }
-    return inspected;
+    return { ...inspected, approval: inspected.approval };
   }
 }
