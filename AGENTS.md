@@ -66,6 +66,15 @@ For each meaningful implementation task:
 
 Explain significant engineering trade-offs and record meaningful human corrections to AI-generated work in `docs/AI_WORKFLOW.md`.
 
+### Reusable development skills
+
+Read and use the relevant repository skill when its workflow applies:
+
+- [test-planning](.agents/skills/test-planning/SKILL.md): when translating requirements into scenarios or reviewing plan coverage, supported actions/assertions, and expected results. Require human semantic review before approval; generated expectations are proposals.
+- [failure-investigation](.agents/skills/failure-investigation/SKILL.md): when diagnosing actual automated failures or rejected runs, inspecting evidence, and verifying fixes while preserving the original failure. An execution error alone does not establish an environmental root cause.
+
+These skills guide Codex during development; they are not runtime VeriQA testing features and do not replace Zod validation, human approval, or deterministic Playwright assertions. They were introduced after Milestones 1–9, not used to perform those milestones.
+
 ## 6. Verification Rules
 
 A successful agent response is not verification.
