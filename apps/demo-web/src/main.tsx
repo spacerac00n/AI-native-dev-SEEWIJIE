@@ -10,6 +10,7 @@ import {
 import { StrictMode, useEffect, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { api, ApiError } from "./api";
+import "./style.css";
 
 function App() {
   const [status, setStatus] = useState("API health has not been checked.");
@@ -133,10 +134,14 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>VeriQA Demo</h1>
+    <main className="demo-shell">
+      <header className="brand-header"><span className="brand-symbol" aria-hidden="true">m</span><div><p className="wordmark">matcha</p><h1>VeriQA Demo</h1></div></header>
+      <div className="welcome-layout">
+        <div className="intro"><p className="eyebrow">A little hello goes a long way</p><p className="hero-title">Find your people.<br /><em>Feel at home.</em></p><p className="hero-description">Good conversations. Shared interests. A new friend around the corner.</p><div className="friend-art" aria-hidden="true"><span className="friend friend-one"><i /><b /></span><span className="friend friend-two"><i /><b /></span><span className="spark">✳</span></div><p className="intro-note">A fresh start, together.</p></div>
+        <div className="auth-panel">
       {loading ? <p>Checking your session...</p> : home ? (
-        <section>
+        <section className="home-screen">
+          <p className="eyebrow">Make yourself at home</p>
           <h2>Welcome, {home.email}</h2>
           <h3>Your checklist</h3>
           <ul>
@@ -154,12 +159,11 @@ function App() {
         </section>
       ) : challenge ? (
         <section>
+          <p className="eyebrow">One small step</p>
           <h2>Verify OTP</h2>
           <p>Enter the six-digit code for {email}. It expires after five minutes.</p>
-          <aside aria-label="Local mock OTP delivery">
-            <h3>Local mock OTP delivery</h3>
-            <p>No email is sent. Synthetic demo accounts only.</p>
-            {delivery && <p>Code: <output data-testid="mock-otp">{delivery.otp}</output></p>}
+          <aside className="mock-otp" aria-label="Local mock OTP delivery">
+            {delivery && <p>Mock OTP: <output data-testid="mock-otp">{delivery.otp}</output></p>}
           </aside>
           <form onSubmit={verifyOtp}>
             <label>OTP <input name="otp" inputMode="numeric" autoComplete="one-time-code" disabled={busy}
@@ -172,6 +176,7 @@ function App() {
         </section>
       ) : (
         <section>
+          <p className="eyebrow">Your next connection starts here</p>
           <h2>Email login</h2>
           <p>Use a synthetic email ending exactly with @e.ntu.edu.sg.</p>
           <form onSubmit={requestOtp}>
@@ -182,9 +187,9 @@ function App() {
         </section>
       )}
       {error && <p role="alert">{error}</p>}
-      <hr />
-      <button type="button" onClick={checkHealth}>Check API health</button>
-      <p role="status">{status}</p>
+        </div>
+      </div>
+      <footer className="demo-footer"><span>Friend matching · local demo</span><div><button type="button" onClick={checkHealth}>Check API health</button><p role="status">{status}</p></div></footer>
     </main>
   );
 }
